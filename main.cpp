@@ -7,15 +7,16 @@
 #include <iostream>
 #include <fstream>
 
-int main(){
-    Graph obj(false);
-    obj.loadGraphFromFile("/home/yy/DensestSubgraph/data/cores.txt");
-    std::vector<VertexID> a = obj.getNeighbors(static_cast<VertexID>(0));
+int main() {
+    Graph obj(true);
+    obj.loadGraphFromFile("/home/yy/DensestSubgraph/data/xycores.txt");
     Reduction rec;
-    std::vector<ui> core;
-    core = rec.coreDecomposition(obj);
-    for(int i=0; i < obj.getVerticesCount(); i++){
-        std::cout << core[i] << " ";
+    auto core = rec.xyCoreDecomposition(obj, 2, 2);
+    for (int i = 0; i < 2; i++) {
+        for(auto &vertex: core[i]){
+            std::cout << vertex << " ";
+        }
+        std::cout << std::endl;
     }
 //    std::ifstream file("/home/yy/DensestSubgraph/data/maxflow2.txt");
 //    ui n;

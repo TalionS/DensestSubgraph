@@ -42,6 +42,10 @@ public:
 
     const std::vector<VertexID>& getNeighbors(VertexID i) const ;
 
+    const std::vector<VertexID>& getOutNeighbors(VertexID i) const ;
+
+    const std::vector<VertexID>& getInNeighbors(VertexID i) const ;
+
     const std::vector<ui>& getDegrees() const ;
 
     const std::vector<ui>& getInDegrees() const ;

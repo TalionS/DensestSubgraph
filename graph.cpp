@@ -136,6 +136,14 @@ const std::vector<VertexID>& Graph::getNeighbors(VertexID i) const {
     return adj_[0][i];
 }
 
+const std::vector<VertexID>& Graph::getOutNeighbors(VertexID i) const {
+    return adj_[0][i];
+}
+
+const std::vector<VertexID>& Graph::getInNeighbors(VertexID i) const {
+    return adj_[1][i];
+}
+
 const std::vector<ui>& Graph::getDegrees() const {
     if(is_directed_) {
         printf("getDegrees() is only for undirected graphs.");
@@ -149,7 +157,7 @@ const std::vector<ui>& Graph::getInDegrees() const {
         printf("getInDegrees() is only for directed graphs.");
         exit(1);
     }
-    return deg_[0];
+    return deg_[1];
 }
 
 const std::vector<ui>& Graph::getOutDegrees() const {
@@ -157,6 +165,6 @@ const std::vector<ui>& Graph::getOutDegrees() const {
         printf("getOutDegrees() is only for directed graphs.");
         exit(1);
     }
-    return deg_[1];
+    return deg_[0];
 }
 
