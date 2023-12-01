@@ -2,7 +2,7 @@
 // Created by yy on 11/23/23.
 //
 #include "reduction.h"
-#include "graph.h"
+#include "utility/graph.h"
 #include <algorithm>
 
 std::vector<ui> Reduction::coreDecomposition(const Graph &graph) {

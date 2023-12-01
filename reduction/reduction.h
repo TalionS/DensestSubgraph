@@ -5,8 +5,8 @@
 #ifndef DENSESTSUBGRAPH_REDUCTION_H
 #define DENSESTSUBGRAPH_REDUCTION_H
 
-#include "graph.h"
-#include "types.h"
+#include "utility/graph.h"
+#include "utility/types.h"
 
 #include <queue>
 #include <vector>
@@ -15,8 +15,9 @@
 
 class Reduction {
 public:
-    std::vector<ui> coreDecomposition(const Graph& graph);
-    std::vector<VertexID> *xyCoreDecomposition(const Graph& graph, ui x, ui y);
+    std::vector<ui> coreDecomposition(const Graph &graph);
+
+    std::vector<VertexID> *xyCoreDecomposition(const Graph &graph, ui x, ui y);
 
 };
 
