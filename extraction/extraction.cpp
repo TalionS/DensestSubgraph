@@ -4,13 +4,13 @@
 
 #include "extraction.h"
 
-void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double *l, double *r, std::vector<VertexID> *vertices) {
+void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, std::vector<VertexID> *vertices) {
     std::vector<VertexID> tmp_S;
     ui n = graph.getVerticesCount();
     VertexID s = 0, t = 2 * n + 1;
     vertices[0].clear();
     vertices[1].clear();
-    double mid = (*l + *r) / 2.0;
+    double mid = (l + r) / 2.0;
 
     flow.getMinCut(s, t, tmp_S);
     ui edge_num = 0;
@@ -27,13 +27,13 @@ void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double *l,
     }
 
     if (!vertices[0].empty() && !vertices[1].empty()) {
-        *l = mid;
+        l = mid;
         if (graph.subgraph_density < edge_num / sqrt(vertices[0].size() * vertices[1].size())) {
             graph.subgraph_density = edge_num / sqrt(vertices[0].size() * vertices[1].size());
             graph.vertices[0] = vertices[0];
             graph.vertices[1] = vertices[1];
         }
     } else {
-        *r = mid;
+        r = mid;
     }
 }

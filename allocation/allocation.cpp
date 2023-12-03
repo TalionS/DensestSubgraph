@@ -6,13 +6,13 @@
 #include <algorithm>
 #include <cmath>
 
-void Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio, double *l, double *r) {
+void Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio, double l, double r) {
     ui n = graph.getVerticesCount();
     ui m = graph.getEdgesCount();
     auto in_degrees = graph.getInDegrees();
     auto out_degrees = graph.getOutDegrees();
     double ratio_sqrt = sqrt(ratio);
-    double mid = (*l + *r) / 2;
+    double mid = (l + r) / 2;
 
     flow = FlowNetwork(2 * n + 2);
     VertexID s = 0, t = 2 * n + 1;

@@ -24,16 +24,17 @@ int main(int argc, char **argv) {
     Extraction ext;
     Verification ver;
     FlowNetwork flow;
+    //ratio 集合这里暂时写的比较简单
     for(int i = 1; i <= graph.getVerticesCount(); i++)
         for(int j = 1; j <= graph.getVerticesCount(); j++) {
             double ratio = i / j;
             bool flag = true;
-            double *l, *r;
-            l = new double;
-            r = new double;
-            *l = graph.subgraph_density;
-            *r = graph.subgraph_density_upper_bound;
+            double l, r;
+            l = graph.subgraph_density;
+            r = graph.subgraph_density_upper_bound;
             auto vertices = new std::vector<VertexID>[2];
+
+            //内层循环
             while(flag) {
                 alloc.flowExactAllocation(graph, flow, ratio, l, r);
                 ext.flowExactExtraction(graph, flow, l, r, vertices);

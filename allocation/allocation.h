@@ -10,7 +10,7 @@
 
 class Allocation{
 public:
-    void flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio, double *l, double *r);
+    void flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio, double l, double r);
 };
 
 #endif //DENSESTSUBGRAPH_ALLOCATION_H
