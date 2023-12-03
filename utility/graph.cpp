@@ -7,23 +7,38 @@
 #include <iostream>
 #include <assert.h>
 
-Graph::Graph() : is_directed_(false), vertices_count_(0), edges_count_(0) {
+Graph::Graph() :
+        is_directed_(false),
+        vertices_count_(0),
+        edges_count_(0),
+        subgraph_density(0),
+        subgraph_density_lower_bound(0),
+        subgraph_density_upper_bound(0) {
 
 }
 
-Graph::Graph(bool is_directed) : is_directed_(is_directed), vertices_count_(0), edges_count_(0) {
+Graph::Graph(bool is_directed) :
+        is_directed_(is_directed),
+        vertices_count_(0),
+        edges_count_(0),
+        subgraph_density(0),
+        subgraph_density_lower_bound(0),
+        subgraph_density_upper_bound(0) {
     if (is_directed_) {
         adj_ = new std::vector<std::vector<VertexID>>[2];
         deg_ = new std::vector<ui>[2];
+        vertices = new std::vector<VertexID>[2];
     } else {
         adj_ = new std::vector<std::vector<VertexID>>[1];
         deg_ = new std::vector<ui>[1];
+        vertices = new std::vector<VertexID>[1];
     }
 }
 
 Graph::~Graph() {
     delete[] adj_;
     delete[] deg_;
+    delete[] vertices;
 }
 
 void Graph::loadGraphFromFile(const std::string &dir) {
@@ -35,10 +50,6 @@ void Graph::loadGraphFromFile(const std::string &dir) {
 
     ui edges_count;
     file >> vertices_count_ >> edges_count;
-    vertices_.resize(static_cast<VertexID>(vertices_count_), 0);
-    for (VertexID i = 0; i < static_cast<VertexID>(vertices_count_); i++) {
-        vertices_[i] = i;
-    }
     if (is_directed_) {
         for (int i = 0; i < 2; i++) {
             adj_[i].resize(static_cast<VertexID>(vertices_count_));
@@ -59,6 +70,13 @@ void Graph::loadGraphFromFile(const std::string &dir) {
 
     assert(edges_count_ == edges_count);
     file.close();
+    if (is_directed_) {
+        ui max_out = *std::max_element(deg_[0].begin(), deg_[0].end());
+        ui max_in = *std::max_element(deg_[1].begin(), deg_[1].end());
+        subgraph_density_upper_bound = std::max(max_out, max_in);
+    } else {
+        subgraph_density_upper_bound = *std::max_element(deg_[0].begin(), deg_[0].end());
+    }
 };
 
 void Graph::addUndirectedEdge(VertexID begin, VertexID end) {
@@ -77,54 +95,54 @@ void Graph::addDirectedEdge(VertexID begin, VertexID end) {
     edges_count_++;
 };
 
-void Graph::deleteEdge(VertexID begin, VertexID end) {
-    if (is_directed_) {
-        auto out_edges = adj_[0][begin];
-        out_edges.erase(std::remove(out_edges.begin(), out_edges.end(), end), out_edges.end());
-
-
-        auto &in_edges = adj_[1][end];
-        in_edges.erase(std::remove(in_edges.begin(), in_edges.end(), begin), in_edges.end());
-
-        deg_[0][begin]--;
-        deg_[1][end]--;
-
-        edges_count_--;
-    } else {
-        auto &edges_begin = adj_[0][begin];
-        edges_begin.erase(std::remove(edges_begin.begin(), edges_begin.end(), end), edges_begin.end());
-
-
-        auto &edges_end = adj_[0][end];
-        edges_end.erase(std::remove(edges_end.begin(), edges_end.end(), begin), edges_end.end());
-
-        deg_[0][begin]--;
-        deg_[0][end]--;
-
-        edges_count_--;
-    }
-};
-
-void Graph::addVertex(VertexID vertex_id) {
-    if (std::find(vertices_.begin(), vertices_.end(), vertex_id) != vertices_.end()) {
-        std::cout << "Vertex " << vertex_id << " already exists." << std::endl;
-        return;
-    }
-
-    vertices_.push_back(vertex_id);
-
-    vertices_count_++;
-
-    if (is_directed_) {
-        adj_[0].resize(vertices_count_);
-        adj_[1].resize(vertices_count_);
-        deg_[0].resize(vertices_count_, 0);
-        deg_[1].resize(vertices_count_, 0);
-    } else {
-        adj_[0].resize(vertices_count_);
-        deg_[0].resize(vertices_count_, 0);
-    }
-};
+//void Graph::deleteEdge(VertexID begin, VertexID end) {
+//    if (is_directed_) {
+//        auto out_edges = adj_[0][begin];
+//        out_edges.erase(std::remove(out_edges.begin(), out_edges.end(), end), out_edges.end());
+//
+//
+//        auto &in_edges = adj_[1][end];
+//        in_edges.erase(std::remove(in_edges.begin(), in_edges.end(), begin), in_edges.end());
+//
+//        deg_[0][begin]--;
+//        deg_[1][end]--;
+//
+//        edges_count_--;
+//    } else {
+//        auto &edges_begin = adj_[0][begin];
+//        edges_begin.erase(std::remove(edges_begin.begin(), edges_begin.end(), end), edges_begin.end());
+//
+//
+//        auto &edges_end = adj_[0][end];
+//        edges_end.erase(std::remove(edges_end.begin(), edges_end.end(), begin), edges_end.end());
+//
+//        deg_[0][begin]--;
+//        deg_[0][end]--;
+//
+//        edges_count_--;
+//    }
+//};
+//
+//void Graph::addVertex(VertexID vertex_id) {
+//    if (std::find(vertices.begin(), vertices.end(), vertex_id) != vertices.end()) {
+//        std::cout << "Vertex " << vertex_id << " already exists." << std::endl;
+//        return;
+//    }
+//
+//    vertices.push_back(vertex_id);
+//
+//    vertices_count_++;
+//
+//    if (is_directed_) {
+//        adj_[0].resize(vertices_count_);
+//        adj_[1].resize(vertices_count_);
+//        deg_[0].resize(vertices_count_, 0);
+//        deg_[1].resize(vertices_count_, 0);
+//    } else {
+//        adj_[0].resize(vertices_count_);
+//        deg_[0].resize(vertices_count_, 0);
+//    }
+//};
 
 const ui Graph::getEdgesCount() const {
     return edges_count_;
@@ -132,6 +150,10 @@ const ui Graph::getEdgesCount() const {
 
 const ui Graph::getVerticesCount() const {
     return vertices_count_;
+}
+
+std::vector<VertexID> *Graph::getVertices() {
+    return vertices;
 }
 
 const std::vector<VertexID> &Graph::getNeighbors(VertexID i) const {

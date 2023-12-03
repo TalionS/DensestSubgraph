@@ -64,6 +64,8 @@ int main(int argc, char **argv) {
         }
         else{
             //todo
+            std::vector<>
+            while
         }
     }
         return 0;

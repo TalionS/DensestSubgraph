@@ -8,16 +8,22 @@
 
 FlowEdge::FlowEdge(VertexID from, VertexID to, double capacity, double flow, VertexID index) : from(from), to(to), index(index), capacity(capacity), flow(flow) {};
 
+FlowNetwork::FlowNetwork() : nodes_count_(0){
+
+}
+
 FlowNetwork::FlowNetwork(ui vertices_count) : nodes_count_(vertices_count){
+    adj_.clear();
     adj_.resize(vertices_count);
-//    vertices_.resize(vertices_count);
+//    vertices.resize(vertices_count);
 //    for (int i = 0; i < vertices_count; ++i) {
-//        vertices_[i] = i;
+//        vertices[i] = i;
 //    }
 }
 
 
-void FlowNetwork::addEdge(VertexID from, VertexID to, ui capacity) {
+void FlowNetwork::addEdge(VertexID from, VertexID to, double capacity) {
+//    printf("(%d, %d, %f)\n", from, to, capacity);
     FlowEdge forward_edge(from, to, capacity, 0, adj_[to].size());
     adj_[from].push_back(forward_edge);
     if(from == to){
@@ -28,7 +34,7 @@ void FlowNetwork::addEdge(VertexID from, VertexID to, ui capacity) {
 }
 
 void FlowNetwork::enqueue(VertexID v) {
-    if(!active_[v] && excess_[v] && dist_[v] < nodes_count_){
+    if(!active_[v] && excess_[v] > 0 && dist_[v] < nodes_count_){
         active_[v] = true;
         height_bucket_[dist_[v]].push_back(v);
         highest_active_height_ = std::max(highest_active_height_, dist_[v]);
@@ -115,37 +121,46 @@ double FlowNetwork::getMaxFlow(VertexID s, VertexID t) {
             highest_active_height_--;
         }
     }
+//    for(auto &dis: dist_)
+//        printf("%d ", dis);
+//    printf("\n");
     return excess_[t];
 }
 
-double FlowNetwork::getMinCut(VertexID s, VertexID t, std::vector<VertexID> &S, std::vector<VertexID> &T) {
-    auto ret = getMaxFlow(s, t);
+void FlowNetwork::getMinCut(VertexID s, VertexID t, std::vector<VertexID> &S) {
+//    S.clear();
+//    T.clear();
+//    std::vector<bool> visited(nodes_count_, false);
+//
+//    std::queue<VertexID> q;
+//    q.push(s);
+//    visited[s] = true;
+//    while (!q.empty()) {
+//        VertexID u = q.front();
+//        q.pop();
+//
+//        for (const auto &e : adj_[u]) {
+////            printf("(%d, %d, %f, %f)\n", e.from, e.to, e.flow, e.capacity);
+//            if (!visited[e.to] && e.capacity - e.flow > 0) {
+//                visited[e.to] = true;
+//                q.push(e.to);
+//            }
+//        }
+//    }
+//
+//    for (VertexID i = 0; i < nodes_count_; ++i) {
+//        if (visited[i]) {
+//            S.push_back(i);
+//        } else {
+//            T.push_back(i);
+//        }
+//    }
     S.clear();
-    T.clear();
-    std::vector<bool> visited(nodes_count_, false);
-
-    std::queue<VertexID> q;
-    q.push(s);
-    visited[s] = true;
-    while (!q.empty()) {
-        VertexID u = q.front();
-        q.pop();
-
-        for (const auto &e : adj_[u]) {
-            if (!visited[e.to] && e.capacity - e.flow > 0) {
-                visited[e.to] = true;
-                q.push(e.to);
-            }
+    for (int v = 0; v < nodes_count_; v++) {
+//        if (dist_[v] >= nodes_count_) {
+        if (dist_[v] >= nodes_count_) {
+            S.push_back(v);
         }
     }
-
-    for (VertexID i = 0; i < nodes_count_; ++i) {
-        if (visited[i]) {
-            S.push_back(i);
-        } else {
-            T.push_back(i);
-        }
-    }
-    return ret;
 }
 

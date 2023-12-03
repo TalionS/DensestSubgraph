@@ -19,7 +19,7 @@ public:
 
 
 class FlowNetwork {
-private:
+public:
     std::vector<std::vector<FlowEdge>> adj_;
     std::vector<double> excess_;
     std::vector<ui> dist_;
@@ -35,13 +35,15 @@ private:
 
 
 public:
+    FlowNetwork();
+
     FlowNetwork(ui vertices_count);
 
-    void addEdge(VertexID from, VertexID to, ui capacity);
+    void addEdge(VertexID from, VertexID to, double capacity);
 
     double getMaxFlow(VertexID s, VertexID t);
 
-    double getMinCut(VertexID s, VertexID t, std::vector<VertexID> &S, std::vector<VertexID> &T);
+    void getMinCut(VertexID s, VertexID t, std::vector<VertexID> &S);
     
 
 private:
