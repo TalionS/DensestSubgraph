@@ -6,12 +6,16 @@
 #include <algorithm>
 #include <cmath>
 
-void Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio, double l, double r) {
+void Allocation::flowExactAllocation(Graph &graph, Graph &x_y_core, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r, bool is_dc) {
     ui n = graph.getVerticesCount();
-    ui m = graph.getEdgesCount();
-    auto in_degrees = graph.getInDegrees();
-    auto out_degrees = graph.getOutDegrees();
-    double ratio_sqrt = sqrt(ratio);
+    ui m = x_y_core.getEdgesCount();
+    auto in_degrees = x_y_core.getInDegrees();
+    auto out_degrees = x_y_core.getOutDegrees();
+    double ratio_sqrt;
+    if(is_dc)
+        ratio_sqrt = sqrt((ratio.first + ratio.second) / 2);
+    else
+        ratio_sqrt = sqrt(ratio.first / ratio.second);
     double mid = (l + r) / 2;
 
     flow = FlowNetwork(2 * n + 2);

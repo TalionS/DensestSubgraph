@@ -12,12 +12,23 @@
 #include <vector>
 #include <iostream>
 #include <list>
+#include <algorithm>
+#include <cmath>
 
 class Reduction {
 public:
-    std::vector<ui> coreDecomposition(const Graph &graph);
+    void xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double, double> ratio, double &l, double &r, bool &is_init, bool is_dc);
 
-    std::vector<VertexID> *xyCoreDecomposition(const Graph &graph, ui x, ui y);
+public:
+    std::vector<ui> core;
+
+    std::vector<VertexID> *vert;
+    std::vector<ui> *pos;
+    std::vector<ui> *bin;
+private:
+    void coreDecomposition(const Graph &graph);
+    void generateXYCore(const Graph &graph, Graph &x_y_core, ui x, ui y);
+    void xyCoreInitialization(const Graph &graph);
 
 };
 

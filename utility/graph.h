@@ -28,28 +28,28 @@ public:
     double subgraph_density;
 
 public:
-    Graph();
-    explicit Graph(bool is_directed);
+    explicit Graph(bool is_directed, ui n = 0);
     ~Graph();
 
 public:
     void loadGraphFromFile(const std::string &dir);
     void addDirectedEdge(VertexID begin, VertexID end);
     void addUndirectedEdge(VertexID begin, VertexID end);
+
 //    void deleteEdge(VertexID begin, VertexID end);
 //    void addVertex(VertexID vertex_id);
 //    void deleteVertex(VertexID vertex_id);
 
 public:
-    const ui getEdgesCount() const;
-    const ui getVerticesCount() const;
+    ui getEdgesCount() const;
+    ui getVerticesCount() const;
     std::vector<VertexID>* getVertices();
-    const std::vector<VertexID> &getNeighbors(VertexID i) const;
-    const std::vector<VertexID> &getOutNeighbors(VertexID i) const;
-    const std::vector<VertexID> &getInNeighbors(VertexID i) const;
-    const std::vector<ui> &getDegrees() const;
-    const std::vector<ui> &getInDegrees() const;
-    const std::vector<ui> &getOutDegrees() const;
+    std::vector<VertexID> &getNeighbors(VertexID i) const;
+    std::vector<VertexID> &getOutNeighbors(VertexID i) const;
+    std::vector<VertexID> &getInNeighbors(VertexID i) const;
+    std::vector<ui> &getDegrees() const;
+    std::vector<ui> &getInDegrees() const;
+    std::vector<ui> &getOutDegrees() const;
 };
 
 
