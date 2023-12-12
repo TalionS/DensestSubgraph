@@ -11,3 +11,10 @@ bool Verification::flowExactVerification(Graph &graph, double l, double r) {
     if (r - l > bias) return true;
     else return false;
 }
+
+bool Verification::UndirectedflowExactVerification(Graph &graph, double l, double r) {
+    ui n = graph.getVerticesCount();
+    double bias = 1.0 / ((double) n * (n - 1));
+    if (r - l > bias) return true;
+    else return false;
+}

@@ -14,6 +14,7 @@
 class Verification{
 public:
     bool flowExactVerification(Graph &graph, double l, double r);
+    bool UndirectedflowExactVerification(Graph &graph, double l, double r);
 };
 
 #endif //DENSESTSUBGRAPH_VERIFICATION_H

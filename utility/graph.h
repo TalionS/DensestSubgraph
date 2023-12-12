@@ -29,6 +29,7 @@ public:
 
 public:
     explicit Graph(bool is_directed, ui n = 0);
+    Graph& operator=(const Graph& other);
     ~Graph();
 
 public:

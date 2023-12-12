@@ -24,7 +24,8 @@ void Args::argsParse(int argc, char **argv) {
             //error
             exit(-1);
         }
-        args_[argv[i++]] = argv[i];
+        args_[argv[i]] = argv[i + 1];
+        i++;
     }
 }
 

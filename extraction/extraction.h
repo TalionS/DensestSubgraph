@@ -14,6 +14,7 @@
 class Extraction{
 public:
     void flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, std::vector<VertexID> *vertices);
+    void UndirectedflowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, std::vector<VertexID> *vertices);
 };
 
 #endif //DENSESTSUBGRAPH_EXTRACTION_H

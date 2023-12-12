@@ -37,3 +37,33 @@ void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l,
         r = mid;
     }
 }
+
+void Extraction::UndirectedflowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, std::vector<VertexID> *vertices) {
+    std::vector<VertexID> tmp_S;
+    ui n = graph.getVerticesCount();
+    VertexID s = 0, t = n + 1;
+    vertices[0].clear();
+    double mid = (l + r) / 2.0;
+    flow.getMinCut(s, t, tmp_S);
+    ui edge_num = 0;
+    for (auto &v: tmp_S) {
+        if (v == 0) continue;
+        if (v <= n) {
+            vertices[0].push_back(v - 1);
+            for (auto &edge: flow.adj_[v]) {
+                if (edge.to > 0 && edge.to <= n && flow.dist_[edge.to] >= n) {
+                    edge_num++;
+                }
+            }
+        }
+    }
+    if (!vertices[0].empty()) {
+        l = mid;
+        if (graph.subgraph_density < edge_num / vertices[0].size()) {
+            graph.subgraph_density = edge_num / vertices[0].size();
+            graph.vertices[0] = vertices[0];
+        }
+    } else {
+        r = mid;
+    }
+}

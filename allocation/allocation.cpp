@@ -36,6 +36,22 @@ void Allocation::flowExactAllocation(Graph &graph, Graph &x_y_core, FlowNetwork 
     flow.getMaxFlow(s, t);
 }
 
+void Allocation::UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r) {
+    ui n = graph.getVerticesCount();
+    ui m = graph.getEdgesCount();
+    auto degrees = graph.getDegrees();
+    double mid = (l + r) / 2;
+    flow = FlowNetwork(n + 2);
+    VertexID s = 0, t = n + 1;
+    for (int i = 1; i <= n; i++) {
+        flow.addEdge(s, i, m);
+        flow.addEdge(i, t, m + 2 * mid - degrees[i - 1]);
+        for (auto &v: graph.getNeighbors(i - 1)) {
+            flow.addEdge(i, v + 1, 1);
+        }
+    }
+    flow.getMaxFlow(s, t);
+}
 //void Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio) {
 //    double l = graph.subgraph_density;
 //    double r = graph.subgraph_density_upper_bound;
