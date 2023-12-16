@@ -206,6 +206,33 @@ graph.cpp.s:
 	cd /home/qingshuo/DensestSubgraph && $(MAKE) -f utility/CMakeFiles/utility.dir/build.make utility/CMakeFiles/utility.dir/graph.cpp.s
 .PHONY : graph.cpp.s
 
+lp.o: lp.cpp.o
+
+.PHONY : lp.o
+
+# target to build an object file
+lp.cpp.o:
+	cd /home/qingshuo/DensestSubgraph && $(MAKE) -f utility/CMakeFiles/utility.dir/build.make utility/CMakeFiles/utility.dir/lp.cpp.o
+.PHONY : lp.cpp.o
+
+lp.i: lp.cpp.i
+
+.PHONY : lp.i
+
+# target to preprocess a source file
+lp.cpp.i:
+	cd /home/qingshuo/DensestSubgraph && $(MAKE) -f utility/CMakeFiles/utility.dir/build.make utility/CMakeFiles/utility.dir/lp.cpp.i
+.PHONY : lp.cpp.i
+
+lp.s: lp.cpp.s
+
+.PHONY : lp.s
+
+# target to generate assembly for a file
+lp.cpp.s:
+	cd /home/qingshuo/DensestSubgraph && $(MAKE) -f utility/CMakeFiles/utility.dir/build.make utility/CMakeFiles/utility.dir/lp.cpp.s
+.PHONY : lp.cpp.s
+
 ratioselection.o: ratioselection.cpp.o
 
 .PHONY : ratioselection.o
@@ -251,6 +278,9 @@ help:
 	@echo "... graph.o"
 	@echo "... graph.i"
 	@echo "... graph.s"
+	@echo "... lp.o"
+	@echo "... lp.i"
+	@echo "... lp.s"
 	@echo "... ratioselection.o"
 	@echo "... ratioselection.i"
 	@echo "... ratioselection.s"

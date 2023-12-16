@@ -9,6 +9,7 @@ CMakeFiles/debug.dir/test.cpp.o
  utility/args.h
  utility/flownetwork.h
  utility/graph.h
+ utility/lp.h
  utility/ratioselection.h
  utility/types.h
  verification/verification.h

@@ -67,3 +67,38 @@ void Extraction::UndirectedflowExactExtraction(Graph &graph, FlowNetwork &flow, 
         r = mid;
     }
 }
+
+void Extraction::UndirectedlpExactExtraction(Graph &graph, LinearProgamming &lp, std::vector<VertexID> *vertices) {
+    std::vector<ui> y;
+    std::vector<std::pair<double,VertexID>> tmp;
+    ui n = graph.getVerticesCount();
+    ui m = graph.getEdgesCount();
+    y.resize(n);
+    tmp.resize(n);
+    vertices[0].clear();
+    for(ui u = 0; u < n; u++){
+        y[u] = 0;
+        tmp[u] = std::make_pair(-lp.r[0][u],u);
+    }
+    for(ui i = 0; i < m; i++){
+        if(lp.r[0][lp.alpha[0][i].id_first] < lp.r[0][lp.alpha[0][i].id_second] || 
+            (lp.r[0][lp.alpha[0][i].id_first] == lp.r[0][lp.alpha[0][i].id_second] && lp.alpha[0][i].id_first > lp.alpha[0][i].id_second))
+            y[lp.alpha[0][i].id_first]++;
+        else
+            y[lp.alpha[0][i].id_second]++;
+    }
+    sort(tmp.begin(), tmp.end());
+    ui last_pos = 0;
+    double sum = 0;
+    double last_ans = 0;
+    for(ui u = 0; u < n; u++){
+        sum += y[tmp[u].second];
+        if(sum / (u + 1) > last_ans){
+            last_ans = sum / (u + 1);
+            last_pos = u;
+        }
+    }
+    for(ui u = 0; u <= last_pos; u++)
+        vertices[0].push_back(tmp[u].second);
+    graph.vertices[0] = vertices[0];
+}

@@ -7,10 +7,16 @@ utility/CMakeFiles/utility.dir/args.cpp.o
 utility/CMakeFiles/utility.dir/flownetwork.cpp.o
  /home/qingshuo/DensestSubgraph/utility/flownetwork.cpp
  /home/qingshuo/DensestSubgraph/utility/flownetwork.h
+ /home/qingshuo/DensestSubgraph/utility/graph.h
  /home/qingshuo/DensestSubgraph/utility/types.h
 utility/CMakeFiles/utility.dir/graph.cpp.o
  /home/qingshuo/DensestSubgraph/utility/graph.cpp
  /home/qingshuo/DensestSubgraph/utility/graph.h
+ /home/qingshuo/DensestSubgraph/utility/types.h
+utility/CMakeFiles/utility.dir/lp.cpp.o
+ /home/qingshuo/DensestSubgraph/utility/graph.h
+ /home/qingshuo/DensestSubgraph/utility/lp.cpp
+ /home/qingshuo/DensestSubgraph/utility/lp.h
  /home/qingshuo/DensestSubgraph/utility/types.h
 utility/CMakeFiles/utility.dir/ratioselection.cpp.o
  /home/qingshuo/DensestSubgraph/utility/ratioselection.cpp

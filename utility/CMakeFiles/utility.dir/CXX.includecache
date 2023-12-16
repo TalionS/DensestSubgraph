@@ -6,16 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/qingshuo/DensestSubgraph/utility/graph.cpp
-graph.h
-/home/qingshuo/DensestSubgraph/utility/graph.h
-fstream
--
-iostream
--
-assert.h
--
-
 /home/qingshuo/DensestSubgraph/utility/graph.h
 vector
 -
@@ -23,6 +13,26 @@ iostream
 -
 types.h
 /home/qingshuo/DensestSubgraph/utility/types.h
+fstream
+-
+string
+-
+algorithm
+-
+
+/home/qingshuo/DensestSubgraph/utility/lp.cpp
+lp.h
+/home/qingshuo/DensestSubgraph/utility/lp.h
+
+/home/qingshuo/DensestSubgraph/utility/lp.h
+vector
+-
+iostream
+-
+types.h
+/home/qingshuo/DensestSubgraph/utility/types.h
+graph.h
+/home/qingshuo/DensestSubgraph/utility/graph.h
 fstream
 -
 string

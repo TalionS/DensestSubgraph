@@ -8,6 +8,7 @@ CMakeFiles/DensestSubgraph.dir/main.cpp.o: reduction/reduction.h
 CMakeFiles/DensestSubgraph.dir/main.cpp.o: utility/args.h
 CMakeFiles/DensestSubgraph.dir/main.cpp.o: utility/flownetwork.h
 CMakeFiles/DensestSubgraph.dir/main.cpp.o: utility/graph.h
+CMakeFiles/DensestSubgraph.dir/main.cpp.o: utility/lp.h
 CMakeFiles/DensestSubgraph.dir/main.cpp.o: utility/types.h
 CMakeFiles/DensestSubgraph.dir/main.cpp.o: verification/verification.h
 

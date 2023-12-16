@@ -19,6 +19,8 @@ verification.h
 /home/qingshuo/DensestSubgraph/verification.h
 flownetwork.h
 /home/qingshuo/DensestSubgraph/flownetwork.h
+lp.h
+/home/qingshuo/DensestSubgraph/lp.h
 iostream
 -
 fstream
@@ -31,6 +33,8 @@ allocation/allocation.h
 utility/flownetwork.h
 ../utility/graph.h
 utility/graph.h
+../utility/lp.h
+utility/lp.h
 
 extraction/extraction.h
 ../utility/types.h
@@ -41,6 +45,8 @@ extraction/vector
 utility/graph.h
 ../utility/flownetwork.h
 utility/flownetwork.h
+../utility/lp.h
+utility/lp.h
 cmath
 -
 
@@ -75,6 +81,8 @@ queue
 -
 types.h
 utility/types.h
+graph.h
+utility/graph.h
 
 utility/graph.h
 vector
@@ -83,6 +91,22 @@ iostream
 -
 types.h
 utility/types.h
+fstream
+-
+string
+-
+algorithm
+-
+
+utility/lp.h
+vector
+-
+iostream
+-
+types.h
+utility/types.h
+graph.h
+utility/graph.h
 fstream
 -
 string
@@ -103,6 +127,8 @@ verification/vector
 utility/graph.h
 ../utility/flownetwork.h
 utility/flownetwork.h
+../utility/lp.h
+utility/lp.h
 cmath
 -
 

@@ -7,6 +7,7 @@
 #include "extraction.h"
 #include "verification.h"
 #include "flownetwork.h"
+#include "lp.h"
 #include <iostream>
 #include <fstream>
 #include "args.h"
@@ -45,12 +46,16 @@ int main(int argc, char **argv) {
         Verification ver;
         if(graph_type == "u"){
             double l, r;
+            ui T = 1;
             FlowNetwork flow;
+            LinearProgamming lp = LinearProgamming(0);
+            lp.Init(graph);
             l = graph.subgraph_density;
             r = graph.subgraph_density_upper_bound;
             auto vertices = new std::vector<VertexID>[1];
             bool flag = true;
             while(flag){
+                T <<= 1;
                 if(rec_type == "flow-exact"){
                     //todo
                 }
@@ -61,16 +66,16 @@ int main(int argc, char **argv) {
                 }
                 if(alloc_type == "flow-exact")
                     alloc.UndirectedflowExactAllocation(graph, flow, l, r);
-                if(alloc_type == "lp-exact"){
-                    //todo
-                }
+                if(alloc_type == "lp-exact")
+                    alloc.UndirectedlpAllocation(graph, lp, T);
                 if(ext_type == "flow-exact")
                     ext.UndirectedflowExactExtraction(graph, flow, l, r, vertices);
-                if(ext_type == "lp-exact"){
-                    //todo
-                }
+                if(ext_type == "lp-exact")
+                    ext.UndirectedlpExactExtraction(graph, lp, vertices);
                 if(ver_type == "flow-exact")
                     flag = ver.UndirectedflowExactVerification(graph, l, r);
+                if(ver_type == "lp-exact")
+                    flag = ver.UndirectedlpVerification(graph, lp, flow, vertices);
             }
             //todo
         }

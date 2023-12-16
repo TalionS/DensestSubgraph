@@ -19,6 +19,8 @@ cmath
 /home/qingshuo/DensestSubgraph/utility/flownetwork.h
 ../utility/graph.h
 /home/qingshuo/DensestSubgraph/utility/graph.h
+../utility/lp.h
+/home/qingshuo/DensestSubgraph/utility/lp.h
 
 /home/qingshuo/DensestSubgraph/utility/flownetwork.h
 vector
@@ -27,6 +29,8 @@ queue
 -
 types.h
 /home/qingshuo/DensestSubgraph/utility/types.h
+graph.h
+/home/qingshuo/DensestSubgraph/utility/graph.h
 
 /home/qingshuo/DensestSubgraph/utility/graph.h
 vector
@@ -35,6 +39,22 @@ iostream
 -
 types.h
 /home/qingshuo/DensestSubgraph/utility/types.h
+fstream
+-
+string
+-
+algorithm
+-
+
+/home/qingshuo/DensestSubgraph/utility/lp.h
+vector
+-
+iostream
+-
+types.h
+/home/qingshuo/DensestSubgraph/utility/types.h
+graph.h
+/home/qingshuo/DensestSubgraph/utility/graph.h
 fstream
 -
 string

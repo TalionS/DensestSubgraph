@@ -6,4 +6,5 @@ allocation/CMakeFiles/allocation.dir/allocation.cpp.o
  /home/qingshuo/DensestSubgraph/allocation/allocation.h
  /home/qingshuo/DensestSubgraph/utility/flownetwork.h
  /home/qingshuo/DensestSubgraph/utility/graph.h
+ /home/qingshuo/DensestSubgraph/utility/lp.h
  /home/qingshuo/DensestSubgraph/utility/types.h

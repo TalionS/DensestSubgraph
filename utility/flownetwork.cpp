@@ -3,6 +3,7 @@
 //
 
 #include "flownetwork.h"
+#include "graph.h"
 #include <iostream>
 #include <queue>
 

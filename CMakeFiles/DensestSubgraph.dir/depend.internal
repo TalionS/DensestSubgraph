@@ -9,5 +9,6 @@ CMakeFiles/DensestSubgraph.dir/main.cpp.o
  utility/args.h
  utility/flownetwork.h
  utility/graph.h
+ utility/lp.h
  utility/types.h
  verification/verification.h

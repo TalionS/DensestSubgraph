@@ -5,5 +5,6 @@ allocation/CMakeFiles/allocation.dir/allocation.cpp.o: allocation/allocation.cpp
 allocation/CMakeFiles/allocation.dir/allocation.cpp.o: allocation/allocation.h
 allocation/CMakeFiles/allocation.dir/allocation.cpp.o: utility/flownetwork.h
 allocation/CMakeFiles/allocation.dir/allocation.cpp.o: utility/graph.h
+allocation/CMakeFiles/allocation.dir/allocation.cpp.o: utility/lp.h
 allocation/CMakeFiles/allocation.dir/allocation.cpp.o: utility/types.h
 

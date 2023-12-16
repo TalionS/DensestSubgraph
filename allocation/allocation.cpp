@@ -52,6 +52,23 @@ void Allocation::UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, 
     }
     flow.getMaxFlow(s, t);
 }
+
+void Allocation::UndirectedlpAllocation(Graph &graph, LinearProgamming &lp, ui T) {
+    double learning_rate;
+    for(ui t = T >> 1; t < T; t++){
+        learning_rate = 2.0 / (t + 2);
+        lp.Iterate(learning_rate);
+    }
+    /*
+    for(int i = 0; i < graph.getVerticesCount(); i++){
+        std::cout<<lp.r[0][i]<<" ";
+    }
+    puts("");
+    for(int i = 0; i < graph.getEdgesCount(); i++){
+        std::cout<<lp.alpha[0][i].id_first<<" "<<lp.alpha[0][i].weight_first<<" "<<lp.alpha[0][i].id_second<<" "<<lp.alpha[0][i].weight_second<<std::endl;
+    }
+    */
+}
 //void Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio) {
 //    double l = graph.subgraph_density;
 //    double r = graph.subgraph_density_upper_bound;
