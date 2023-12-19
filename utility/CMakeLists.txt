@@ -9,6 +9,7 @@ add_library(utility SHARED
         args.cpp
         ratioselection.cpp
         xycore.cpp
+        lp.cpp
 )
 
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

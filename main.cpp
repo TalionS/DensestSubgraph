@@ -7,6 +7,7 @@
 #include "extraction.h"
 #include "verification.h"
 #include "flownetwork.h"
+#include "lp.h"
 #include <iostream>
 #include <fstream>
 #include "args.h"
@@ -14,18 +15,16 @@
 int main(int argc, char **argv) {
     Args args = Args();
     args.argsParse(argc, argv);
-    std::string graph_path = args.getOption("-path");
-    std::string graph_type = args.getOption("-g_type");
-    std::string accuracy = args.getOption("-appro");
-    std::string epsilon = args.getOption("-eps");
+    //std::string graph_path = args.getOption("-path");
+    std::string graph_type = args.getOption("-d");
+    std::string accuracy = args.getOption("-a");
+    //std::string epsilon = args.getOption("-eps");
     std::string rec_type = args.getOption("-rec"); // bool
     std::string alloc_type = args.getOption("-alloc");
     std::string ext_type = args.getOption("-ext");
     std::string ver_type = args.getOption("-ver");
-
     //合法性检验
     //todo
-
     Graph graph = Graph(graph_type != "u");
 //    if () {
 //        graph = Graph(false);
@@ -33,7 +32,6 @@ int main(int argc, char **argv) {
 //        graph = Graph(true);
 //    }
     graph.loadGraphFromFile(args.getOption("-g"));
-
     Reduction rec;
     Allocation alloc;
     Extraction ext;
@@ -47,27 +45,42 @@ int main(int argc, char **argv) {
         Extraction ext;
         Verification ver;
         if(graph_type == "u"){
-            if(rec_type == "flow-exact"){
-                //todo
-            }
-            if(rec_type == "core-exact"){
-                //todo
-            }
-            if(rec_type == "lp-exact"){
-                //todo
-            }
-            //todo
-            if(alloc_type == "lp-exact"){
-                //todo
-            }
-            //todo
-            if(ext_type == "lp-exact"){
-                //todo
+            double l, r;
+            ui T = 1;
+            FlowNetwork flow;
+            LinearProgamming lp = LinearProgamming(0);
+            lp.Init(graph);
+            l = graph.subgraph_density;
+            r = graph.subgraph_density_upper_bound;
+            auto vertices = new std::vector<VertexID>[1];
+            bool flag = true;
+            while(flag){
+                T <<= 1;
+                if(rec_type == "flow-exact"){
+                    //todo
+                }
+                if(rec_type == "core-exact")
+                    rec.kCoreReduction(graph, l, r);
+                if(rec_type == "lp-exact"){
+                    //todo
+                }
+                if(alloc_type == "flow-exact")
+                    alloc.UndirectedflowExactAllocation(graph, flow, l, r);
+                if(alloc_type == "lp-exact")
+                    alloc.UndirectedlpAllocation(graph, lp, T);
+                if(ext_type == "flow-exact")
+                    ext.UndirectedflowExactExtraction(graph, flow, l, r, vertices);
+                if(ext_type == "lp-exact")
+                    ext.UndirectedlpExactExtraction(graph, lp, vertices);
+                if(ver_type == "flow-exact")
+                    flag = ver.UndirectedflowExactVerification(graph, l, r);
+                if(ver_type == "lp-exact")
+                    flag = ver.UndirectedlpVerification(graph, lp, flow, vertices);
             }
             //todo
         }
         else{
-
+            /*
             //The generation of Ratio set needs to be refined.
             //How to combine divide-and-conquer strategy with our current framework
             //needs to be considered.
@@ -100,6 +113,7 @@ int main(int argc, char **argv) {
                             ;
                     }
                 }
+            */
         }
     }
         return 0;

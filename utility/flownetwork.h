@@ -8,6 +8,7 @@
 #include <vector>
 #include <queue>
 #include "types.h"
+#include "graph.h"
 
 class FlowEdge {
 public:

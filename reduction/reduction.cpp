@@ -66,6 +66,42 @@ void Reduction::xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double,
     xycore.generateXYCore(graph, x_y_core, x, y);
 }
 
+void Reduction::kCoreReduction(Graph &graph, double &l, double &r){
+    ui vertices_count = graph.getVerticesCount();
+    std::vector<ui> degrees = graph.getDegrees();
+    std::vector<ui> newid(vertices_count, 0);
+    std::queue<VertexID> q;
+    for(int i = 0; i < vertices_count; i++){
+        if(degrees[i] < l) q.push(i), newid[i] = vertices_count;
+    }
+    while(q.size()){
+        int u = q.front();
+        q.pop();
+        for (ui v: graph.getNeighbors(u)) {
+            if(newid[v] == vertices_count) continue;
+            if ((--degrees[v]) < l) {
+                q.push(v);
+                newid[v] = vertices_count;
+            }
+        }
+    }
+    ui new_vertices_count = 0;
+    for(int i = 0; i < vertices_count; i++){
+        if(newid[i] != vertices_count) newid[i] = new_vertices_count++;
+    }
+    Graph kcore = Graph(false, new_vertices_count);
+    for(int i = 0; i < vertices_count; i++){
+        if(newid[i] == vertices_count) continue;
+        for (ui j: graph.getNeighbors(i)) {
+            if(newid[j] == vertices_count) continue;
+            if(newid[i] < newid[j]) kcore.addUndirectedEdge(newid[i], newid[j]);
+        }
+    }
+    kcore.subgraph_density_lower_bound = l;
+    kcore.subgraph_density_upper_bound = r;
+    graph = kcore;
+    auto dgrees = graph.getDegrees();
+}
 //VertexID i = 0, j = 0;
 //while(degrees[0][vert[0][i]] < x || degrees[1][vert[1][j]] < y) {
 //for (; degrees[0][vert[0][i]] < x; i++) {

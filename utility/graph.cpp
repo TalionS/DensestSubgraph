@@ -27,10 +27,37 @@ Graph::Graph(bool is_directed, ui n) :
         adj_ = new std::vector<std::vector<VertexID>>[1];
         deg_ = new std::vector<ui>[1];
         vertices = new std::vector<VertexID>[1];
-        adj_[0].resize(static_cast<VertexID>(1));
-        deg_[0].resize(static_cast<VertexID>(1));
-        vertices[0].resize(static_cast<VertexID>(1));
+        adj_[0].resize(static_cast<unsigned long>(n));
+        deg_[0].resize(static_cast<unsigned long>(n));
+        vertices[0].resize(static_cast<unsigned long>(n));
     }
+}
+
+Graph& Graph::operator=(const Graph& other) {
+    if (this != &other) {  // Avoid self-assignment
+        // Copy data members
+        is_directed_ = other.is_directed_;
+        vertices_count_ = other.vertices_count_;
+        edges_count_ = other.edges_count_;
+        subgraph_density = other.subgraph_density;
+        subgraph_density_lower_bound = other.subgraph_density_lower_bound;
+        subgraph_density_upper_bound = other.subgraph_density_upper_bound;
+
+        // Resize and copy adjacency lists, degree vectors, and vertices vectors
+        if (is_directed_) {
+            adj_[0] = other.adj_[0];
+            adj_[1] = other.adj_[1];
+            deg_[0] = other.deg_[0];
+            deg_[1] = other.deg_[1];
+            vertices[0] = other.vertices[0];
+            vertices[1] = other.vertices[1];
+        } else {
+            adj_[0] = other.adj_[0];
+            deg_[0] = other.deg_[0];
+            vertices[0] = other.vertices[0];
+        }
+    }
+    return *this;
 }
 
 Graph::~Graph() {
