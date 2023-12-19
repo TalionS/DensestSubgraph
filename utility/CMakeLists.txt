@@ -8,6 +8,7 @@ add_library(utility SHARED
         flownetwork.cpp
         args.cpp
         ratioselection.cpp
+        xycore.cpp
 )
 
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

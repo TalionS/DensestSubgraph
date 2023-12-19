@@ -7,6 +7,7 @@
 
 #include "utility/graph.h"
 #include "utility/types.h"
+#include "utility/xycore.h"
 
 #include <queue>
 #include <vector>
@@ -19,16 +20,13 @@ class Reduction {
 public:
     void xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double, double> ratio, double &l, double &r, bool &is_init, bool is_dc);
 
-public:
+private:
     std::vector<ui> core;
+    XYCore xycore;
 
-    std::vector<VertexID> *vert;
-    std::vector<ui> *pos;
-    std::vector<ui> *bin;
+
 private:
     void coreDecomposition(const Graph &graph);
-    void generateXYCore(const Graph &graph, Graph &x_y_core, ui x, ui y);
-    void xyCoreInitialization(const Graph &graph);
 
 };
 

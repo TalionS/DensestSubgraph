@@ -10,6 +10,7 @@
 #include "extraction.h"
 #include "verification.h"
 #include "ratioselection.h"
+#include "xycore.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -27,6 +28,11 @@ int main(int argc, char **argv) {
     Extraction ext;
     Verification ver;
     FlowNetwork flow;
+    XYCore xycore;
+    std::pair<ui, ui> max_core_num;
+    alloc.coreApproAllocation(graph, max_core_num);
+    xycore.xyCoreInitialization(graph);
+    printf("%d\n", xycore.getDelta(graph));
     ui ratio_count = 0;
     bool is_dc = true;
     bool is_init_ratio = false;

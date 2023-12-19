@@ -43,73 +43,12 @@ void Reduction::coreDecomposition(const Graph &graph) {
             }
         }
     }
-};
-
-void Reduction::generateXYCore(const Graph &graph, Graph &x_y_core, ui x, ui y) {
-    auto n = graph.getVerticesCount();
-    auto *degrees = new std::vector<ui>[2];
-    degrees[0] = graph.getOutDegrees();
-    degrees[1] = graph.getInDegrees();
-
-    int cur = 0;
-    if (x > *std::max_element(degrees[cur].begin(), degrees[cur].end())) {
-        return;
-    }
-    for (ui i = bin[cur][x]; i < n; i++) {
-        VertexID u = vert[cur][i];
-        auto adj = graph.getOutNeighbors(u);
-        std::sort(adj.begin(), adj.end(),
-                  [&](const int& a, const int& b) -> bool
-                  {
-                      return degrees[1 - cur][a] > degrees[1 - cur][b];
-                  });
-        VertexID v = adj[std::max(int(x) - 1, 0)];
-        if (degrees[1 - cur][v] < y) continue;
-        for (auto t :adj) {
-            if (degrees[1 - cur][t] < y)
-                break;
-            x_y_core.addDirectedEdge(u, t);
-        }
-    }
-
-}
-
-void Reduction::xyCoreInitialization(const Graph &graph) {
-    auto vertices_count = graph.getVerticesCount();
-    auto *degrees = new std::vector<ui>[2];
-    degrees[0] = graph.getOutDegrees();
-    degrees[1] = graph.getInDegrees();
-    vert = new std::vector<VertexID>[2];
-    bin = new std::vector<ui>[2];
-    pos = new std::vector<ui>[2];
-    for (int i = 0; i < 2; i++) {
-        bin[i].resize(vertices_count + 1, 0);
-        vert[i].resize(vertices_count, 0);
-        pos[i].resize(vertices_count, 0);
-        for(VertexID v = 0; v < vertices_count; v++){
-            ++bin[i][degrees[i][v]];
-        }
-        ui start = 0;
-        for(int d = 0; d <= vertices_count; d++){
-            ui num = bin[i][d];
-            bin[i][d] = start;
-            start += num;
-        }
-        for(VertexID v = 0; v < vertices_count; v++){
-            pos[i][v] = bin[i][degrees[i][v]]++;
-            vert[i][pos[i][v]] = v;
-        }
-        for(int d = vertices_count; d > 0; d--){
-            bin[i][d] = bin[i][d - 1];
-        }
-        bin[i][0] = 0;
-    }
 }
 
 void Reduction::xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double, double> ratio, double &l, double &r, bool &is_init, bool is_dc) {
     if(!is_init) {
         is_init = true;
-        xyCoreInitialization(graph);
+        xycore.xyCoreInitialization(graph);
     }
     ui x, y;
     if(!is_dc) {
@@ -124,7 +63,7 @@ void Reduction::xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double,
         y = std::max(static_cast<int>(ceil(ratio_left_sqrt * l / 2)), 1);
     }
 
-    generateXYCore(graph, x_y_core, x, y);
+    xycore.generateXYCore(graph, x_y_core, x, y);
 }
 
 //VertexID i = 0, j = 0;

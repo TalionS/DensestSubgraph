@@ -36,6 +36,71 @@ void Allocation::flowExactAllocation(Graph &graph, Graph &x_y_core, FlowNetwork 
     flow.getMaxFlow(s, t);
 }
 
+void Allocation::coreApproAllocation(Graph &graph, std::pair<ui, ui> &max_core_num_pair) {
+    unsigned long long max_prod = 0;
+    ui core_nums[2];
+    xycore.xyCoreInitialization(graph);
+    std::vector<ui> max_degrees(2, 0);
+    for(int i = 0; i < 2; i++)
+        max_degrees[i] = *std::max_element(xycore.degrees[i].begin(), xycore.degrees[i].end());
+    ui cur = (max_degrees[0] < max_degrees[1]) ? 0 : 1;
+    core_nums[cur] = 1;
+    core_nums[1 - cur] = max_degrees[1 - cur];
+    max_prod = core_nums[1 - cur];
+
+    ui delta = xycore.getDelta(graph);
+    printf("delta %d\n", delta);
+    for (int i = 0; i < 2; i++){
+        for (ui d = 1; d <= delta; d++){
+            if (((unsigned long long) d) * max_degrees[1 - i] <= max_prod)
+                continue;
+            ui d_opst;
+            d_opst = xycore.skyline_core_num(graph, i, d, static_cast<ui>(max_prod / d + 1));
+            if (((unsigned long long) d) * d_opst > max_prod) {
+                max_prod = d * d_opst;
+                core_nums[i] = d;
+                core_nums[1 - i] = d_opst;
+            }
+        }
+    }
+
+    printf("alpha %d beta %d\n", core_nums[0], core_nums[1]);
+    max_core_num_pair =  std::make_pair(core_nums[0], core_nums[1]);
+}
+
+void Allocation::UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r) {
+    ui n = graph.getVerticesCount();
+    ui m = graph.getEdgesCount();
+    auto degrees = graph.getDegrees();
+    double mid = (l + r) / 2;
+    flow = FlowNetwork(n + 2);
+    VertexID s = 0, t = n + 1;
+    for (int i = 1; i <= n; i++) {
+        flow.addEdge(s, i, m);
+        flow.addEdge(i, t, m + 2 * mid - degrees[i - 1]);
+        for (auto &v: graph.getNeighbors(i - 1)) {
+            flow.addEdge(i, v + 1, 1);
+        }
+    }
+    flow.getMaxFlow(s, t);
+}
+
+void Allocation::UndirectedlpAllocation(Graph &graph, LinearProgamming &lp, ui T) {
+    double learning_rate;
+    for(ui t = T >> 1; t < T; t++){
+        learning_rate = 2.0 / (t + 2);
+        lp.Iterate(learning_rate);
+    }
+    /*
+    for(int i = 0; i < graph.getVerticesCount(); i++){
+        std::cout<<lp.r[0][i]<<" ";
+    }
+    puts("");
+    for(int i = 0; i < graph.getEdgesCount(); i++){
+        std::cout<<lp.alpha[0][i].id_first<<" "<<lp.alpha[0][i].weight_first<<" "<<lp.alpha[0][i].id_second<<" "<<lp.alpha[0][i].weight_second<<std::endl;
+    }
+    */
+}
 //void Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio) {
 //    double l = graph.subgraph_density;
 //    double r = graph.subgraph_density_upper_bound;
@@ -98,5 +163,3 @@ void Allocation::flowExactAllocation(Graph &graph, Graph &x_y_core, FlowNetwork 
 //    }
 //    printf("%f\n", graph.subgraph_density);
 //}
-
-
