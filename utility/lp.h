@@ -8,6 +8,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 
 struct Alpha{
@@ -17,7 +18,7 @@ struct Alpha{
     double weight_second;
 };
 
-class LinearProgamming{
+class LinearProgramming{
 
 private:
     bool is_directed_;
@@ -28,12 +29,12 @@ public:
     std::vector<Alpha> *alpha;
 
 public:
-    ~LinearProgamming();
-    explicit LinearProgamming(bool is_directed, ui vertices_count = 0, ui edge_count = 0);
+    ~LinearProgramming();
+    explicit LinearProgramming(bool is_directed, ui vertices_count = 0, ui edge_count = 0);
 
     void Iterate(double learning_rate, double ratio = 0);
 
-    void Init(Graph &graph);
+    void Init(Graph &graph, double ratio = 0);
 
 };
 

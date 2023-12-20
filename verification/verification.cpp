@@ -19,7 +19,7 @@ bool Verification::UndirectedflowExactVerification(Graph &graph, double l, doubl
     else return false;
 }
 
-bool Verification::UndirectedlpVerification(Graph &graph, LinearProgamming &lp, FlowNetwork &flow, std::vector<VertexID> *vertices) {
+bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp, FlowNetwork &flow, std::vector<VertexID> *vertices) {
     std::vector<ui> y;
     std::vector<std::pair<double,VertexID>> tmp;
     ui n = graph.getVerticesCount();

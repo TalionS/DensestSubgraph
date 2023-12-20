@@ -68,7 +68,7 @@ void Extraction::UndirectedflowExactExtraction(Graph &graph, FlowNetwork &flow, 
     }
 }
 
-void Extraction::UndirectedlpExactExtraction(Graph &graph, LinearProgamming &lp, std::vector<VertexID> *vertices) {
+void Extraction::UndirectedlpExactExtraction(Graph &graph, LinearProgramming &lp, std::vector<VertexID> *vertices) {
     std::vector<ui> y;
     std::vector<std::pair<double,VertexID>> tmp;
     ui n = graph.getVerticesCount();

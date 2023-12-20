@@ -16,7 +16,7 @@ class Verification{
 public:
     bool flowExactVerification(Graph &graph, double l, double r);
     bool UndirectedflowExactVerification(Graph &graph, double l, double r);
-    bool UndirectedlpVerification(Graph &graph, LinearProgamming &lp, FlowNetwork &flow, std::vector<VertexID> *vertices);
+    bool UndirectedlpVerification(Graph &graph, LinearProgramming &lp, FlowNetwork &flow, std::vector<VertexID> *vertices);
 };
 
 #endif //DENSESTSUBGRAPH_VERIFICATION_H

@@ -7,6 +7,7 @@
 #include <cmath>
 
 void Allocation::flowExactAllocation(Graph &graph, Graph &x_y_core, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r, bool is_dc) {
+    printf("%d\n", graph.getVerticesCount() == x_y_core.getVerticesCount());
     ui n = graph.getVerticesCount();
     ui m = x_y_core.getEdgesCount();
     auto in_degrees = x_y_core.getInDegrees();
@@ -68,6 +69,17 @@ void Allocation::coreApproAllocation(Graph &graph, std::pair<ui, ui> &max_core_n
     max_core_num_pair =  std::make_pair(core_nums[0], core_nums[1]);
 }
 
+void Allocation::directedLPExactAllocation(Graph &x_y_core, LinearProgramming &lp, ui T, bool &is_init) {
+    if (!is_init) {
+        lp.Init(x_y_core);
+        is_init = true;
+    }
+    double learning_rate;
+    for (ui t = T >> 1; t < T; t++){
+        learning_rate = 2.0 / (t + 2);
+    }
+}
+
 void Allocation::UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r) {
     ui n = graph.getVerticesCount();
     ui m = graph.getEdgesCount();
@@ -85,7 +97,7 @@ void Allocation::UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, 
     flow.getMaxFlow(s, t);
 }
 
-void Allocation::UndirectedlpAllocation(Graph &graph, LinearProgamming &lp, ui T) {
+void Allocation::UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui T) {
     double learning_rate;
     for(ui t = T >> 1; t < T; t++){
         learning_rate = 2.0 / (t + 2);
