@@ -19,7 +19,9 @@ public:
                         bool is_core_dc,
                         bool is_lp_dc,
                         ui s_size,
-                        ui t_size);
+                        ui t_size,
+                        double ratio_o,
+                        double ratio_p);
 
 private:
     struct NormalCompare {
@@ -30,7 +32,7 @@ private:
 
 
     std::priority_queue<std::pair<double, double>, std::vector<std::pair<double, double>>, NormalCompare> normal_ratio_set_;
-    std::priority_queue<double, std::vector<double>, std::greater<>> core_dc_ratio_set_;
+    std::priority_queue<double, std::vector<double>, std::greater<>> dc_ratio_set_;
 private:
     void ratioSetInitialization(ui vertices_count, bool is_core_dc, bool is_lp_dc);
 };

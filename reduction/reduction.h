@@ -21,7 +21,7 @@ public:
     void xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double, double> ratio, double &l, double &r, bool &is_init, bool is_dc);
     void kCoreReduction(Graph &graph, double &l, double &r);
 
-private:
+public:
     std::vector<ui> core;
     XYCore xycore;
 

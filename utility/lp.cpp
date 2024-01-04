@@ -7,9 +7,9 @@ LinearProgramming::LinearProgramming(bool is_directed, ui n, ui m) :
     if (is_directed_) {
         r = new std::vector<double>[2];
         alpha = new std::vector<Alpha>[1];
-        alpha[0].resize(static_cast<unsigned long>(m));
+        alpha[0].resize(static_cast<unsigned long>(m)), 0;
         for (int i = 0; i < 2; i++) {
-            r[i].resize(static_cast<unsigned long>(n));
+            r[i].resize(static_cast<unsigned long>(n), 0);
         }
     } else {
         r = new std::vector<double>[1];
@@ -32,7 +32,8 @@ void LinearProgramming::Init(Graph &graph, double ratio) {
 
     if (is_directed_) {
         ui cnt = 0;
-        r[0].resize(n, 0);
+        for (ui i = 0; i < 2; i++)
+            r[i].resize(n, 0);
         alpha[0].resize(m);
         for (VertexID u = 0; u < n; u++) {
             for (auto &v: graph.getOutNeighbors(u)) {
@@ -47,6 +48,17 @@ void LinearProgramming::Init(Graph &graph, double ratio) {
             r[0][alpha[0][u].id_first] += 2 * sqrt(ratio) * alpha[0][u].weight_first;
             r[1][alpha[0][u].id_second] += 2 / sqrt(ratio) * alpha[0][u].weight_second;
         }
+//        printf("alpha\n");
+//        for(auto a: alpha[0])
+//            std::cout << "(" << a.id_first << a.id_second << ")" << a.weight_first << " " << a.weight_second <<std::endl;
+//        printf("r\n");
+//        for (auto r_: r[0])
+//            std::cout << r_ << " ";
+//        std::cout << std::endl;
+//        for (auto r_ : r[1])
+//            std::cout << r_ << " ";
+//        std::cout << std::endl;
+//        printf("Init finished.\n");
     } else {
         ui cnt = 0;
         r[0].resize(n);

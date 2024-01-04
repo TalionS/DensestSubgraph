@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
             double l, r;
             ui T = 1;
             FlowNetwork flow;
-            LinearProgamming lp = LinearProgamming(0);
+            LinearProgramming lp = LinearProgramming(0);
             lp.Init(graph);
             l = graph.subgraph_density;
             r = graph.subgraph_density_upper_bound;

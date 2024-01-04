@@ -9,12 +9,14 @@
 #include "../utility/graph.h"
 #include "../utility/xycore.h"
 #include "../utility/lp.h"
+#include <algorithm>
+#include <cmath>
 
 class Allocation{
 public:
-    void flowExactAllocation(Graph &graph, Graph &x_y_core, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r, bool is_dc);
+    void flowExactAllocation(Graph &x_y_core, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r, bool is_dc);
     void coreApproAllocation(Graph &graph, std::pair<ui, ui> &max_core_num_pair);
-    void directedLPExactAllocation(Graph &x_y_core, LinearProgramming &lp, ui T, bool &is_init);
+    void directedLPExactAllocation(Graph &x_y_core, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios);
     void UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r);
     void UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui T);
 private:
