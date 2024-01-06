@@ -19,6 +19,7 @@ public:
     void directedLPExactAllocation(Graph &x_y_core, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios);
     void UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r);
     void UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui T);
+    void UndirectedFistaAllocation(Graph &graph, LinearProgramming &lp, ui T);
 private:
     XYCore xycore;
 };

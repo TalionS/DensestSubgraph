@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
         l = graph.subgraph_density;
 //        l = 0;
         r = graph.subgraph_density_upper_bound;
-        LinearProgramming lp = LinearProgramming(true);
+        LinearProgramming lp = LinearProgramming(true, 0);
         ui T = 1;
         std::pair<ui, ui> best_pos;
         double rho_c;

@@ -56,21 +56,21 @@ bool Verification::directedLPExactVerification(Graph &graph,
             selected[i][u] = true;
     }
     for (ui i = 0; i < m; i++){
-        if (selected[0][lp.alpha[0][i].id_first] && !selected[1][lp.alpha[0][i].id_second]){
-            lp.r[0][lp.alpha[0][i].id_first] -= 2.0 * sqrt(ratio) * lp.alpha[0][i].weight_first;
-            lp.r[1][lp.alpha[0][i].id_second] += 2.0 / sqrt(ratio) * lp.alpha[0][i].weight_first;
-            lp.alpha[0][i].weight_first = 0;
-            lp.alpha[0][i].weight_second = 1;
+        if (selected[0][lp.alpha[i].id_first] && !selected[1][lp.alpha[i].id_second]){
+            lp.r[0][lp.alpha[i].id_first] -= 2.0 * sqrt(ratio) * lp.alpha[i].weight_first;
+            lp.r[1][lp.alpha[i].id_second] += 2.0 / sqrt(ratio) * lp.alpha[i].weight_first;
+            lp.alpha[i].weight_first = 0;
+            lp.alpha[i].weight_second = 1;
         }
-        else if(!selected[0][lp.alpha[0][i].id_first] && selected[1][lp.alpha[0][i].id_second]){
-            lp.r[0][lp.alpha[0][i].id_first] += 2.0 * sqrt(ratio) * lp.alpha[0][i].weight_second;
-            lp.r[1][lp.alpha[0][i].id_second] -= 2.0 / sqrt(ratio) * lp.alpha[0][i].weight_second;
-            lp.alpha[0][i].weight_first = 1;
-            lp.alpha[0][i].weight_second = 0;
-            in_degrees[lp.alpha[0][i].id_second]--;
+        else if(!selected[0][lp.alpha[i].id_first] && selected[1][lp.alpha[i].id_second]){
+            lp.r[0][lp.alpha[i].id_first] += 2.0 * sqrt(ratio) * lp.alpha[i].weight_second;
+            lp.r[1][lp.alpha[i].id_second] -= 2.0 / sqrt(ratio) * lp.alpha[i].weight_second;
+            lp.alpha[i].weight_first = 1;
+            lp.alpha[i].weight_second = 0;
+            in_degrees[lp.alpha[i].id_second]--;
         }
-        else if(selected[0][lp.alpha[0][i].id_first] && selected[1][lp.alpha[0][i].id_second])
-            edges.emplace_back(std::make_pair(lp.alpha[0][i].id_first, lp.alpha[0][i].id_second));
+        else if(selected[0][lp.alpha[i].id_first] && selected[1][lp.alpha[i].id_second])
+            edges.emplace_back(std::make_pair(lp.alpha[i].id_first, lp.alpha[i].id_second));
     }
     std::vector<ui> pos(2, 0);
     if (!cnt[0] || !cnt[1])
@@ -138,11 +138,11 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
         tmp[u] = std::make_pair(-lp.r[0][u],u);
     }
     for(ui i = 0; i < m; i++){
-        if(lp.r[0][lp.alpha[0][i].id_first] < lp.r[0][lp.alpha[0][i].id_second] || 
-            (lp.r[0][lp.alpha[0][i].id_first] == lp.r[0][lp.alpha[0][i].id_second] && lp.alpha[0][i].id_first > lp.alpha[0][i].id_second))
-            y[lp.alpha[0][i].id_first]++;
+        if(lp.r[0][lp.alpha[i].id_first] < lp.r[0][lp.alpha[i].id_second] || 
+            (lp.r[0][lp.alpha[i].id_first] == lp.r[0][lp.alpha[i].id_second] && lp.alpha[i].id_first > lp.alpha[i].id_second))
+            y[lp.alpha[i].id_first]++;
         else
-            y[lp.alpha[0][i].id_second]++;
+            y[lp.alpha[i].id_second]++;
     }
     sort(tmp.begin(), tmp.end());
     std::vector<double> val;
@@ -170,18 +170,18 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
         belong[tmp[u].second] = pos;
     }
     for(ui i = 0; i < m; i++){
-        if(belong[lp.alpha[0][i].id_first] == belong[lp.alpha[0][i].id_second]) continue;
-        if(belong[lp.alpha[0][i].id_first] < belong[lp.alpha[0][i].id_second]){
-            lp.r[0][lp.alpha[0][i].id_second] += lp.alpha[0][i].weight_first;
-            lp.r[0][lp.alpha[0][i].id_first] -= lp.alpha[0][i].weight_first;
-            lp.alpha[0][i].weight_first = 0;
-            lp.alpha[0][i].weight_second = 1;
+        if(belong[lp.alpha[i].id_first] == belong[lp.alpha[i].id_second]) continue;
+        if(belong[lp.alpha[i].id_first] < belong[lp.alpha[i].id_second]){
+            lp.r[0][lp.alpha[i].id_second] += lp.alpha[i].weight_first;
+            lp.r[0][lp.alpha[i].id_first] -= lp.alpha[i].weight_first;
+            lp.alpha[i].weight_first = 0;
+            lp.alpha[i].weight_second = 1;
         }
-        if(belong[lp.alpha[0][i].id_first] > belong[lp.alpha[0][i].id_second]){
-            lp.r[0][lp.alpha[0][i].id_first] += lp.alpha[0][i].weight_second;
-            lp.r[0][lp.alpha[0][i].id_second] -= lp.alpha[0][i].weight_second;
-            lp.alpha[0][i].weight_second = 0;
-            lp.alpha[0][i].weight_first = 1;
+        if(belong[lp.alpha[i].id_first] > belong[lp.alpha[i].id_second]){
+            lp.r[0][lp.alpha[i].id_first] += lp.alpha[i].weight_second;
+            lp.r[0][lp.alpha[i].id_second] -= lp.alpha[i].weight_second;
+            lp.alpha[i].weight_second = 0;
+            lp.alpha[i].weight_first = 1;
         }
     }  
     double minn = 1e20;
@@ -203,7 +203,7 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
     ui opt_edge_count = 0;
     ui opt_node_count = vertices[0].size();
     for(ui i = 0; i < m; i++){
-        if(belong[lp.alpha[0][i].id_first] == 0 && belong[lp.alpha[0][i].id_second] == 0){
+        if(belong[lp.alpha[i].id_first] == 0 && belong[lp.alpha[i].id_second] == 0){
             opt_edge_count++;
         }
     }
@@ -211,11 +211,11 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
     flow = FlowNetwork(opt_edge_count + opt_node_count + 2);
     pos = 0;
     for(ui i = 0; i < m; i++){
-        if(belong[lp.alpha[0][i].id_first] == 0 && belong[lp.alpha[0][i].id_second] == 0){
+        if(belong[lp.alpha[i].id_first] == 0 && belong[lp.alpha[i].id_second] == 0){
             pos++;
             flow.addEdge(S,pos,opt_node_count);
-            flow.addEdge(pos, opt_edge_count + rev[lp.alpha[0][i].id_first], opt_node_count);
-            flow.addEdge(pos, opt_edge_count + rev[lp.alpha[0][i].id_second], opt_node_count);
+            flow.addEdge(pos, opt_edge_count + rev[lp.alpha[i].id_first], opt_node_count);
+            flow.addEdge(pos, opt_edge_count + rev[lp.alpha[i].id_second], opt_node_count);
         }
     }
     for(ui i = 1; i <= opt_node_count; i++){

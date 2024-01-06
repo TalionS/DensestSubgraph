@@ -44,6 +44,7 @@ public:
 public:
     ui getEdgesCount() const;
     ui getVerticesCount() const;
+    ui getMaxdeg();
     std::vector<VertexID>* getVertices();
     std::vector<VertexID> &getNeighbors(VertexID i) const;
     std::vector<VertexID> &getOutNeighbors(VertexID i) const;

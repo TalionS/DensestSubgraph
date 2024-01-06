@@ -73,11 +73,11 @@ void Extraction::directedLPExactExtraction(Graph &graph,
         }
     }
     for (ui i = 0; i < m; i++){
-        if (lp.r[0][lp.alpha[0][i].id_first] < lp.r[1][lp.alpha[0][i].id_second] ||
-                (lp.r[0][lp.alpha[0][i].id_first] == lp.r[1][lp.alpha[0][i].id_second] && lp.alpha[0][i].id_first > lp.alpha[0][i].id_second))
-            y[0][lp.alpha[0][i].id_first]++;
+        if (lp.r[0][lp.alpha[i].id_first] < lp.r[1][lp.alpha[i].id_second] ||
+                (lp.r[0][lp.alpha[i].id_first] == lp.r[1][lp.alpha[i].id_second] && lp.alpha[i].id_first > lp.alpha[i].id_second))
+            y[0][lp.alpha[i].id_first]++;
         else
-            y[1][lp.alpha[0][i].id_second]++;
+            y[1][lp.alpha[i].id_second]++;
     }
     for (ui i = 0; i < 2; i++)
         sort(tmp_r[i].begin(), tmp_r[i].end());
@@ -168,11 +168,11 @@ void Extraction::UndirectedlpExactExtraction(Graph &graph, LinearProgramming &lp
         tmp[u] = std::make_pair(-lp.r[0][u],u);
     }
     for(ui i = 0; i < m; i++){
-        if(lp.r[0][lp.alpha[0][i].id_first] < lp.r[0][lp.alpha[0][i].id_second] || 
-            (lp.r[0][lp.alpha[0][i].id_first] == lp.r[0][lp.alpha[0][i].id_second] && lp.alpha[0][i].id_first > lp.alpha[0][i].id_second))
-            y[lp.alpha[0][i].id_first]++;
+        if(lp.r[0][lp.alpha[i].id_first] < lp.r[0][lp.alpha[i].id_second] || 
+            (lp.r[0][lp.alpha[i].id_first] == lp.r[0][lp.alpha[i].id_second] && lp.alpha[i].id_first > lp.alpha[i].id_second))
+            y[lp.alpha[i].id_first]++;
         else
-            y[lp.alpha[0][i].id_second]++;
+            y[lp.alpha[i].id_second]++;
     }
     sort(tmp.begin(), tmp.end());
     ui last_pos = 0;
