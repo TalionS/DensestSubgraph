@@ -7,8 +7,9 @@
 #include <iostream>
 #include <assert.h>
 
-Graph::Graph(bool is_directed, ui n) :
+Graph::Graph(bool is_directed, ui n, bool is_weighted) :
         is_directed_(is_directed),
+        is_weighted_(is_weighted),
         vertices_count_(n),
         edges_count_(0),
         subgraph_density(0),
@@ -28,6 +29,7 @@ Graph::Graph(bool is_directed, ui n) :
         deg_ = new std::vector<ui>[1];
         vertices = new std::vector<VertexID>[1];
         adj_[0].resize(static_cast<unsigned long>(n));
+        weight_.resize(static_cast<unsigned long>(n));
         deg_[0].resize(static_cast<unsigned long>(n));
         vertices[0].resize(static_cast<unsigned long>(n));
     }
@@ -37,11 +39,13 @@ Graph& Graph::operator=(const Graph& other) {
     if (this != &other) {  // Avoid self-assignment
         // Copy data members
         is_directed_ = other.is_directed_;
+        is_weighted_ = other.is_weighted_;
         vertices_count_ = other.vertices_count_;
         edges_count_ = other.edges_count_;
         subgraph_density = other.subgraph_density;
         subgraph_density_lower_bound = other.subgraph_density_lower_bound;
         subgraph_density_upper_bound = other.subgraph_density_upper_bound;
+        weight_ = other.weight_;
 
         // Resize and copy adjacency lists, degree vectors, and vertices vectors
         if (is_directed_) {
@@ -88,23 +92,31 @@ void Graph::loadGraphFromFile(const std::string &dir) {
         adj_[0].resize(static_cast<VertexID>(vertices_count_));
         deg_[0].resize(static_cast<VertexID>(vertices_count_), 0);
         VertexID begin, end;
-        while (file >> begin >> end) {
-            addUndirectedEdge(begin, end);
+        if (!is_weighted_) {
+            while (file >> begin >> end) {
+                addUndirectedEdge(begin, end);
+            }
+        } else {
+            ui weight;
+            while (file >> begin >> end >> weight) {
+                addUndirectedEdge(begin, end, weight);
+            }
         }
     }
 
-    assert(edges_count_ == edges_count);
+//    assert(edges_count_ == edges_count);
     file.close();
     if (is_directed_) {
         ui max_out = *std::max_element(deg_[0].begin(), deg_[0].end());
         ui max_in = *std::max_element(deg_[1].begin(), deg_[1].end());
         subgraph_density_upper_bound = std::max(max_out, max_in);
+        subgraph_density = sqrt(subgraph_density_upper_bound);
     } else {
         subgraph_density_upper_bound = *std::max_element(deg_[0].begin(), deg_[0].end());
     }
 };
 
-void Graph::addUndirectedEdge(VertexID begin, VertexID end) {
+void Graph::addUndirectedEdge(VertexID begin, VertexID end, ui weight) {
     if (begin > adj_[0].size() || end > adj_[0].size()){
         adj_[0].resize(std::max(begin, end) + 1);
         deg_[0].resize(std::max(begin, end) + 1, 0);
@@ -113,18 +125,19 @@ void Graph::addUndirectedEdge(VertexID begin, VertexID end) {
     adj_[0][end].push_back(begin);
     deg_[0][begin] += 1;
     deg_[0][end] += 1;
+    weight_[begin].push_back(weight);
+    weight_[end].push_back(weight);
     edges_count_++;
 };
 
 void Graph::addDirectedEdge(VertexID begin, VertexID end) {
-    if (begin > adj_[0].size() || end > adj_[0].size()){
-        int size = std::max(int(begin), int(end)) + 1;
-        printf("%d\n\n", size);
-        adj_[0].resize(size);
-        adj_[1].resize(size);
-        deg_[0].resize(size, 0);
-        deg_[1].resize(size, 0);
-    }
+//    if (begin > adj_[0].size() || end > adj_[0].size()){
+//        int size = std::max(int(begin), int(end)) + 1;
+//        adj_[0].resize(size);
+//        adj_[1].resize(size);
+//        deg_[0].resize(size, 0);
+//        deg_[1].resize(size, 0);
+//    }
     adj_[0][begin].push_back(end);
     adj_[1][end].push_back(begin);
     deg_[0][begin] += 1;
@@ -211,6 +224,10 @@ std::vector<ui> &Graph::getDegrees() const {
         exit(1);
     }
     return deg_[0];
+}
+
+std::vector<std::vector<ui>> Graph::getWeights() const {
+    return weight_;
 }
 
 std::vector<ui> &Graph::getInDegrees() const {
