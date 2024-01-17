@@ -23,7 +23,7 @@ public:
                                    std::vector<std::vector<bool>> &is_peeled,
                                    ui &edges_count,
                                    bool &is_init);
-    void directedFixedKSApproAllocation(Graph &graph, )
+//    void directedFixedKSApproAllocation(Graph &graph, )
     void directedBSApproAllocation(Graph &graph, std::pair<double, double> ratio, std::vector<Heap> &heap,
                                    std::vector<std::vector<Heap::handle_type>> &handles,
                                    std::vector<std::vector<bool>> &is_peeled,
@@ -37,6 +37,7 @@ public:
 //    void directedVWApproAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios)
     void UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r);
     void UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui T);
+    void UndirectedFistaAllocation(Graph &graph, LinearProgramming &lp, ui T);
 private:
     XYCore xycore;
 };

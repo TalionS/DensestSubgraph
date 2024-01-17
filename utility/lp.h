@@ -26,16 +26,22 @@ private:
     bool is_directed_;
 
 public:
-    std::vector<double> *r;
-    std::vector<Alpha> alpha;
     ui nodes_count_;
     ui edges_count_;
+    ui type_;
+public:
+    std::vector<double> *r;
+    std::vector<Alpha> alpha;
+    std::vector<Alpha> beta;
+
 
 public:
     ~LinearProgramming();
-    explicit LinearProgramming(bool is_directed, ui vertices_count = 0, ui edge_count = 0);
+    explicit LinearProgramming(bool is_directed, ui type = 0, ui vertices_count = 0, ui edge_count = 0);
 
     void Iterate(double learning_rate, double ratio = 0);
+
+    void FistaIterate(double learning_rate, double t, double ratio = 0);
 
     void Init(Graph &graph, double ratio = 0);
 

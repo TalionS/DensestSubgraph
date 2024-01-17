@@ -378,6 +378,12 @@ void Allocation::UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui 
     }
     */
 }
+void Allocation::UndirectedFistaAllocation(Graph &graph, LinearProgramming &lp, ui T) {
+    double max_deg = graph.getMaxdeg();
+    for(ui t = T >> 1; t < T; t++){
+        lp.FistaIterate(1.0 / 2 / max_deg, t + 1);
+    }
+}
 //void Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, double ratio) {
 //    double l = graph.subgraph_density;
 //    double r = graph.subgraph_density_upper_bound;

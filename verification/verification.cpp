@@ -75,6 +75,35 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
 //        return true;
     for (ui i = 0; i < 2; i++)
         sort(tmp_r[i].begin(), tmp_r[i].end());
+<<<<<<< HEAD
+=======
+    std::vector<std::vector<bool>> selected(2);
+    for(ui i = 0; i < 2; i++) {
+        selected[i].resize(n, false);
+        for (auto u: vertices[i])
+            selected[i][u] = true;
+    }
+    for (ui i = 0; i < m; i++){
+        if (selected[0][lp.alpha[i].id_first] && !selected[1][lp.alpha[i].id_second]){
+            lp.r[0][lp.alpha[i].id_first] -= 2.0 * sqrt(ratio) * lp.alpha[i].weight_first;
+            lp.r[1][lp.alpha[i].id_second] += 2.0 / sqrt(ratio) * lp.alpha[i].weight_first;
+            lp.alpha[i].weight_first = 0;
+            lp.alpha[i].weight_second = 1;
+        }
+        else if(!selected[0][lp.alpha[i].id_first] && selected[1][lp.alpha[i].id_second]){
+            lp.r[0][lp.alpha[i].id_first] += 2.0 * sqrt(ratio) * lp.alpha[i].weight_second;
+            lp.r[1][lp.alpha[i].id_second] -= 2.0 / sqrt(ratio) * lp.alpha[i].weight_second;
+            lp.alpha[i].weight_first = 1;
+            lp.alpha[i].weight_second = 0;
+            in_degrees[lp.alpha[i].id_second]--;
+        }
+        else if(selected[0][lp.alpha[i].id_first] && selected[1][lp.alpha[i].id_second])
+            edges.emplace_back(std::make_pair(lp.alpha[i].id_first, lp.alpha[i].id_second));
+    }
+    std::vector<ui> pos(2, 0);
+    if (!cnt[0] || !cnt[1])
+        return false;
+>>>>>>> 946bd640d4371fd1c62a1836bae0fc7a360b16fb
     ui cur = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
     if (-tmp_r[cur][0].first < graph.subgraph_density * sqrt(1 + epsilon)) {
         double t = -tmp_r[cur][0].first / graph.subgraph_density / sqrt(1 + epsilon);
@@ -230,10 +259,16 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
         y[u] = 0;
         tmp[u] = std::make_pair(-lp.r[0][u], u);
     }
+<<<<<<< HEAD
     for (ui i = 0; i < m; i++) {
         if (lp.r[0][lp.alpha[i].id_first] < lp.r[0][lp.alpha[i].id_second] ||
             (lp.r[0][lp.alpha[i].id_first] == lp.r[0][lp.alpha[i].id_second] &&
              lp.alpha[i].id_first > lp.alpha[i].id_second))
+=======
+    for(ui i = 0; i < m; i++){
+        if(lp.r[0][lp.alpha[i].id_first] < lp.r[0][lp.alpha[i].id_second] || 
+            (lp.r[0][lp.alpha[i].id_first] == lp.r[0][lp.alpha[i].id_second] && lp.alpha[i].id_first > lp.alpha[i].id_second))
+>>>>>>> 946bd640d4371fd1c62a1836bae0fc7a360b16fb
             y[lp.alpha[i].id_first]++;
         else
             y[lp.alpha[i].id_second]++;
@@ -263,21 +298,35 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
         sz[pos]--;
         belong[tmp[u].second] = pos;
     }
+<<<<<<< HEAD
     for (ui i = 0; i < m; i++) {
         if (belong[lp.alpha[i].id_first] == belong[lp.alpha[i].id_second]) continue;
         if (belong[lp.alpha[i].id_first] < belong[lp.alpha[i].id_second]) {
+=======
+    for(ui i = 0; i < m; i++){
+        if(belong[lp.alpha[i].id_first] == belong[lp.alpha[i].id_second]) continue;
+        if(belong[lp.alpha[i].id_first] < belong[lp.alpha[i].id_second]){
+>>>>>>> 946bd640d4371fd1c62a1836bae0fc7a360b16fb
             lp.r[0][lp.alpha[i].id_second] += lp.alpha[i].weight_first;
             lp.r[0][lp.alpha[i].id_first] -= lp.alpha[i].weight_first;
             lp.alpha[i].weight_first = 0;
             lp.alpha[i].weight_second = 1;
         }
+<<<<<<< HEAD
         if (belong[lp.alpha[i].id_first] > belong[lp.alpha[i].id_second]) {
+=======
+        if(belong[lp.alpha[i].id_first] > belong[lp.alpha[i].id_second]){
+>>>>>>> 946bd640d4371fd1c62a1836bae0fc7a360b16fb
             lp.r[0][lp.alpha[i].id_first] += lp.alpha[i].weight_second;
             lp.r[0][lp.alpha[i].id_second] -= lp.alpha[i].weight_second;
             lp.alpha[i].weight_second = 0;
             lp.alpha[i].weight_first = 1;
         }
+<<<<<<< HEAD
     }
+=======
+    }  
+>>>>>>> 946bd640d4371fd1c62a1836bae0fc7a360b16fb
     double minn = 1e20;
     std::vector<ui> rev;
     rev.resize(n);
@@ -295,18 +344,30 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
 
     ui opt_edge_count = 0;
     ui opt_node_count = vertices[0].size();
+<<<<<<< HEAD
     for (ui i = 0; i < m; i++) {
         if (belong[lp.alpha[i].id_first] == 0 && belong[lp.alpha[i].id_second] == 0) {
+=======
+    for(ui i = 0; i < m; i++){
+        if(belong[lp.alpha[i].id_first] == 0 && belong[lp.alpha[i].id_second] == 0){
+>>>>>>> 946bd640d4371fd1c62a1836bae0fc7a360b16fb
             opt_edge_count++;
         }
     }
     ui S = 0, T = opt_edge_count + opt_node_count + 1;
     flow = FlowNetwork(opt_edge_count + opt_node_count + 2);
     pos = 0;
+<<<<<<< HEAD
     for (ui i = 0; i < m; i++) {
         if (belong[lp.alpha[i].id_first] == 0 && belong[lp.alpha[i].id_second] == 0) {
             pos++;
             flow.addEdge(S, pos, opt_node_count);
+=======
+    for(ui i = 0; i < m; i++){
+        if(belong[lp.alpha[i].id_first] == 0 && belong[lp.alpha[i].id_second] == 0){
+            pos++;
+            flow.addEdge(S,pos,opt_node_count);
+>>>>>>> 946bd640d4371fd1c62a1836bae0fc7a360b16fb
             flow.addEdge(pos, opt_edge_count + rev[lp.alpha[i].id_first], opt_node_count);
             flow.addEdge(pos, opt_edge_count + rev[lp.alpha[i].id_second], opt_node_count);
         }
