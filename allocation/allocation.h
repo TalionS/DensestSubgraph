@@ -23,12 +23,10 @@ public:
                                    std::vector<std::vector<bool>> &is_peeled,
                                    ui &edges_count,
                                    bool &is_init);
-    void directedFixedKSApproAllocation(Graph &graph, std::pair<double, double> ratio, std::vector<Heap> &heap,
+    void directedFixedKSApproAllocation(Graph &graph, std::pair<double, double> ratio, ui cur, std::vector<Heap> &heap,
                                         std::vector<std::vector<Heap::handle_type>> &handles,
                                         std::vector<std::vector<bool>> &is_peeled,
-                                        ui &edges_count,
-                                        std::vector<ui> &vertices_count,
-                                        bool &is_init);
+                                        ui &edges_count);
     void directedBSApproAllocation(Graph &graph, std::pair<double, double> ratio, std::vector<Heap> &heap,
                                    std::vector<std::vector<Heap::handle_type>> &handles,
                                    std::vector<std::vector<bool>> &is_peeled,

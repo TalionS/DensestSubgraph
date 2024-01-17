@@ -25,9 +25,9 @@ int main(int argc, char **argv) {
 //    std::cout << args.getOption("-a") << std::endl;
     clock_t begin = clock();
     Graph graph(true);
-//    graph.loadGraphFromFile("../data/counter_example_for_ksapp.txt");
+    graph.loadGraphFromFile("../data/counter_example_for_ksapp.txt");
 //    graph.loadGraphFromFile("../data/xycores.txt");
-    graph.loadGraphFromFile("../data/MI.txt");
+//    graph.loadGraphFromFile("../data/MI.txt");
 //    density 7.606087, S/T 13/12
 //    graph.loadGraphFromFile("../data/AD1.txt");
 //    density 31.681085, S/T 453/195
@@ -96,6 +96,7 @@ int main(int argc, char **argv) {
         std::vector<std::vector<Heap::handle_type>> handles;
         std::vector<std::vector<bool>> is_peeled;
         std::vector<ui> vertices_count;
+        ui cur = 0;
         while(flag) {
 //            Graph x_y_core = Graph(true, graph.getVerticesCount());
 //            if (!is_core)
@@ -120,10 +121,12 @@ int main(int argc, char **argv) {
 //            ext.directedPMApproExtraction(graph, edges_count, vertices);
 //            flag = ver.directedPMApproVerification(vertices);
 
-            alloc.directedBSApproAllocation(graph, ratio, heap, handles, is_peeled, edges_count, vertices_count, is_init_lp);
+            alloc.directedFixedKSApproAllocation(graph, ratio, cur, heap, handles, is_peeled, edges_count);
+//            alloc.directedBSApproAllocation(graph, ratio, heap, handles, is_peeled, edges_count, vertices_count, is_init_lp);
 //            alloc.directedKSApproAllocation(graph, heap, handles, is_peeled, edges_count, is_init_lp);
             ext.directedBSApproExtraction(graph, is_peeled, vertices);
-            flag = ver.directedBSApproVerification(graph, edges_count, vertices);
+            flag = ver.directedFixedKSApproVerification(graph, cur);
+//            flag = ver.directedBSApproVerification(graph, edges_count, vertices);
 
 //            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);
 //            ext.flowExactExtraction(graph, flow, l, r, s_size, t_size);

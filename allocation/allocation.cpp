@@ -4,13 +4,15 @@
 
 #include "allocation.h"
 
-void Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r, bool is_dc) {
+void
+Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r,
+                                bool is_dc) {
     ui n = graph.getVerticesCount();
     ui m = graph.getEdgesCount();
     auto in_degrees = graph.getInDegrees();
     auto out_degrees = graph.getOutDegrees();
     double ratio_sqrt;
-    if(is_dc)
+    if (is_dc)
         ratio_sqrt = sqrt((ratio.first + ratio.second) / 2);
     else
         ratio_sqrt = sqrt(ratio.first / ratio.second);
@@ -89,8 +91,8 @@ void Allocation::directedBSApproAllocation(Graph &graph, std::pair<double, doubl
 //                handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
 //                is_peeled[i][u] = false;
 //            }
-            for (ui u = 0; u < n; u++){
-                if (degrees[i][u]){
+            for (ui u = 0; u < n; u++) {
+                if (degrees[i][u]) {
                     handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
                     is_peeled[i][u] = false;
                 }
@@ -114,11 +116,11 @@ void Allocation::directedBSApproAllocation(Graph &graph, std::pair<double, doubl
 //            }
 //        }
 //    };
-    ui  cur = heap[0].top().first * ratio.first <= heap[1].top().first * ratio.second? 0 : 1;
+    ui cur = heap[0].top().first * ratio.first <= heap[1].top().first * ratio.second ? 0 : 1;
     VertexID u = heap[cur].top().second;
     heap[cur].pop();
     is_peeled[cur][u] = true;
-    for (auto v : cur? graph.getInNeighbors(u): graph.getOutNeighbors(u)) {
+    for (auto v: cur ? graph.getInNeighbors(u) : graph.getOutNeighbors(u)) {
         if (!is_peeled[1 - cur][v]) {
             (*handles[1 - cur][v]).first--;
             heap[1 - cur].increase(handles[1 - cur][v]);
@@ -140,7 +142,7 @@ void Allocation::coreApproAllocation(Graph &graph, std::pair<ui, ui> &max_core_n
     ui core_nums[2];
     xycore.xyCoreInitialization(graph);
     std::vector<ui> max_degrees(2, 0);
-    for(int i = 0; i < 2; i++)
+    for (int i = 0; i < 2; i++)
         max_degrees[i] = *std::max_element(xycore.degrees[i].begin(), xycore.degrees[i].end());
     ui cur = (max_degrees[0] < max_degrees[1]) ? 0 : 1;
     core_nums[cur] = 1;
@@ -149,8 +151,8 @@ void Allocation::coreApproAllocation(Graph &graph, std::pair<ui, ui> &max_core_n
 
     ui delta = xycore.getDelta(graph);
     printf("delta %d\n", delta);
-    for (int i = 0; i < 2; i++){
-        for (ui d = 1; d <= delta; d++){
+    for (int i = 0; i < 2; i++) {
+        for (ui d = 1; d <= delta; d++) {
             if (((unsigned long long) d) * max_degrees[1 - i] <= max_prod)
                 continue;
             ui d_opst;
@@ -164,7 +166,7 @@ void Allocation::coreApproAllocation(Graph &graph, std::pair<ui, ui> &max_core_n
     }
 
     printf("alpha %d beta %d\n", core_nums[0], core_nums[1]);
-    max_core_num_pair =  std::make_pair(core_nums[0], core_nums[1]);
+    max_core_num_pair = std::make_pair(core_nums[0], core_nums[1]);
 }
 
 void Allocation::directedKSApproAllocation(Graph &graph, std::vector<Heap> &heap,
@@ -220,8 +222,8 @@ void Allocation::directedKSApproAllocation(Graph &graph, std::vector<Heap> &heap
 //                handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
 //                is_peeled[i][u] = false;
 //            }
-            for (ui u = 0; u < n; u++){
-                if (degrees[i][u]){
+            for (ui u = 0; u < n; u++) {
+                if (degrees[i][u]) {
                     handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
                     is_peeled[i][u] = false;
                 }
@@ -258,11 +260,11 @@ void Allocation::directedKSApproAllocation(Graph &graph, std::vector<Heap> &heap
 //        }
 //    if (heap[0].empty() || heap[1].empty())
 //        return;
-    ui cur = heap[0].top().first <= heap[1].top().first? 0: 1;
+    ui cur = heap[0].top().first <= heap[1].top().first ? 0 : 1;
     VertexID u = heap[cur].top().second;
     heap[cur].pop();
     is_peeled[cur][u] = true;
-    for (auto v : cur? graph.getInNeighbors(u): graph.getOutNeighbors(u)) {
+    for (auto v: cur ? graph.getInNeighbors(u) : graph.getOutNeighbors(u)) {
         if (!is_peeled[1 - cur][v]) {
             (*handles[1 - cur][v]).first--;
             heap[1 - cur].increase(handles[1 - cur][v]);
@@ -280,37 +282,62 @@ void Allocation::directedKSApproAllocation(Graph &graph, std::vector<Heap> &heap
 //            remove_node(i);
 }
 
-void Allocation::directedFixedKSApproAllocation(Graph &graph, std::pair<double, double> ratio, std::vector<Heap> &heap,
+void Allocation::directedFixedKSApproAllocation(Graph &graph, std::pair<double, double> ratio, ui cur,
+                                                std::vector<Heap> &heap,
                                                 std::vector<std::vector<Heap::handle_type>> &handles,
-                                                std::vector<std::vector<bool>> &is_peeled, ui &edges_count,
-                                                std::vector<ui> &vertices_count, bool &is_init) {
+                                                std::vector<std::vector<bool>> &is_peeled, ui &edges_count) {
     ui n = graph.getVerticesCount();
-    if (!is_init){
-        is_init = true;
-        edges_count = graph.getEdgesCount();
-        vertices_count.resize(2, 0);
-        heap.clear();
-        heap.resize(2);
-        handles.clear();
-        handles.resize(2);
-        is_peeled.clear();
-        is_peeled.resize(2);
-        std::vector<std::vector<ui>> degrees(2);
-        degrees[0] = graph.getOutDegrees();
-        degrees[1] = graph.getInDegrees();
-        for (int i = 0; i < 2; i++) {
-            handles[i].resize(n);
-            is_peeled[i].resize(n, true);
-            for (ui u = 0; u < n; u++){
-                handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
-                is_peeled[i][u] = false;
-            }
-            for (ui u = 0; u < n; u++)
-                if (!is_peeled[i][u])
-                    vertices_count[i]++;
+    edges_count = graph.getEdgesCount();
+    heap.clear();
+    heap.resize(2);
+    handles.clear();
+    handles.resize(2);
+    is_peeled.clear();
+    is_peeled.resize(2);
+    std::vector<std::vector<ui>> degrees(2);
+    degrees[0] = graph.getOutDegrees();
+    degrees[1] = graph.getInDegrees();
+    for (int i = 0; i < 2; i++) {
+        handles[i].resize(n);
+        is_peeled[i].resize(n, true);
+        for (ui u = 0; u < n; u++) {
+            handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
+            is_peeled[i][u] = false;
         }
-        return;
     }
+
+    std::vector<ui> cnt(2, n);
+    std::vector<ui> required(2);
+    required[0] = (ui) ratio.first;
+    required[1] = (ui) ratio.second;
+    while (required[cur] < cnt[cur]) {
+        VertexID u = heap[cur].top().second;
+        heap[cur].pop();
+        is_peeled[cur][u] = true;
+        for (auto v: cur ? graph.getInNeighbors(u) : graph.getOutNeighbors(u)) {
+            if (!is_peeled[1 - cur][v]) {
+                (*handles[1 - cur][v]).first--;
+                heap[1 - cur].increase(handles[1 - cur][v]);
+                edges_count -= 1;
+            }
+        }
+        cnt[cur]--;
+    }
+
+    while (required[1 - cur] < cnt[1 - cur]) {
+        VertexID u = heap[1 - cur].top().second;
+        heap[1 - cur].pop();
+        is_peeled[1 - cur][u] = true;
+        for (auto v: (1 - cur) ? graph.getInNeighbors(u) : graph.getOutNeighbors(u)) {
+            if (!is_peeled[cur][v]) {
+                (*handles[cur][v]).first--;
+                heap[cur].increase(handles[cur][v]);
+                edges_count -= 1;
+            }
+        }
+        cnt[1 - cur]--;
+    }
+    printf("haha");
 }
 
 void
@@ -320,7 +347,7 @@ Allocation::directedPMApproAllocation(Graph &graph, std::pair<double, double> ra
                                       bool &is_init) {
     ui n = graph.getVerticesCount();
 //    double ratio = ratio.first / ratio.second;
-    if (!is_init){
+    if (!is_init) {
         is_init = true;
         edges_count = graph.getEdgesCount();
         degrees[0] = graph.getOutDegrees();
@@ -337,14 +364,14 @@ Allocation::directedPMApproAllocation(Graph &graph, std::pair<double, double> ra
     std::vector<ui> cnt(2);
     for (ui i = 0; i < 2; i++)
         cnt[i] = vertices[i].size();
-    ui side =  cnt[0] >= cnt[1] * ratio.first? 0: 1;
+    ui side = cnt[0] >= cnt[1] * ratio.first ? 0 : 1;
     std::vector<VertexID> tmp;
     ui edges_peeled_count = 0;
     for (auto u: vertices[side]) {
         if (degrees[side][u] > (1 + epsilon) * edges_count / cnt[side])
             tmp.push_back(u);
         else {
-            for (auto v: side? graph.getInNeighbors(u): graph.getOutNeighbors(u))
+            for (auto v: side ? graph.getInNeighbors(u) : graph.getOutNeighbors(u))
                 degrees[1 - side][v]--;
             edges_peeled_count += degrees[side][u];
         }
@@ -353,7 +380,8 @@ Allocation::directedPMApproAllocation(Graph &graph, std::pair<double, double> ra
     edges_count -= edges_peeled_count;
 }
 
-void Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios, bool is_vw_appro) {
+void Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init,
+                                      std::pair<double, double> ratios, bool is_vw_appro) {
     double ratio;
     if (!is_vw_appro) {
         if (ratios.first < 1 && ratios.second > 1) {
@@ -363,7 +391,7 @@ void Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T,
         } else if (ratios.first >= 1) {
             ratio = 2 / (1 / ratios.first + 1 / ratios.second);
         }
-    } else{
+    } else {
         ratio = ratios.first / ratios.second;
     }
     if (!is_init) {
@@ -372,7 +400,7 @@ void Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T,
     }
     double learning_rate;
 //    for (ui t = T - 100; t < T; t++){
-    for (ui t = T >> 1; t < T; t++){
+    for (ui t = T >> 1; t < T; t++) {
         learning_rate = 2.0 / (t + 2);
         lp.Iterate(learning_rate, ratio);
     }
@@ -397,7 +425,7 @@ void Allocation::UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, 
 
 void Allocation::UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui T) {
     double learning_rate;
-    for(ui t = T >> 1; t < T; t++){
+    for (ui t = T >> 1; t < T; t++) {
         learning_rate = 2.0 / (t + 2);
         lp.Iterate(learning_rate);
     }
@@ -411,9 +439,10 @@ void Allocation::UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui 
     }
     */
 }
+
 void Allocation::UndirectedFistaAllocation(Graph &graph, LinearProgramming &lp, ui T) {
     double max_deg = graph.getMaxdeg();
-    for(ui t = T >> 1; t < T; t++){
+    for (ui t = T >> 1; t < T; t++) {
         lp.FistaIterate(1.0 / 2 / max_deg, t + 1);
     }
 }
