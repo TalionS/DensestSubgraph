@@ -8,6 +8,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <random>
 #include <cmath>
 
 
@@ -16,17 +17,19 @@ struct Alpha{
     ui id_second;
     double weight_first;
     double weight_second;
+    bool is_selected = true;
 };
 
 class LinearProgramming{
 
 private:
     bool is_directed_;
-    ui nodes_count_;
-    ui edges_count_;
+
 public:
     std::vector<double> *r;
-    std::vector<Alpha> *alpha;
+    std::vector<Alpha> alpha;
+    ui nodes_count_;
+    ui edges_count_;
 
 public:
     ~LinearProgramming();

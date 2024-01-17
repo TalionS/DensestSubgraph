@@ -7,21 +7,23 @@
 
 #include <map>
 #include <vector>
+#include <string>
+#include <algorithm>
 
 class Args {
 private:
     std::map<std::string, std::string> args_;
-    std::vector<std::string> options_ = {
-            "-g",       //graph file path
-            "-d",       //type of graph, u for undirected, d for directed
-            "-a",       //accuracy, e for exact, a for approximate
-            "-e",       //epsilon
-            "-rec",     //type of reduction
-            "-alloc",   //type of allocation
-            "-ext",     //type of extraction
-            "-ver"      //type of verification
-
-    };
+    std::vector<std::string> options_ = {"-g", "-d", "-a", "-e", "-rec", "-alloc", "-ext", "-ver"};
+//            "-g",       //graph file path
+//            "-d",       //type of graph, u for undirected, d for directed
+//            "-a",       //accuracy, e for exact, a for approximate
+//            "-e",       //epsilon
+//            "-rec",     //type of reduction
+//            "-alloc",   //type of allocation
+//            "-ext",     //type of extraction
+//            "-ver"      //type of verification
+//
+//    };
 
 public:
     Args();

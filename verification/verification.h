@@ -16,8 +16,20 @@
 
 class Verification{
 public:
-    bool flowExactVerification(Graph &graph, XYCore xy_core, double l, double r);
-    bool directedLPExactVerification(Graph &graph, Graph &x_y_core, LinearProgramming &lp, std::pair<ui, ui> best_pos, std::vector<std::vector<VertexID>> &vertices, std::pair<double, double> ratios, double rho_c);
+    bool flowExactVerification(Graph &graph, double l, double r);
+    bool directedBSApproVerification(Graph &graph, ui edges_count, std::vector<std::vector<VertexID>> vertices);
+    bool directedCPVerification(Graph &graph, Graph &subgraph, LinearProgramming &lp, std::pair<ui, ui> best_pos,
+                                std::vector<std::vector<VertexID>> &vertices, std::pair<double, double> ratios,
+                                double rho,
+                                double rho_c, double &ratio_o, double &ratio_p, bool &stable_set_reduction,
+                                std::vector<std::pair<VertexID, VertexID>> &edges, double epsilon = 0);
+    bool directedPMApproVerification(std::vector<std::vector<VertexID>> vertices);
+    bool directedVWApproVerification(Graph &graph,
+                                     LinearProgramming &lp,
+                                     std::vector<std::vector<VertexID>> &vertices,
+                                     double rho,
+                                     double vw_rho,
+                                     double epsilon = 0);
     bool UndirectedflowExactVerification(Graph &graph, double l, double r);
     bool UndirectedlpVerification(Graph &graph, LinearProgramming &lp, FlowNetwork &flow, std::vector<VertexID> *vertices);
 };

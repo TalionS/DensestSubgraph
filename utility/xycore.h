@@ -12,10 +12,10 @@
 
 class XYCore{
 public:
-    std::vector<VertexID> vert[2];
-    std::vector<ui> bin[2];
-    std::vector<ui> pos[2];
-    std::vector<ui> degrees[2];
+    std::vector<std::vector<VertexID>> vert;
+    std::vector<std::vector<ui>> bin;
+    std::vector<std::vector<ui>> pos;
+    std::vector<std::vector<ui>> degrees;
 public:
     XYCore();
     void xyCoreInitialization(const Graph &graph);
@@ -23,7 +23,8 @@ public:
     ui getDelta(const Graph &graph);
     ui skyline_core_num(Graph &graph, ui cur, ui x, ui y, bool reduced = false);
 private:
-    inline void decDeg(ui cur, VertexID t);
+    inline void decDeg(ui cur, VertexID t, std::vector<std::vector<VertexID>> &vert_copy, std::vector<std::vector<ui>> &bin_copy, std::vector<std::vector<ui>> &pos_copy,
+                       std::vector<std::vector<ui>> &degrees_copy);
 };
 
 

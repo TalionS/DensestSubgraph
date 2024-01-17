@@ -2,10 +2,21 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <unistd.h>
+#include <limits.h> // 用于 PATH_MAX
 
 int main() {
-    std::ifstream input_file("/home/yy/DensestSubgraph/data/moreno_innovation/out.moreno_innovation_innovation");
-    std::ofstream output_file("MI.txt");
+    std::ifstream input_file("data/1111.txt");
+    std::ofstream output_file("data/MR.txt");
+
+    char currentPath[PATH_MAX];
+    if (getcwd(currentPath, sizeof(currentPath)) != NULL) {
+        std::cout << "Current path is: " << currentPath << std::endl;
+    } else {
+        std::cerr << "Error getting current directory" << std::endl;
+        return 1;
+    }
+
 
     if (!input_file.is_open()) {
         std::cerr << "Failed to open input file." << std::endl;
@@ -22,7 +33,8 @@ int main() {
         std::vector<int> numbers;
         std::istringstream iss(line);
         int num;
-        while (iss >> num) {
+        for (int i = 0; i < 2; i++){
+            iss >> num;
             numbers.push_back(num - 1);
         }
         for (auto num: numbers)

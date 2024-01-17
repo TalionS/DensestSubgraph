@@ -24,7 +24,7 @@ FlowNetwork::FlowNetwork(ui vertices_count) : nodes_count_(vertices_count){
 
 
 void FlowNetwork::addEdge(VertexID from, VertexID to, double capacity) {
-//    printf("(%d, %d, %f)\n", from, to, capacity);
+//    printf("%d %d %f\n", from, to, capacity);
     FlowEdge forward_edge(from, to, capacity, 0, adj_[to].size());
     adj_[from].push_back(forward_edge);
     if(from == to){

@@ -11,12 +11,30 @@
 #include "../utility/lp.h"
 #include <algorithm>
 #include <cmath>
+#include <boost/heap/fibonacci_heap.hpp>
+using Heap = boost::heap::fibonacci_heap<std::pair<ui, VertexID>>;
 
 class Allocation{
 public:
-    void flowExactAllocation(Graph &x_y_core, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r, bool is_dc);
+    void flowExactAllocation(Graph &graph, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r, bool is_dc);
     void coreApproAllocation(Graph &graph, std::pair<ui, ui> &max_core_num_pair);
-    void directedLPExactAllocation(Graph &x_y_core, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios);
+    void directedKSApproAllocation(Graph &graph, std::vector<Heap> &heap,
+                                   std::vector<std::vector<Heap::handle_type>> &handles,
+                                   std::vector<std::vector<bool>> &is_peeled,
+                                   ui &edges_count,
+                                   bool &is_init);
+    void directedFixedKSApproAllocation(Graph &graph, )
+    void directedBSApproAllocation(Graph &graph, std::pair<double, double> ratio, std::vector<Heap> &heap,
+                                   std::vector<std::vector<Heap::handle_type>> &handles,
+                                   std::vector<std::vector<bool>> &is_peeled,
+                                   ui &edges_count,
+                                   std::vector<ui> &vertices_count,
+                                   bool &is_init);
+    void directedPMApproAllocation(Graph &graph, std::pair<double, double> ratio, double epsilon, ui &edges_count,
+                                   std::vector<std::vector<VertexID>> &vertices, std::vector<std::vector<ui>> &degrees,
+                                   bool &is_init);
+    void directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios, bool is_vw_appro = false);
+//    void directedVWApproAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios)
     void UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r);
     void UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui T);
 private:

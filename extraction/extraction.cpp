@@ -3,6 +3,7 @@
 //
 
 #include "extraction.h"
+#include "wcore.h"
 
 void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, ui &s_size, ui &t_size) {
     std::vector<VertexID> tmp_S;
@@ -39,19 +40,42 @@ void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l,
     }
 }
 
-void Extraction::directedLPExactExtraction(Graph &graph,
-                                           LinearProgramming &lp,
-                                           std::pair<ui, ui> &best_pos,
-                                           std::vector<std::vector<VertexID>> &vertices,
-                                           std::pair<double, double> ratios,
-                                           double &ratio_o,
-                                           double &ratio_p,
-                                           double &rho_c) {
+void Extraction::directedBSApproExtraction(Graph &graph, std::vector<std::vector<bool>> is_peeled,
+                                           std::vector<std::vector<VertexID>> &vertices) {
+    for (ui i = 0; i < 2; i++) {
+        vertices[i].clear();
+        for (ui u = 0; u < graph.getVerticesCount(); u++)
+            if (!is_peeled[i][u])
+                vertices[i].push_back(u);
+    }
+
+}
+void Extraction::directedPMApproExtraction(Graph &graph, ui edges_count, std::vector<std::vector<VertexID>> vertices) {
+    if (!vertices[0].size() || !vertices[1].size())
+        return;
+    if (edges_count > graph.subgraph_density * sqrt(vertices[0].size() * vertices[1].size())) {
+        graph.subgraph_density = edges_count / sqrt(vertices[0].size() * vertices[1].size());
+        graph.vertices[0] = vertices[0];
+        graph.vertices[1] = vertices[1];
+    }
+}
+
+void Extraction::directedCPExtraction(Graph &graph, LinearProgramming &lp, std::pair<ui, ui> &best_pos,
+                                      std::vector<std::vector<VertexID>> &vertices, std::pair<double, double> ratios,
+                                      double &ratio_o, double &ratio_p, double &rho, double &rho_c) {
+    rho = 0;
     rho_c = 0;
+    best_pos = std::make_pair(0, 0);
+    double ratio;
+    if (ratios.first < 1 && ratios.second > 1) {
+        ratio = 1;
+    } else if (ratios.second <= 1) {
+        ratio = (ratios.first + ratios.second) / 2;
+    } else if (ratios.first >= 1) {
+        ratio = 2 / (1 / ratios.first + 1 / ratios.second);
+    }
     ratio_o = 0;
     ratio_p = 0;
-    best_pos = std::make_pair(0, 0);
-    double ratio = (ratios.first + ratios.second) / 2;
 //    double ratio = ratios.first / ratios.second;
     auto out_degrees = graph.getOutDegrees();
     auto in_degrees = graph.getInDegrees();
@@ -59,7 +83,6 @@ void Extraction::directedLPExactExtraction(Graph &graph,
     std::vector<std::vector<std::pair<double, VertexID>>> tmp_r(2);
     std::vector<ui> cnt(2, 0);
     ui n = graph.getVerticesCount();
-    ui m = graph.getEdgesCount();
     for (ui i = 0; i < 2; i++)
         y[i].resize(n);
     for(VertexID u = 0; u < n; u++){
@@ -72,56 +95,134 @@ void Extraction::directedLPExactExtraction(Graph &graph,
             tmp_r[1].emplace_back(std::make_pair(-lp.r[1][u], u));
         }
     }
-    for (ui i = 0; i < m; i++){
-        if (lp.r[0][lp.alpha[0][i].id_first] < lp.r[1][lp.alpha[0][i].id_second] ||
-                (lp.r[0][lp.alpha[0][i].id_first] == lp.r[1][lp.alpha[0][i].id_second] && lp.alpha[0][i].id_first > lp.alpha[0][i].id_second))
-            y[0][lp.alpha[0][i].id_first]++;
-        else
-            y[1][lp.alpha[0][i].id_second]++;
-    }
     for (ui i = 0; i < 2; i++)
         sort(tmp_r[i].begin(), tmp_r[i].end());
     double sum = 0;
     std::vector<ui> pos(2, 0);
-
+    best_pos.first = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
+    std::vector<std::vector<bool>> is_selected(2);
+    for (ui i = 0; i < 2; i++)
+        is_selected[i].resize(n, false);
     while (pos[0] < cnt[0] || pos[1] < cnt[1]){
         ui cur;
-        if (pos[1] == cnt[1] || tmp_r[0][pos[0]] < tmp_r[1][pos[1]]){
+        if (pos[1] == cnt[1] || (pos[0] != cnt[0] && tmp_r[0][pos[0]] < tmp_r[1][pos[1]])){
             cur = 0;
         }
         else{
             cur = 1;
         }
-//        printf("%f\n", tmp_r[cur][pos[cur]].first);
-        sum += y[cur][tmp_r[cur][pos[cur]].second];
+//        printf("%f\n", tmp_r[cur][pos_[cur]].first);
+//        sum += y[cur][tmp_r[cur][pos_[cur]].second];
+        is_selected[cur][tmp_r[cur][pos[cur]].second] = true;
+        for (auto v: cur? graph.getInNeighbors(tmp_r[cur][pos[cur]].second) : graph.getOutNeighbors(tmp_r[cur][pos[cur]].second)){
+            if (is_selected[1 - cur][v])
+                sum++;
+        }
         pos[cur]++;
         if (pos[0] == 0 || pos[1] == 0) continue;
-        double ratio_prime = pos[0] / pos[1];
+        double ratio_prime = (double) pos[0] / pos[1];
         if (2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]) > rho_c){
             best_pos = std::make_pair(cur, pos[cur]);
             ratio_o = ratio_prime;
+            rho = sum / sqrt(pos[0] * pos[1]);
             rho_c = 2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]);
         }
     }
-    if (ratio_o == 0) ratio_o = ratio;
     ratio_p = ratio * ratio / ratio_o;
     if (ratio_o > ratio_p) std::swap(ratio_o, ratio_p);
     vertices[0].clear();
     vertices[1].clear();
     pos.assign(2, 0);
-    if (cnt[0] && cnt[1]){
-        ui cur = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
-        while (cur != best_pos.first || pos[cur] != best_pos.second){
-            if (pos[1] == cnt[1] || tmp_r[0][pos[0]] < tmp_r[1][pos[1]]){
-                cur = 0;
-            }
-            else{
-                cur = 1;
-            }
-            vertices[cur].emplace_back(tmp_r[cur][pos[cur]].second);
-            pos[cur]++;
+    ui cur = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
+    while (cur != best_pos.first || pos[cur] != best_pos.second){
+        if (pos[1] == cnt[1] || (pos[0] != cnt[0] && tmp_r[0][pos[0]] < tmp_r[1][pos[1]])){
+            cur = 0;
+        }
+        else{
+            cur = 1;
+        }
+        vertices[cur].emplace_back(tmp_r[cur][pos[cur]].second);
+        pos[cur]++;
+    }
+}
+
+void Extraction::directedVWApproExtraction(Graph &graph, LinearProgramming &lp,
+                                           std::vector<std::vector<VertexID>> &vertices,
+                                           std::pair<double, double> ratios, double &rho, double &vw_rho) {
+    rho = 0;
+    vw_rho = 0;
+    std::pair<ui, ui> best_pos = std::make_pair(0, 0);
+    double ratio = ratios.first / ratios.second;
+//    printf("%f\n", sqrt(1 / graph.getVerticesCount()));
+//    double ratio = ratios.first / ratios.second;
+    auto out_degrees = graph.getOutDegrees();
+    auto in_degrees = graph.getInDegrees();
+    std::vector<std::vector<ui>> y(2);
+    std::vector<std::vector<std::pair<double, VertexID>>> tmp_r(2);
+    std::vector<ui> cnt(2, 0);
+    ui n = graph.getVerticesCount();
+    for (ui i = 0; i < 2; i++)
+        y[i].resize(n);
+    for(VertexID u = 0; u < n; u++){
+        if (out_degrees[u]){
+            cnt[0]++;
+            tmp_r[0].emplace_back(std::make_pair(-lp.r[0][u], u));
+        }
+        if (in_degrees[u]){
+            cnt[1]++;
+            tmp_r[1].emplace_back(std::make_pair(-lp.r[1][u], u));
         }
     }
+    for (ui i = 0; i < 2; i++)
+        sort(tmp_r[i].begin(), tmp_r[i].end());
+    double sum = 0;
+    std::vector<ui> pos(2, 0);
+    best_pos.first = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
+    std::vector<std::vector<bool>> is_selected(2);
+    for (ui i = 0; i < 2; i++)
+        is_selected[i].resize(n, false);
+    while (pos[0] < cnt[0] || pos[1] < cnt[1]){
+        ui cur;
+        if (pos[1] == cnt[1] || (pos[0] != cnt[0] && tmp_r[0][pos[0]] < tmp_r[1][pos[1]])){
+            cur = 0;
+        }
+        else{
+            cur = 1;
+        }
+//        printf("%f\n", tmp_r[cur][pos_[cur]].first);
+//        sum += y[cur][tmp_r[cur][pos_[cur]].second];
+        is_selected[cur][tmp_r[cur][pos[cur]].second] = true;
+        for (auto v: cur? graph.getInNeighbors(tmp_r[cur][pos[cur]].second) : graph.getOutNeighbors(tmp_r[cur][pos[cur]].second)){
+            if (is_selected[1 - cur][v])
+                sum++;
+        }
+        pos[cur]++;
+        if (pos[0] == 0 || pos[1] == 0) continue;
+//        vw_rho = 2 * edge_num / (cnt[0] / sqrt_c + cnt[1] * sqrt_c)
+//        printf("vw_rho: %.20f\n", (double) 2 * sum / (pos_[0] / sqrt(ratio) + pos_[1] * sqrt(ratio)));
+        if ((double) 2 * sum / (pos[0] / sqrt(ratio) + pos[1] * sqrt(ratio)) > vw_rho){
+            best_pos = std::make_pair(cur, pos[cur]);
+            rho = sum / sqrt(pos[0] * pos[1]);
+            vw_rho = (double) 2 * sum / (pos[0] / sqrt(ratio) + pos[1] * sqrt(ratio));
+        }
+    }
+    vertices[0].clear();
+    vertices[1].clear();
+    pos.assign(2, 0);
+    ui cur = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
+    while (cur != best_pos.first || pos[cur] != best_pos.second){
+        if (pos[1] == cnt[1] || (pos[0] != cnt[0] && tmp_r[0][pos[0]] < tmp_r[1][pos[1]])){
+            cur = 0;
+        }
+        else{
+            cur = 1;
+        }
+        vertices[cur].emplace_back(tmp_r[cur][pos[cur]].second);
+        pos[cur]++;
+    }
+}
+
+void Extraction::directedWCoreApproExtraction(Graph &graph, WCore &w_core) {
 
 }
 
@@ -168,11 +269,11 @@ void Extraction::UndirectedlpExactExtraction(Graph &graph, LinearProgramming &lp
         tmp[u] = std::make_pair(-lp.r[0][u],u);
     }
     for(ui i = 0; i < m; i++){
-        if(lp.r[0][lp.alpha[0][i].id_first] < lp.r[0][lp.alpha[0][i].id_second] || 
-            (lp.r[0][lp.alpha[0][i].id_first] == lp.r[0][lp.alpha[0][i].id_second] && lp.alpha[0][i].id_first > lp.alpha[0][i].id_second))
-            y[lp.alpha[0][i].id_first]++;
+        if(lp.r[0][lp.alpha[i].id_first] < lp.r[0][lp.alpha[i].id_second] ||
+            (lp.r[0][lp.alpha[i].id_first] == lp.r[0][lp.alpha[i].id_second] && lp.alpha[i].id_first > lp.alpha[i].id_second))
+            y[lp.alpha[i].id_first]++;
         else
-            y[lp.alpha[0][i].id_second]++;
+            y[lp.alpha[i].id_second]++;
     }
     sort(tmp.begin(), tmp.end());
     ui last_pos = 0;
