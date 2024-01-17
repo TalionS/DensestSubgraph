@@ -280,6 +280,39 @@ void Allocation::directedKSApproAllocation(Graph &graph, std::vector<Heap> &heap
 //            remove_node(i);
 }
 
+void Allocation::directedFixedKSApproAllocation(Graph &graph, std::pair<double, double> ratio, std::vector<Heap> &heap,
+                                                std::vector<std::vector<Heap::handle_type>> &handles,
+                                                std::vector<std::vector<bool>> &is_peeled, ui &edges_count,
+                                                std::vector<ui> &vertices_count, bool &is_init) {
+    ui n = graph.getVerticesCount();
+    if (!is_init){
+        is_init = true;
+        edges_count = graph.getEdgesCount();
+        vertices_count.resize(2, 0);
+        heap.clear();
+        heap.resize(2);
+        handles.clear();
+        handles.resize(2);
+        is_peeled.clear();
+        is_peeled.resize(2);
+        std::vector<std::vector<ui>> degrees(2);
+        degrees[0] = graph.getOutDegrees();
+        degrees[1] = graph.getInDegrees();
+        for (int i = 0; i < 2; i++) {
+            handles[i].resize(n);
+            is_peeled[i].resize(n, true);
+            for (ui u = 0; u < n; u++){
+                handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
+                is_peeled[i][u] = false;
+            }
+            for (ui u = 0; u < n; u++)
+                if (!is_peeled[i][u])
+                    vertices_count[i]++;
+        }
+        return;
+    }
+}
+
 void
 Allocation::directedPMApproAllocation(Graph &graph, std::pair<double, double> ratio, double epsilon, ui &edges_count,
                                       std::vector<std::vector<VertexID>> &vertices,

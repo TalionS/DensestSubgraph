@@ -3,6 +3,7 @@
 /Makefile
 /cmake-build-debug/
 /.idea
+/data
 **/Makefile
 **/cmake_install.cmake
 **/CMakeFiles/

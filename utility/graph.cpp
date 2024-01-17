@@ -19,7 +19,7 @@ Graph::Graph(bool is_directed, ui n, bool is_weighted) :
         adj_ = new std::vector<std::vector<VertexID>>[2];
         deg_ = new std::vector<ui>[2];
         vertices = new std::vector<VertexID>[2];
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < 2; i++) {
             adj_[i].resize(static_cast<unsigned long>(n));
             deg_[i].resize(static_cast<unsigned long>(n));
             vertices[i].resize(static_cast<unsigned long>(n));
@@ -35,7 +35,7 @@ Graph::Graph(bool is_directed, ui n, bool is_weighted) :
     }
 }
 
-Graph& Graph::operator=(const Graph& other) {
+Graph &Graph::operator=(const Graph &other) {
     if (this != &other) {  // Avoid self-assignment
         // Copy data members
         is_directed_ = other.is_directed_;
@@ -92,15 +92,8 @@ void Graph::loadGraphFromFile(const std::string &dir) {
         adj_[0].resize(static_cast<VertexID>(vertices_count_));
         deg_[0].resize(static_cast<VertexID>(vertices_count_), 0);
         VertexID begin, end;
-        if (!is_weighted_) {
-            while (file >> begin >> end) {
-                addUndirectedEdge(begin, end);
-            }
-        } else {
-            ui weight;
-            while (file >> begin >> end >> weight) {
-                addUndirectedEdge(begin, end, weight);
-            }
+        while (file >> begin >> end) {
+            addUndirectedEdge(begin, end);
         }
     }
 
@@ -116,8 +109,8 @@ void Graph::loadGraphFromFile(const std::string &dir) {
     }
 };
 
-void Graph::addUndirectedEdge(VertexID begin, VertexID end, ui weight) {
-    if (begin > adj_[0].size() || end > adj_[0].size()){
+void Graph::addUndirectedEdge(VertexID begin, VertexID end) {
+    if (begin > adj_[0].size() || end > adj_[0].size()) {
         adj_[0].resize(std::max(begin, end) + 1);
         deg_[0].resize(std::max(begin, end) + 1, 0);
     }
@@ -125,8 +118,6 @@ void Graph::addUndirectedEdge(VertexID begin, VertexID end, ui weight) {
     adj_[0][end].push_back(begin);
     deg_[0][begin] += 1;
     deg_[0][end] += 1;
-    weight_[begin].push_back(weight);
-    weight_[end].push_back(weight);
     edges_count_++;
 };
 
@@ -204,7 +195,7 @@ ui Graph::getVerticesCount() const {
 
 ui Graph::getMaxdeg() {
     ui res = 0;
-    for(ui i = 0; i < vertices_count_; i++){
+    for (ui i = 0; i < vertices_count_; i++) {
         res = std::max(res, (ui) deg_[i].size());
     }
     return res;
@@ -232,10 +223,6 @@ std::vector<ui> &Graph::getDegrees() const {
         exit(1);
     }
     return deg_[0];
-}
-
-std::vector<std::vector<ui>> Graph::getWeights() const {
-    return weight_;
 }
 
 std::vector<ui> &Graph::getInDegrees() const {
