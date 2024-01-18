@@ -50,6 +50,12 @@ void LinearProgramming::Init(Graph &graph, double ratio) {
             r[0][alpha[u].id_first] += 2 * sqrt(ratio) * alpha[u].weight_first;
             r[1][alpha[u].id_second] += 2 / sqrt(ratio) * alpha[u].weight_second;
         }
+        if(type_ == 1){
+            beta.resize(m);
+            for (ui i = 0; i < m; i++) {
+                beta[i] = alpha[i];
+            }
+        }
 //        printf("alpha\n");
 //        for(auto a: alpha)
 //            std::cout << "(" << a.id_first << a.id_second << ")" << a.weight_first << " " << a.weight_second <<std::endl;
@@ -100,10 +106,10 @@ void LinearProgramming::Iterate(double learning_rate, double ratio) {
             r[0][i] *= (1 - learning_rate);
             r[1][i] *= (1 - learning_rate);
         }
-//        std::random_device rd;     // 获取一个随机种子
-//        std::mt19937 g(rd());      // 用随机种子初始化一个随机数生成器
+//        std::random_device rd;
+//        std::mt19937 g(rd());
 //
-//        shuffle(alpha.begin(), alpha.end(), g); // 使用 shuffle 和随机数生成器
+//        shuffle(alpha.begin(), alpha.end(), g);
 //        std::vector<bool> is_selected[2];
 //        is_selected[0].resize(nodes_count_, false);
 //        is_selected[1].resize(nodes_count_, false);
@@ -181,12 +187,42 @@ void LinearProgramming::Iterate(double learning_rate, double ratio) {
 
 void LinearProgramming::FistaIterate(double learning_rate, double t, double ratio) {
     if (is_directed_) {
-        //todo
+        std::vector<Alpha> alpha_new;
+        for (ui i = 0; i < edges_count_; i++) {
+            beta[i].weight_first = beta[i].weight_first - 2 * learning_rate * r[0][beta[i].id_first];
+            beta[i].weight_second = beta[i].weight_second - 2 * learning_rate * r[1][beta[i].id_second];
+            if (abs(beta[i].weight_first - beta[i].weight_second) <= 1) {
+                beta[i].weight_first = (beta[i].weight_first - beta[i].weight_second + 1) / 2;
+                beta[i].weight_second = 1 - beta[i].weight_first;
+            } else if (beta[i].weight_first - beta[i].weight_second > 1) {
+                beta[i].weight_first = 0;
+                beta[i].weight_second = 1;
+            } else {
+                beta[i].weight_first = 1;
+                beta[i].weight_second = 0;
+            }
+        }
+        alpha_new = beta;
+        for (ui i = 0; i < edges_count_; i++) {
+            beta[i].weight_first =
+                    alpha_new[i].weight_first + (alpha_new[i].weight_first - alpha[i].weight_first) * (t - 1) / (t + 2);
+            beta[i].weight_second = alpha_new[i].weight_second +
+                                    (alpha_new[i].weight_second - alpha[i].weight_second) * (t - 1) / (t + 2);
+        }
+        alpha = alpha_new;
+        for (ui i = 0; i < nodes_count_; i++) {
+            r[0][i] = 0;
+            r[1][i] = 0;
+        }
+        for (ui u = 0; u < edges_count_; u++) {
+            r[0][alpha[u].id_first] += 2 * sqrt(ratio) * alpha[u].weight_first;
+            r[1][alpha[u].id_second] += 2 / sqrt(ratio) * alpha[u].weight_second;
+        }
     } else {
         std::vector<Alpha> alpha_new;
         for (ui i = 0; i < edges_count_; i++) {
             beta[i].weight_first = beta[i].weight_first - 2 * learning_rate * r[0][beta[i].id_first];
-            beta[i].weight_second = beta[i].weight_first - 2 * learning_rate * r[0][beta[i].id_first];
+            beta[i].weight_second = beta[i].weight_second - 2 * learning_rate * r[0][beta[i].id_second];
             if (abs(beta[i].weight_first - beta[i].weight_second) <= 1) {
                 beta[i].weight_first = (beta[i].weight_first - beta[i].weight_second + 1) / 2;
                 beta[i].weight_second = 1 - beta[i].weight_first;

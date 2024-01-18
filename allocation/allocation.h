@@ -12,8 +12,10 @@
 #include <algorithm>
 #include <cmath>
 #include <boost/heap/fibonacci_heap.hpp>
-using Heap = boost::heap::fibonacci_heap<std::pair<ui, VertexID>>;
+using Heap = boost::heap::fibonacci_heap<std::pair<int, VertexID>>;
 
+//[this] (std::pair<ui, VertexID> a, std::pair<ui, VertexID> b)->bool {
+//return a.first < b.first || (a.first == b.first && a.first <= b.first);}
 class Allocation{
 public:
     void flowExactAllocation(Graph &graph, FlowNetwork &flow, std::pair<double, double> ratio, double l, double r, bool is_dc);

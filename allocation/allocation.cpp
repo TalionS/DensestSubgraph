@@ -93,7 +93,7 @@ void Allocation::directedBSApproAllocation(Graph &graph, std::pair<double, doubl
 //            }
             for (ui u = 0; u < n; u++) {
                 if (degrees[i][u]) {
-                    handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
+                    handles[i][u] = heap[i].push(std::make_pair(-degrees[i][u], u));
                     is_peeled[i][u] = false;
                 }
             }
@@ -116,13 +116,13 @@ void Allocation::directedBSApproAllocation(Graph &graph, std::pair<double, doubl
 //            }
 //        }
 //    };
-    ui cur = heap[0].top().first * ratio.first <= heap[1].top().first * ratio.second ? 0 : 1;
+    ui cur = heap[0].top().first * ratio.first >= heap[1].top().first * ratio.second ? 0 : 1;
     VertexID u = heap[cur].top().second;
     heap[cur].pop();
     is_peeled[cur][u] = true;
     for (auto v: cur ? graph.getInNeighbors(u) : graph.getOutNeighbors(u)) {
         if (!is_peeled[1 - cur][v]) {
-            (*handles[1 - cur][v]).first--;
+            (*handles[1 - cur][v]).first++;
             heap[1 - cur].increase(handles[1 - cur][v]);
             edges_count -= 1;
         }
@@ -224,7 +224,7 @@ void Allocation::directedKSApproAllocation(Graph &graph, std::vector<Heap> &heap
 //            }
             for (ui u = 0; u < n; u++) {
                 if (degrees[i][u]) {
-                    handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
+                    handles[i][u] = heap[i].push(std::make_pair(-degrees[i][u], u));
                     is_peeled[i][u] = false;
                 }
             }
@@ -260,13 +260,13 @@ void Allocation::directedKSApproAllocation(Graph &graph, std::vector<Heap> &heap
 //        }
 //    if (heap[0].empty() || heap[1].empty())
 //        return;
-    ui cur = heap[0].top().first <= heap[1].top().first ? 0 : 1;
+    ui cur = heap[0].top().first >= heap[1].top().first ? 0 : 1;
     VertexID u = heap[cur].top().second;
     heap[cur].pop();
     is_peeled[cur][u] = true;
     for (auto v: cur ? graph.getInNeighbors(u) : graph.getOutNeighbors(u)) {
         if (!is_peeled[1 - cur][v]) {
-            (*handles[1 - cur][v]).first--;
+            (*handles[1 - cur][v]).first++;
             heap[1 - cur].increase(handles[1 - cur][v]);
             edges_count -= 1;
         }
@@ -301,7 +301,7 @@ void Allocation::directedFixedKSApproAllocation(Graph &graph, std::pair<double, 
         handles[i].resize(n);
         is_peeled[i].resize(n, true);
         for (ui u = 0; u < n; u++) {
-            handles[i][u] = heap[i].push(std::make_pair(degrees[i][u], u));
+            handles[i][u] = heap[i].push(std::make_pair(-degrees[i][u], u));
             is_peeled[i][u] = false;
         }
     }
@@ -310,13 +310,18 @@ void Allocation::directedFixedKSApproAllocation(Graph &graph, std::pair<double, 
     std::vector<ui> required(2);
     required[0] = (ui) ratio.first;
     required[1] = (ui) ratio.second;
+    if (required[0] == 36 && required[1] == 1)
+        printf(" ");
     while (required[cur] < cnt[cur]) {
+//        printf("vertex: %d, degrees: %d\n", heap[cur].top().second, heap[cur].top().first);
+//        heap[cur].pop();
+//        continue;
         VertexID u = heap[cur].top().second;
         heap[cur].pop();
         is_peeled[cur][u] = true;
         for (auto v: cur ? graph.getInNeighbors(u) : graph.getOutNeighbors(u)) {
             if (!is_peeled[1 - cur][v]) {
-                (*handles[1 - cur][v]).first--;
+                (*handles[1 - cur][v]).first++;
                 heap[1 - cur].increase(handles[1 - cur][v]);
                 edges_count -= 1;
             }
@@ -330,14 +335,13 @@ void Allocation::directedFixedKSApproAllocation(Graph &graph, std::pair<double, 
         is_peeled[1 - cur][u] = true;
         for (auto v: (1 - cur) ? graph.getInNeighbors(u) : graph.getOutNeighbors(u)) {
             if (!is_peeled[cur][v]) {
-                (*handles[cur][v]).first--;
+                (*handles[cur][v]).first++;
                 heap[cur].increase(handles[cur][v]);
                 edges_count -= 1;
             }
         }
         cnt[1 - cur]--;
     }
-    printf("haha");
 }
 
 void
@@ -401,8 +405,9 @@ void Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T,
     double learning_rate;
 //    for (ui t = T - 100; t < T; t++){
     for (ui t = T >> 1; t < T; t++) {
-        learning_rate = 2.0 / (t + 2);
-        lp.Iterate(learning_rate, ratio);
+//        learning_rate = 2.0 / (t + 2);
+//        lp.Iterate(learning_rate, ratio);
+        lp.FistaIterate(1.0 / 786 / 2, t + 1, ratio);
     }
 }
 

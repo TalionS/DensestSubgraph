@@ -18,7 +18,8 @@ class Verification{
 public:
     bool flowExactVerification(Graph &graph, double l, double r);
     bool directedBSApproVerification(Graph &graph, ui edges_count, std::vector<std::vector<VertexID>> vertices);
-    bool directedFixedKSApproVerification(Graph &graph, ui &cnt);
+    bool directedFixedKSApproVerification(Graph &graph, ui &cnt, ui edges_count,
+                                          std::vector<std::vector<VertexID>> vertices);
     bool directedCPVerification(Graph &graph, Graph &subgraph, LinearProgramming &lp, std::pair<ui, ui> best_pos,
                                 std::vector<std::vector<VertexID>> &vertices, std::pair<double, double> ratios,
                                 double rho,

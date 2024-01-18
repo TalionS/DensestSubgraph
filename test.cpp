@@ -17,7 +17,7 @@
 #include <time.h>
 #include "wcore.h"
 #include <boost/heap/fibonacci_heap.hpp>
-using Heap = boost::heap::fibonacci_heap<std::pair<ui, VertexID>>;
+using Heap = boost::heap::fibonacci_heap<std::pair<int, VertexID>>;
 
 int main(int argc, char **argv) {
 //    Args args;
@@ -25,11 +25,11 @@ int main(int argc, char **argv) {
 //    std::cout << args.getOption("-a") << std::endl;
     clock_t begin = clock();
     Graph graph(true);
-    graph.loadGraphFromFile("../data/counter_example_for_ksapp.txt");
+//    graph.loadGraphFromFile("../data/counter_example_for_ksapp.txt");
 //    graph.loadGraphFromFile("../data/xycores.txt");
 //    graph.loadGraphFromFile("../data/MI.txt");
 //    density 7.606087, S/T 13/12
-//    graph.loadGraphFromFile("../data/AD1.txt");
+    graph.loadGraphFromFile("../data/AD1.txt");
 //    density 31.681085, S/T 453/195
     auto ratioSelect = RatioSelection(graph, true);
     Reduction red;
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
             ratio_o,
             ratio_p,
             graph.subgraph_density,
-            0) && ratio_count < 1000)
+            0))
     {
         s_size = 0;
         t_size = 0;
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
         l = 1 * graph.subgraph_density;
 //        l = 0;
         r = sqrt(graph.subgraph_density_upper_bound);
-        LinearProgramming lp = LinearProgramming(true);
+        LinearProgramming lp = LinearProgramming(true, 1);
         ui T = 2;
         bool is_core = false;
         std::pair<ui, ui> best_pos(0, 0);
@@ -99,33 +99,33 @@ int main(int argc, char **argv) {
         ui cur = 0;
         while(flag) {
 //            Graph x_y_core = Graph(true, graph.getVerticesCount());
-//            if (!is_core)
-//                red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc);
-//            is_core = true;
-//            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
+            if (!is_core)
+                red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc);
+            is_core = true;
+            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
 //            T += 100;
-//            T <<= 1;
-//            printf("%d\n", T);
+            T <<= 1;
+            printf("%d\n", T);
 //            alloc.directedCPAllocation(graph, lp, T, is_init_lp, ratio, true);
 //            ext.directedVWApproExtraction(graph, lp, vertices, ratio, rho, rho_c);
 //            flag = ver.directedVWApproVerification(graph, lp, vertices, rho, rho_c, 0);
 
 
-//            alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio);
-//            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
-//            flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
-//                                              ratio_p, stable_set_reduction,
-//                                              edges, 1);
+            alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio);
+            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
+            flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
+                                              ratio_p, stable_set_reduction,
+                                              edges, 0);
 
 //            alloc.directedPMApproAllocation(graph, ratio, 1, edges_count, vertices, degrees, is_init_lp);
 //            ext.directedPMApproExtraction(graph, edges_count, vertices);
 //            flag = ver.directedPMApproVerification(vertices);
 
-            alloc.directedFixedKSApproAllocation(graph, ratio, cur, heap, handles, is_peeled, edges_count);
+//            alloc.directedFixedKSApproAllocation(graph, ratio, cur, heap, handles, is_peeled, edges_count);
 //            alloc.directedBSApproAllocation(graph, ratio, heap, handles, is_peeled, edges_count, vertices_count, is_init_lp);
 //            alloc.directedKSApproAllocation(graph, heap, handles, is_peeled, edges_count, is_init_lp);
-            ext.directedBSApproExtraction(graph, is_peeled, vertices);
-            flag = ver.directedFixedKSApproVerification(graph, cur);
+//            ext.directedBSApproExtraction(graph, is_peeled, vertices);
+//            flag = ver.directedFixedKSApproVerification(graph, cur, edges_count, vertices);
 //            flag = ver.directedBSApproVerification(graph, edges_count, vertices);
 
 //            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);

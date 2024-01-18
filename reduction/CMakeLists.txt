@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(reduction SHARED
         reduction.cpp
-        kspeeling.cpp
 )
 
 # 包含 utility 库的头文件目录

@@ -17,7 +17,7 @@ RatioSelection::RatioSelection(Graph &graph, bool is_lp) {
 
 void RatioSelection::ratioSetInitialization(ui vertices_count, bool is_vw, bool is_core_dc, bool is_lp_dc) {
     if (!is_core_dc && !is_lp_dc && !is_vw) {
-        for (ui i = 0; i < vertices_count; i++) {
+        for (ui i = 1; i <= vertices_count; i++) {
             normal_ratio_set_.push(std::make_pair(1, i));
         }
     }

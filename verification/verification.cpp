@@ -26,8 +26,16 @@ bool Verification::directedBSApproVerification(Graph &graph, ui edges_count,
     return edges_count;
 }
 
-bool Verification::directedFixedKSApproVerification(Graph &graph, ui &cnt) {
+bool Verification::directedFixedKSApproVerification(Graph &graph, ui &cnt, ui edges_count,
+                                                    std::vector<std::vector<VertexID>> vertices) {
     cnt++;
+    if (edges_count){
+        if (graph.subgraph_density * sqrt((double) vertices[0].size() * vertices[1].size()) < edges_count) {
+            graph.subgraph_density = edges_count / sqrt((double) vertices[0].size() * vertices[1].size());
+            graph.vertices[0] = vertices[0];
+            graph.vertices[1] = vertices[1];
+        }
+    }
     return cnt < 2;
 }
 
@@ -122,7 +130,7 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
         }
         std::vector<ui> pos(2, 0);
         double min_r = -tmp_r[cur][0].first;
-//        printf("(%f, %f)\n", min_r, rho_c);
+        printf("(%f, %f)\n", min_r, rho_c);
         while (cur != best_pos.first || pos[cur] != best_pos.second) {
             if (pos[1] == cnt[1] || (pos[0] != cnt[0] && tmp_r[0][pos[0]] < tmp_r[1][pos[1]])) {
                 cur = 0;
