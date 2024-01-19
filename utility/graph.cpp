@@ -196,7 +196,7 @@ ui Graph::getVerticesCount() const {
 ui Graph::getMaxdeg() {
     ui res = 0;
     for (ui i = 0; i < vertices_count_; i++) {
-        res = std::max(res, (ui) deg_[i].size());
+        res = std::max(res, (ui) deg_[0][i]);
     }
     return res;
 }

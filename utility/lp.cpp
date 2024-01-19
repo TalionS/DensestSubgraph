@@ -193,15 +193,15 @@ void LinearProgramming::FistaIterate(double learning_rate, double t, double rati
         for (ui i = 0; i < edges_count_; i++) {
             beta[i].weight_first = beta[i].weight_first - 2 * learning_rate * r[0][beta[i].id_first];
             beta[i].weight_second = beta[i].weight_second - 2 * learning_rate * r[0][beta[i].id_second];
-            if (abs(beta[i].weight_first - beta[i].weight_second) <= 1) {
+            if (abs(beta[i].weight_first - beta[i].weight_second) < 1) {
                 beta[i].weight_first = (beta[i].weight_first - beta[i].weight_second + 1) / 2;
                 beta[i].weight_second = 1 - beta[i].weight_first;
-            } else if (beta[i].weight_first - beta[i].weight_second > 1) {
-                beta[i].weight_first = 0;
-                beta[i].weight_second = 1;
-            } else {
+            } else if (beta[i].weight_first - beta[i].weight_second > 0) {
                 beta[i].weight_first = 1;
                 beta[i].weight_second = 0;
+            } else {
+                beta[i].weight_first = 0;
+                beta[i].weight_second = 1;
             }
         }
         alpha_new = beta;
