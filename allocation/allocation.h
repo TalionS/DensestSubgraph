@@ -9,6 +9,7 @@
 #include "../utility/graph.h"
 #include "../utility/xycore.h"
 #include "../utility/lp.h"
+#include "../utility/app.h"
 #include <algorithm>
 #include <cmath>
 #include <boost/heap/fibonacci_heap.hpp>
@@ -43,6 +44,7 @@ public:
     void UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r);
     void UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui T);
     void UndirectedFistaAllocation(Graph &graph, LinearProgramming &lp, ui T);
+    void UndirectedCoreAppAllocation(Graph &graph, CoreApp ca);
 private:
     XYCore xycore;
 };

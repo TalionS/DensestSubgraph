@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include "args.h"
+#include "app.h"
 
 int main(int argc, char **argv) {
     Args args = Args();
@@ -50,6 +51,8 @@ int main(int argc, char **argv) {
             FlowNetwork flow;
             LinearProgramming lp = LinearProgramming(0, 1);
             lp.Init(graph);
+            CoreApp ca = CoreApp();
+            ca.Init(graph);
             l = graph.subgraph_density;
             r = graph.subgraph_density_upper_bound;
             auto vertices = new std::vector<VertexID>[1];
@@ -64,6 +67,8 @@ int main(int argc, char **argv) {
                 if(rec_type == "lp-exact"){
                     //todo
                 }
+                if(alloc_type == "core-app")
+                    alloc.UndirectedCoreAppAllocation(graph, ca);
                 if(alloc_type == "flow-exact")
                     alloc.UndirectedflowExactAllocation(graph, flow, l, r);
                 if(alloc_type == "lp-exact")
