@@ -332,3 +332,13 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
     }
     return abs(flow.getMaxFlow(S, T) - 1.0 * opt_edge_count * opt_node_count) > eps;
 }
+bool Verification::UndirectedCoreAppVerification(Graph &graph, CoreApp &ca){
+    std::vector<ui> deg = graph.getDegrees();
+    if(ca.pos + 1 == ca.nodes_count || deg[ca.id[ca.pos + 1]] < ca.k) return false;  
+    ca.pos = 2 * ca.pos + 1;
+    if(ca.pos + 1 > ca.nodes_count){
+        ca.pos = ca.nodes_count - 1;
+    }
+    while(ca.pos + 1 < ca.nodes_count && deg[ca.id[ca.pos]] == deg[ca.id[ca.pos + 1]]) ca.pos++;
+    return true;
+}
