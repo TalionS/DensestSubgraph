@@ -13,17 +13,22 @@
 class Args {
 private:
     std::map<std::string, std::string> args_;
-    std::vector<std::string> options_ = {"-g", "-d", "-a", "-e", "-rec", "-alloc", "-ext", "-ver"};
-//            "-g",       //graph file path
-//            "-d",       //type of graph, u for undirected, d for directed
-//            "-a",       //accuracy, e for exact, a for approximate
-//            "-e",       //epsilon
-//            "-rec",     //type of reduction
-//            "-alloc",   //type of allocation
-//            "-ext",     //type of extraction
-//            "-ver"      //type of verification
-//
-//    };
+//    std::vector<std::string> options_ = {"-g", "-d", "-a", "-e", "-rec", "-alloc", "-ext", "-ver"};
+    std::vector<std::string> options_ = {
+            "-path",    //graph file path
+            "-t",       //type of graph, u for undirected, d for directed
+            "-a",       //accuracy, e for exact, a for approximate
+            "-eps",     //epsilon
+            "-red",     //type of reduction
+            "-alloc",   //type of allocation
+            "-ext",     //type of extraction
+            "-ver",     //type of verification
+            "-o",       //update order
+            "-s",       //update strategy
+            "-vw",
+            "-lr",
+            "-p"        //parallel
+    };
 
 public:
     Args();

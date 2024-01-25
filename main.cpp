@@ -11,40 +11,39 @@
 #include <iostream>
 #include <fstream>
 #include "args.h"
+#include "ratioselection.h"
 
 int main(int argc, char **argv) {
     Args args = Args();
     args.argsParse(argc, argv);
-    //std::string graph_path = args.getOption("-path");
-    std::string graph_type = args.getOption("-d");
-    std::string accuracy = args.getOption("-a");
-    //std::string epsilon = args.getOption("-eps");
-    std::string rec_type = args.getOption("-rec"); // bool
+    bool is_directed =  args.getOption("-t") == "d";
+    bool is_exact = args.getOption("-a") == "e";
+    bool is_vw = args.getOption("-vw") == "t";
+    bool is_parallel = args.getOption("-p") == "t";
+    double epsilon = std::stod(args.getOption("-eps"));
+    double learning_rate = std::stod(args.getOption("-lr"));
+    std::string red_type = args.getOption("-red");
     std::string alloc_type = args.getOption("-alloc");
     std::string ext_type = args.getOption("-ext");
     std::string ver_type = args.getOption("-ver");
-    //合法性检验
+    std::string order_type = args.getOption("-o");
+    std::string update_type = args.getOption("-s");
     //todo
-    Graph graph = Graph(graph_type != "u");
-//    if () {
-//        graph = Graph(false);
-//    } else {
-//        graph = Graph(true);
-//    }
-    graph.loadGraphFromFile(args.getOption("-g"));
+    Graph graph = Graph(args.getOption("-t") != "u");
+    graph.loadGraphFromFile(args.getOption("-path"));
     Reduction rec;
     Allocation alloc;
     Extraction ext;
     Verification ver;
-    if (accuracy == "a") {
+    if (!is_exact) {
         //todo
     }
     else {
-        Reduction rec;
-        Allocation alloc;
-        Extraction ext;
-        Verification ver;
-        if(graph_type == "u"){
+//        Reduction rec;
+//        Allocation alloc;
+//        Extraction ext;
+//        Verification ver;
+        if(!is_directed){
             double l, r;
             ui T = 1;
             FlowNetwork flow;
@@ -56,12 +55,12 @@ int main(int argc, char **argv) {
             bool flag = true;
             while(flag){
                 T <<= 1;
-                if(rec_type == "flow-exact"){
+                if(red_type == "flow-exact"){
                     //todo
                 }
-                if(rec_type == "core-exact")
+                if(red_type == "core-exact")
                     rec.kCoreReduction(graph, l, r);
-                if(rec_type == "lp-exact"){
+                if(red_type == "lp-exact"){
                     //todo
                 }
                 if(alloc_type == "flow-exact")
@@ -80,40 +79,45 @@ int main(int argc, char **argv) {
             //todo
         }
         else{
-            /*
             //The generation of Ratio set needs to be refined.
             //How to combine divide-and-conquer strategy with our current framework
             //needs to be considered.
-            for(int i = 1; i <= graph.getVerticesCount(); i++)
-                for(int j = 1; j <= graph.getVerticesCount(); j++){
-                    double ratio = i / j;
-                    bool flag = true;
-                    double l, r;
-                    FlowNetwork flow;
-                    l = graph.subgraph_density;
-                    r = graph.subgraph_density_upper_bound;
-                    auto vertices = new std::vector<VertexID>[2];
-                    while(flag){
-                        if (rec_type == "xy-core")
-                            rec.xyCoreReduction(graph, ratio, l, r);
-
-                        if (alloc_type == "flow-exact")
-                            alloc.flowExactAllocation(graph, flow, ratio, l, r);
-                        else if (alloc_type == "cp-exact")
-                            ;
-
-                        if (ext_type == "flow-exact")
-                            ext.flowExactExtraction(graph, flow, l, r, vertices);
-                        else if (ext_type == "cp-exact")
-                            ;
-
-                        if (ver_type == "flow-exact")
-                            flag = ver.flowExactVerification(graph, l, r);
-                        else if(ver_type == "cp-exact")
-                            ;
-                    }
-                }
-            */
+//            std::pair<double, double> ratio;
+//            RatioSelection ratio_selection(graph, true);
+//            bool is_init_ratio = false;
+//            bool is_vw, is_dc;
+//            while(ratio_selection.ratioSelection(graph.getVerticesCount(),
+//                                                 ratio,
+//                                                 is_init_ratio,
+//                                                 is_dc,
+//                                                 is_dc))
+//
+//                    bool flag = true;
+//                    double l, r;
+//                    FlowNetwork flow;
+//                    l = graph.subgraph_density;
+//                    r = graph.subgraph_density_upper_bound;
+//                    auto vertices = new std::vector<VertexID>[2];
+//                    while(flag){
+//                        if (red_type == "xy-core")
+//                            rec.xyCoreReduction(graph, ratio, l, r, <#initializer#>, <#initializer#>, false, false);
+//
+//                        if (alloc_type == "flow-exact")
+//                            alloc.flowExactAllocation(graph, flow, ratio, l, r);
+//                        else if (alloc_type == "cp-exact")
+//                            ;
+//
+//                        if (ext_type == "flow-exact")
+//                            ext.flowExactExtraction(graph, flow, l, r, vertices);
+//                        else if (ext_type == "cp-exact")
+//                            ;
+//
+//                        if (ver_type == "flow-exact")
+//                            flag = ver.flowExactVerification(graph, l, r);
+//                        else if(ver_type == "cp-exact")
+//                            ;
+//                    }
+//                }
         }
     }
         return 0;
