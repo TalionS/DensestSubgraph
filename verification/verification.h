@@ -11,6 +11,7 @@
 #include "../utility/flownetwork.h"
 #include "../utility/lp.h"
 #include "../utility/xycore.h"
+#include "../utility/app.h"
 #include <cmath>
 #include <algorithm>
 
@@ -34,6 +35,7 @@ public:
                                      double epsilon = 0);
     bool UndirectedflowExactVerification(Graph &graph, double l, double r);
     bool UndirectedlpVerification(Graph &graph, LinearProgramming &lp, FlowNetwork &flow, std::vector<VertexID> *vertices);
+    bool UndirectedCoreAppVerification(Graph &graph, CoreApp &ca);
 };
 
 #endif //DENSESTSUBGRAPH_VERIFICATION_H
