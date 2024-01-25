@@ -29,14 +29,14 @@ int main(int argc, char **argv) {
 //    graph.loadGraphFromFile("../data/xycores.txt");
 //    graph.loadGraphFromFile("../data/MI.txt");
 //    density 7.606087, S/T 13/12
-    graph.loadGraphFromFile("../data/AD1.txt");
+    graph.loadGraphFromFile("../data/AM.txt");
 //    density 31.681085, S/T 453/195
 //    WCore wcore;
 //    wcore.wCoreDecomposition(graph);
 //    clock_t core_end = clock();
 //    printf("time: %f", (double )(core_end - begin) / CLOCKS_PER_SEC);
 //    return 0;
-    auto ratioSelect = RatioSelection(graph, true);
+    auto ratioSelect = RatioSelection(graph);
     Reduction red;
     Allocation alloc;
     Extraction ext;
@@ -67,23 +67,19 @@ int main(int argc, char **argv) {
             graph.getVerticesCount(),
             ratio,
             is_init_ratio, false,
-            false,
             true,
-//            true,
-//            false,
-            s_size,
-            t_size,
             ratio_o,
             ratio_p,
             graph.subgraph_density,
-            0.001))
+            0))
     {
         s_size = 0;
         t_size = 0;
         bool flag = true;
         bool is_init_lp = false;
-        double l, r;
-        l = 1 * graph.subgraph_density;
+        double l, r, alpha;
+        alpha = 0;
+        l = alpha * graph.subgraph_density;
 //        l = 0;
         r = graph.subgraph_density_upper_bound;
         LinearProgramming lp = LinearProgramming(true, 0, 0, 0, 0);
@@ -106,15 +102,15 @@ int main(int argc, char **argv) {
 //        ratio.first = (double) 453 / 195;
 //        ratio.second = (double) 453 / 195;
         while(flag) {
-            Graph x_y_core = Graph(true, graph.getVerticesCount());
-//            if (!is_core) {
-            red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc, false);
-//                is_core = true;
-//            }
+//            Graph x_y_core = Graph(true, graph.getVerticesCount());
+            if (!is_core) {
+                red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc, false, false);
+                is_core = true;
+            }
 //            is_core = true;
-//            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
+            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
 //            T += 100;
-//            T <<= 1;
+            T <<= 1;
 //            printf("%d\n", T);
 //            alloc.directedCPAllocation(graph, lp, T, is_init_lp, ratio, true);
 //            ext.directedVWApproExtraction(graph, lp, vertices, ratio, rho, rho_c);
@@ -122,10 +118,10 @@ int main(int argc, char **argv) {
 
 
             alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio, false, false);
-            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c, 0.001);
+            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
             flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
                                               ratio_p, stable_set_reduction,
-                                              edges, 0.001);
+                                              edges, 0);
 
 //            alloc.directedPMApproAllocation(graph, ratio, 1, edges_count, vertices, degrees, is_init_lp);
 //            ext.directedPMApproExtraction(graph, edges_count, vertices);
@@ -139,7 +135,7 @@ int main(int argc, char **argv) {
 //            flag = ver.directedBSApproVerification(graph, edges_count, vertices);
 
 //            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);
-//            ext.flowExactExtraction(graph, flow, l, r, s_size, t_size);
+//            ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
 //            flag = ver.flowExactVerification(graph, l, r);
 //            WCore w_core;
 //            red.wCoreReduction(graph, w_core);

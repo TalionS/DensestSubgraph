@@ -1,68 +1,81 @@
-neighbor 718
-neighbor 328
-neighbor 738
-neighbor 583
-neighbor 735
-neighbor 576
-neighbor 64
-neighbor 164
-neighbor 1158
-neighbor 193
-neighbor 1245
-neighbor 745
-neighbor 334
-neighbor 103
-neighbor 1026
-neighbor 587
-neighbor 801
-neighbor 1897
-neighbor 118
-neighbor 1152
-neighbor 943
-neighbor 1051
-neighbor 650
-neighbor 1021
-neighbor 936
-neighbor 1670
-neighbor 1484
-neighbor 1556
-neighbor 1337
-neighbor 62
-neighbor 1024
-neighbor 41
-neighbor 535
-neighbor 1280
-neighbor 2124
-neighbor 818
-neighbor 1407
-neighbor 1369
-neighbor 2355
-neighbor 1281
-neighbor 1249
-neighbor 2797
-neighbor 1687
-neighbor 945
-neighbor 2739
-neighbor 4593
-neighbor 2833
-neighbor 4192
-neighbor 3882
-neighbor 3571
-neighbor 1346
-neighbor 4592
-neighbor 3937
-neighbor 2059
-neighbor 4600
-neighbor 4595
-neighbor 3885
-neighbor 4603
-neighbor 4602
-neighbor 4599
-neighbor 4597
-neighbor 4596
-neighbor 119
-neighbor 4605
-neighbor 4604
-neighbor 4601
-neighbor 4598
-neighbor 4594
+ratio_count 1, ratio (0.000318, 2652.844784), density 29.018255, S/T 913/2
+ratio_count 2, ratio (0.000341, 722.000000), density 29.018255, S/T 913/2
+ratio_count 3, ratio (0.000341, 285.478911), density 29.425694, S/T 707/8
+ratio_count 4, ratio (0.000350, 95.857143), density 29.472588, S/T 594/15
+ratio_count 5, ratio (0.000352, 41.692308), density 29.938826, S/T 724/49
+ratio_count 6, ratio (0.000363, 18.406250), density 30.390575, S/T 737/99
+ratio_count 7, ratio (0.000374, 9.128571), density 31.344893, S/T 554/147
+ratio_count 8, ratio (0.000398, 3.878788), density 31.657555, S/T 421/210
+ratio_count 9, ratio (0.000406, 1.876542), density 31.657555, S/T 421/210
+ratio_count 10, ratio (0.000406, 0.855764), density 31.657555, S/T 421/210
+ratio_count 11, ratio (0.000406, 0.352369), density 31.657555, S/T 421/210
+ratio_count 12, ratio (0.000406, 0.141403), density 31.657555, S/T 421/210
+ratio_count 13, ratio (0.000406, 0.049391), density 31.657555, S/T 421/210
+ratio_count 14, ratio (0.000406, 0.016576), density 31.657555, S/T 421/210
+ratio_count 15, ratio (0.000406, 0.006719), density 31.657555, S/T 421/210
+ratio_count 16, ratio (0.000406, 0.002318), density 31.657555, S/T 421/210
+ratio_count 17, ratio (0.000406, 0.001272), density 31.657555, S/T 421/210
+ratio_count 18, ratio (0.001458, 0.002318), density 31.657555, S/T 421/210
+ratio_count 19, ratio (0.001458, 0.001803), density 31.657555, S/T 421/210
+ratio_count 20, ratio (0.001977, 0.002318), density 31.657555, S/T 421/210
+ratio_count 21, ratio (0.005474, 0.006719), density 31.657555, S/T 421/210
+ratio_count 22, ratio (0.010730, 0.016576), density 31.657555, S/T 421/210
+ratio_count 23, ratio (0.010730, 0.012987), density 31.657555, S/T 421/210
+ratio_count 24, ratio (0.010730, 0.011742), density 31.657555, S/T 421/210
+ratio_count 25, ratio (0.011976, 0.012987), density 31.657555, S/T 421/210
+ratio_count 26, ratio (0.014353, 0.016576), density 31.657555, S/T 421/210
+ratio_count 27, ratio (0.014353, 0.014658), density 31.657555, S/T 421/210
+ratio_count 28, ratio (0.016316, 0.016576), density 31.657555, S/T 421/210
+ratio_count 29, ratio (0.037397, 0.049391), density 31.657555, S/T 421/210
+ratio_count 30, ratio (0.101790, 0.141403), density 31.657555, S/T 421/210
+ratio_count 31, ratio (0.220026, 0.352369), density 31.657555, S/T 421/210
+ratio_count 32, ratio (0.520070, 0.855764), density 31.657555, S/T 421/210
+ratio_count 33, ratio (0.520070, 0.595616), density 31.657555, S/T 421/210
+ratio_count 34, ratio (0.794521, 0.855764), density 31.657555, S/T 421/210
+ratio_count 35, ratio (1.029178, 1.876542), density 31.657555, S/T 421/210
+ratio_count 36, ratio (1.029178, 1.434386), density 31.657555, S/T 421/210
+ratio_count 37, ratio (1.029178, 1.201487), density 31.657555, S/T 421/210
+ratio_count 38, ratio (1.262840, 1.434386), density 31.657555, S/T 421/210
+ratio_count 39, ratio (1.262840, 1.289955), density 31.657555, S/T 421/210
+ratio_count 40, ratio (1.409938, 1.434386), density 31.657555, S/T 421/210
+ratio_count 41, ratio (1.409938, 1.412571), density 31.657555, S/T 421/210
+ratio_count 42, ratio (1.431818, 1.434386), density 31.657555, S/T 421/210
+ratio_count 43, ratio (1.471572, 1.876542), density 31.657555, S/T 421/210
+ratio_count 44, ratio (1.471572, 1.631195), density 31.657555, S/T 421/210
+ratio_count 45, ratio (1.718045, 1.876542), density 31.657555, S/T 421/210
+ratio_count 46, ratio (2.004762, 3.878788), density 31.657555, S/T 421/210
+ratio_count 47, ratio (2.004762, 2.629834), density 31.681085, S/T 453/195
+ratio_count 48, ratio (2.004762, 2.311534), density 31.681085, S/T 453/195
+ratio_count 49, ratio (2.004762, 2.051807), density 31.681085, S/T 453/195
+ratio_count 50, ratio (2.004762, 2.014218), density 31.681085, S/T 453/195
+ratio_count 51, ratio (2.042449, 2.051807), density 31.681085, S/T 453/195
+ratio_count 52, ratio (2.270000, 2.311534), density 31.681085, S/T 453/195
+ratio_count 53, ratio (2.270000, 2.287879), density 31.681085, S/T 453/195
+ratio_count 54, ratio (2.293658, 2.311534), density 31.681085, S/T 453/195
+ratio_count 55, ratio (2.323077, 2.629834), density 31.681085, S/T 453/195
+ratio_count 56, ratio (2.323077, 2.324742), density 31.681085, S/T 453/195
+ratio_count 57, ratio (3.290717, 3.878788), density 31.681085, S/T 453/195
+ratio_count 58, ratio (5.371371, 9.128571), density 31.681085, S/T 453/195
+ratio_count 59, ratio (5.371371, 6.217822), density 31.681085, S/T 453/195
+ratio_count 60, ratio (8.453456, 9.128571), density 31.681085, S/T 453/195
+ratio_count 61, ratio (9.278653, 18.406250), density 31.681085, S/T 453/195
+ratio_count 62, ratio (9.278653, 11.098039), density 31.681085, S/T 453/195
+ratio_count 63, ratio (9.278653, 9.615385), density 31.681085, S/T 453/195
+ratio_count 64, ratio (10.795449, 11.098039), density 31.681085, S/T 453/195
+ratio_count 65, ratio (17.265524, 18.406250), density 31.681085, S/T 453/195
+ratio_count 66, ratio (23.609886, 41.692308), density 31.681085, S/T 453/195
+ratio_count 67, ratio (23.609886, 30.782609), density 31.681085, S/T 453/195
+ratio_count 68, ratio (23.609886, 26.104795), density 31.681085, S/T 453/195
+ratio_count 69, ratio (28.333333, 30.782609), density 31.681085, S/T 453/195
+ratio_count 70, ratio (28.333333, 29.476169), density 31.681085, S/T 453/195
+ratio_count 71, ratio (29.640000, 30.782609), density 31.681085, S/T 453/195
+ratio_count 72, ratio (29.640000, 29.650603), density 31.681085, S/T 453/195
+ratio_count 73, ratio (34.633001, 41.692308), density 31.681085, S/T 453/195
+ratio_count 74, ratio (55.098048, 95.857143), density 31.681085, S/T 453/195
+ratio_count 75, ratio (55.098048, 71.181818), density 31.681085, S/T 453/195
+ratio_count 76, ratio (55.098048, 56.006593), density 31.681085, S/T 453/195
+ratio_count 77, ratio (80.032620, 95.857143), density 31.681085, S/T 453/195
+ratio_count 78, ratio (80.032620, 87.516856), density 31.681085, S/T 453/195
+ratio_count 79, ratio (88.375000, 95.857143), density 31.681085, S/T 453/195
+ratio_count 80, ratio (212.551723, 285.478911), density 31.681085, S/T 453/195
+ratio_count 81, ratio (456.500000, 722.000000), density 31.681085, S/T 453/195

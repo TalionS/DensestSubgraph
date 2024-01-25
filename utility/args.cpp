@@ -6,11 +6,24 @@
 
 
 Args::Args() {
-
-    for (const auto &opt: options_) {
-        args_[opt] = "default";
-    }
+    args_[options_[0]] = "./";
+    args_["-t"] = "u";
+    args_["-a"] = "e";
+    args_["-eps"] = "0";
+    args_["-red"];
+    args_["-alloc"];
+    args_["-ext"];
+    args_["-ver"];
+    args_["-o"];
+    args_["-s"];
+    args_["-vw"] = "f";
+    args_["-lr"] = "0";
+    args_["-p"] = "f";
+    args_["-exp"] = "t";
+    args_["-it"] = "100";
+    args_["-dc"] = "t";
 }
+
 
 void Args::argsParse(int argc, char **argv) {
     for (int i = 1; i < argc; i++) {

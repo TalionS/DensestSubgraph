@@ -550,56 +550,56 @@ void Allocation::UndirectedFistaAllocation(Graph &graph, LinearProgramming &lp, 
 //    printf("%f\n", graph.subgraph_density);
 //}
 
-void Allocation::UndirectedCoreAppAllocation(Graph &graph, CoreApp ca) {
-    std::vector<ui> deg = graph.getDegrees();
-    ui kmax = 0, kmin = ca.nodes_count + 1;
-    ui num_vertex = ca.pos + 1;
-    ui num_edge = 0;
-
-    for(ui i = 0; i <= ca.pos; i++){
-        ca.w[i] = 0;
-        for(auto v : graph.getNeighbors(ca.id[i])){
-            if(deg[v] >= deg[ca.id[ca.pos]]){
-                ca.w[i]++;
-                num_edge++;
-            }
-        }
-        kmax = std::max(kmax, ca.w[i]);
-        kmin = std::min(kmin, ca.w[i]);
-    }
-    std::vector<ui> bucket[kmax + 1]; 
-    std::vector<ui> del;
-    del.resize(ca.nodes_count);
-    for(ui i = 0; i <= ca.pos; i++){
-        bucket[ca.w[i]].push_back(ca.id[i]);
-        del[ca.id[i]] = i;
-    }
-    ui pos = 0;
-    ui k = std::max(kmin, ca.k + 1);
-    while(k <= kmax && num_vertex){
-        pos += 1;
-        for(ui i = pos; i < k; i++){
-            for(auto u : bucket[i]){
-                if(del[u] == ca.nodes_count + 1) continue;
-                del[u] = ca.nodes_count + 1;
-                num_vertex--;
-                for(auto v : graph.getNeighbors(u)){
-                    if(deg[v] >= deg[ca.id[ca.pos]]){
-                        if(del[v] == ca.nodes_count + 1) continue;
-                        ca.w[del[v]]--;
-                        num_edge--;
-                        bucket[ca.w[del[v]]].push_back(v);
-                    }  
-                }
-            }
-        }
-        if(num_vertex){
-            if(k > ca.k){
-                ca.k = k;
-                std::cout<<num_edge<<" "<<num_vertex<<std::endl;
-            }
-            k = k + 1;
-        }
-
-    }
-}
+//void Allocation::UndirectedCoreAppAllocation(Graph &graph, CoreApp ca) {
+//    std::vector<ui> deg = graph.getDegrees();
+//    ui kmax = 0, kmin = ca.nodes_count + 1;
+//    ui num_vertex = ca.pos + 1;
+//    ui num_edge = 0;
+//
+//    for(ui i = 0; i <= ca.pos; i++){
+//        ca.w[i] = 0;
+//        for(auto v : graph.getNeighbors(ca.id[i])){
+//            if(deg[v] >= deg[ca.id[ca.pos]]){
+//                ca.w[i]++;
+//                num_edge++;
+//            }
+//        }
+//        kmax = std::max(kmax, ca.w[i]);
+//        kmin = std::min(kmin, ca.w[i]);
+//    }
+//    std::vector<ui> bucket[kmax + 1];
+//    std::vector<ui> del;
+//    del.resize(ca.nodes_count);
+//    for(ui i = 0; i <= ca.pos; i++){
+//        bucket[ca.w[i]].push_back(ca.id[i]);
+//        del[ca.id[i]] = i;
+//    }
+//    ui pos = 0;
+//    ui k = std::max(kmin, ca.k + 1);
+//    while(k <= kmax && num_vertex){
+//        pos += 1;
+//        for(ui i = pos; i < k; i++){
+//            for(auto u : bucket[i]){
+//                if(del[u] == ca.nodes_count + 1) continue;
+//                del[u] = ca.nodes_count + 1;
+//                num_vertex--;
+//                for(auto v : graph.getNeighbors(u)){
+//                    if(deg[v] >= deg[ca.id[ca.pos]]){
+//                        if(del[v] == ca.nodes_count + 1) continue;
+//                        ca.w[del[v]]--;
+//                        num_edge--;
+//                        bucket[ca.w[del[v]]].push_back(v);
+//                    }
+//                }
+//            }
+//        }
+//        if(num_vertex){
+//            if(k > ca.k){
+//                ca.k = k;
+//                std::cout<<num_edge<<" "<<num_vertex<<std::endl;
+//            }
+//            k = k + 1;
+//        }
+//
+//    }
+//}

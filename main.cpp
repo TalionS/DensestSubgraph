@@ -23,6 +23,7 @@ int main(int argc, char **argv) {
     bool is_vw = args.getOption("-vw") == "t";
     bool is_parallel = args.getOption("-p") == "t";
     bool is_exp = args.getOption("-exp") == "t";
+    bool is_dc = args.getOption("-dc") == "t";
     double epsilon = std::stod(args.getOption("-eps"));
     double learning_rate = std::stod(args.getOption("-lr"));
     ui iter_num = std::stoi(args.getOption("-it"));
@@ -33,7 +34,7 @@ int main(int argc, char **argv) {
     std::string order_type = args.getOption("-o");
     std::string update_type = args.getOption("-s");
     //todo
-    Graph graph = Graph(args.getOption("-t") != "u");
+    Graph graph = Graph(is_directed);
     graph.loadGraphFromFile(args.getOption("-path"));
     clock_t begin = clock();
     Reduction rec;
@@ -53,8 +54,8 @@ int main(int argc, char **argv) {
             FlowNetwork flow;
             LinearProgramming lp = LinearProgramming(0, 1);
             lp.Init(graph);
-            CoreApp ca = CoreApp();
-            ca.Init(graph);
+//            CoreApp ca = CoreApp();
+//            ca.Init(graph);
             l = graph.subgraph_density;
             r = graph.subgraph_density_upper_bound;
             auto vertices = new std::vector<VertexID>[1];
@@ -69,8 +70,8 @@ int main(int argc, char **argv) {
                 if (red_type == "lp-exact") {
                     //todo
                 }
-                if (alloc_type == "core-app")
-                    alloc.UndirectedCoreAppAllocation(graph, ca);
+//                if (alloc_type == "core-app")
+//                    alloc.UndirectedCoreAppAllocation(graph, ca);
                 if (alloc_type == "flow-exact")
                     alloc.UndirectedflowExactAllocation(graph, flow, l, r);
                 if (alloc_type == "lp-exact")
@@ -89,42 +90,49 @@ int main(int argc, char **argv) {
             //The generation of Ratio set needs to be refined.
             //How to combine divide-and-conquer strategy with our current framework
             //needs to be considered.
-//            std::pair<double, double> ratio;
-//            RatioSelection ratio_selection(graph, true);
-//            bool is_init_ratio = false;
-//            bool is_vw, is_dc;
-//            while(ratio_selection.ratioSelection(graph.getVerticesCount(),
-//                                                 ratio,
-//                                                 is_init_ratio,
-//                                                 is_dc,
-//                                                 is_dc))
-//
-//                    bool flag = true;
-//                    double l, r;
-//                    FlowNetwork flow;
-//                    l = graph.subgraph_density;
-//                    r = graph.subgraph_density_upper_bound;
-//                    auto vertices = new std::vector<VertexID>[2];
-//                    while(flag){
-//                        if (red_type == "xy-core")
-//                            rec.xyCoreReduction(graph, ratio, l, r, <#initializer#>, <#initializer#>, false, false);
-//
-//                        if (alloc_type == "flow-exact")
-//                            alloc.flowExactAllocation(graph, flow, ratio, l, r);
-//                        else if (alloc_type == "cp-exact")
-//                            ;
-//
-//                        if (ext_type == "flow-exact")
-//                            ext.flowExactExtraction(graph, flow, l, r, vertices);
-//                        else if (ext_type == "cp-exact")
-//                            ;
-//
-//                        if (ver_type == "flow-exact")
-//                            flag = ver.flowExactVerification(graph, l, r);
-//                        else if(ver_type == "cp-exact")
-//                            ;
-//                    }
-//                }
+            std::pair<double, double> ratio;
+            double ratio_o, ratio_p;
+            RatioSelection ratio_selection(graph);
+            bool is_init_ratio = false;
+            ui ratio_count = 0;
+            while (ratio_selection.ratioSelection(graph.getVerticesCount(),
+                                                  ratio,
+                                                  is_init_ratio,
+                                                  is_vw,
+                                                  is_dc,
+                                                  ratio_o,
+                                                  ratio_p,
+                                                  graph.subgraph_density,
+                                                  epsilon)) {
+
+                bool flag = true;
+                bool is_init_red = false;
+                double l, r;
+                FlowNetwork flow;
+                l = learning_rate * graph.subgraph_density;
+                r = graph.subgraph_density_upper_bound;
+                auto vertices = new std::vector<VertexID>[2];
+                while (flag) {
+                    Graph x_y_core(is_directed, graph.getVerticesCount());
+                    if (red_type == "exact-xy-core") {
+                        rec.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red,
+                                            is_dc, false, true);
+                    } else if (red_type == "appro-xy-core") {
+                        rec.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red,
+                                            is_dc, false, false);
+                    }
+
+                    if (alloc_type == "flow-exact")
+                        alloc.flowExactAllocation(graph, flow, ratio, l, r, is_dc);
+
+                    if (ext_type == "flow-exact")
+                        ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
+
+                    if (ver_type == "flow-exact")
+                        flag = ver.flowExactVerification(graph, l, r);
+                }
+                printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density, graph.vertices[0].size(), graph.vertices[1].size());
+            }
         }
     }
     clock_t end = clock();

@@ -97,14 +97,14 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
 
     ui cur = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
     bool flag;
-    if (-tmp_r[cur][0].first < graph.subgraph_density * sqrt(1 + epsilon)) {
-        double t = -tmp_r[cur][0].first / graph.subgraph_density / sqrt(1 + epsilon);
-        ratio_o = (2 * ratio - ratio * t * t - 2 * sqrt(ratio * ratio - ratio * ratio * t * t)) / (t * t);
-        ratio_p = ratio * ratio / ratio_o;
-        if (ratio_o > ratio_p)
-            std::swap(ratio_o, ratio_p);
-        flag = false;
-    }
+//    if (-tmp_r[cur][0].first < graph.subgraph_density * sqrt(1 + epsilon)) {
+//        double t = -tmp_r[cur][0].first / graph.subgraph_density / sqrt(1 + epsilon);
+//        ratio_o = (2 * ratio - ratio * t * t - 2 * sqrt(ratio * ratio - ratio * ratio * t * t)) / (t * t);
+//        ratio_p = ratio * ratio / ratio_o;
+//        if (ratio_o > ratio_p)
+//            std::swap(ratio_o, ratio_p);
+//        flag = false;
+//    }
     if (epsilon) {
 //        flag = -tmp_r[cur][0].first / rho_c > sqrt(1 + epsilon);
 //        flag = -tmp_r[cur][0].first > sqrt(1 + epsilon) * rho_c;
@@ -347,13 +347,13 @@ bool Verification::UndirectedlpVerification(Graph &graph, LinearProgramming &lp,
     }
     return abs(flow.getMaxFlow(S, T) - 1.0 * opt_edge_count * opt_node_count) > eps;
 }
-bool Verification::UndirectedCoreAppVerification(Graph &graph, CoreApp &ca){
-    std::vector<ui> deg = graph.getDegrees();
-    if(ca.pos + 1 == ca.nodes_count || deg[ca.id[ca.pos + 1]] < ca.k) return false;  
-    ca.pos = 2 * ca.pos + 1;
-    if(ca.pos + 1 > ca.nodes_count){
-        ca.pos = ca.nodes_count - 1;
-    }
-    while(ca.pos + 1 < ca.nodes_count && deg[ca.id[ca.pos]] == deg[ca.id[ca.pos + 1]]) ca.pos++;
-    return true;
-}
+//bool Verification::UndirectedCoreAppVerification(Graph &graph, CoreApp &ca){
+//    std::vector<ui> deg = graph.getDegrees();
+//    if(ca.pos + 1 == ca.nodes_count || deg[ca.id[ca.pos + 1]] < ca.k) return false;
+//    ca.pos = 2 * ca.pos + 1;
+//    if(ca.pos + 1 > ca.nodes_count){
+//        ca.pos = ca.nodes_count - 1;
+//    }
+//    while(ca.pos + 1 < ca.nodes_count && deg[ca.id[ca.pos]] == deg[ca.id[ca.pos + 1]]) ca.pos++;
+//    return true;
+//}

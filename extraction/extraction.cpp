@@ -61,6 +61,8 @@ Extraction::flowExactExtraction(Graph &graph, std::pair<double, double> ratio, F
         double c = (ratio.first + ratio.second) / 2;
         ratio_o = (double) vertices[0].size() / vertices[1].size();
         ratio_p = c * c / ratio_o;
+        if (ratio_o > ratio_p)
+            std::swap(ratio_o, ratio_p);
         if (graph.subgraph_density < edge_num / sqrt(vertices[0].size() * vertices[1].size())) {
             graph.subgraph_density = edge_num / sqrt(vertices[0].size() * vertices[1].size());
             graph.vertices[0] = vertices[0];
@@ -93,7 +95,7 @@ void Extraction::directedPMApproExtraction(Graph &graph, ui edges_count, std::ve
 
 void Extraction::directedCPExtraction(Graph &graph, LinearProgramming &lp, std::pair<ui, ui> &best_pos,
                                       std::vector<std::vector<VertexID>> &vertices, std::pair<double, double> ratios,
-                                      double &ratio_o, double &ratio_p, double &rho, double &rho_c, double epsilon) {
+                                      double &ratio_o, double &ratio_p, double &rho, double &rho_c) {
     if (!graph.getEdgesCount())
         return;
     rho = 0;
@@ -139,42 +141,43 @@ void Extraction::directedCPExtraction(Graph &graph, LinearProgramming &lp, std::
     std::vector<std::vector<bool>> is_selected(2);
     for (ui i = 0; i < 2; i++)
         is_selected[i].resize(n, false);
-    while (pos[0] < cnt[0] || pos[1] < cnt[1]){
+    while (pos[0] < cnt[0] || pos[1] < cnt[1]) {
         ui cur;
-        if (pos[1] == cnt[1] || (pos[0] != cnt[0] && tmp_r[0][pos[0]] < tmp_r[1][pos[1]])){
+        if (pos[1] == cnt[1] || (pos[0] != cnt[0] && tmp_r[0][pos[0]] < tmp_r[1][pos[1]])) {
             cur = 0;
-        }
-        else{
+        } else {
             cur = 1;
         }
 //        printf("%f\n", tmp_r[cur][pos_[cur]].first);
 //        sum += y[cur][tmp_r[cur][pos_[cur]].second];
         is_selected[cur][tmp_r[cur][pos[cur]].second] = true;
-        for (auto v: cur? graph.getInNeighbors(tmp_r[cur][pos[cur]].second) : graph.getOutNeighbors(tmp_r[cur][pos[cur]].second)){
+        for (auto v: cur ? graph.getInNeighbors(tmp_r[cur][pos[cur]].second) : graph.getOutNeighbors(
+                tmp_r[cur][pos[cur]].second)) {
             if (is_selected[1 - cur][v])
                 sum++;
         }
         pos[cur]++;
         if (pos[0] == 0 || pos[1] == 0) continue;
         double ratio_prime = (double) pos[0] / pos[1];
-        if (!epsilon){
-            if (2 * sqrt(ratio * ratio_prime) * sum > rho_c * (ratio + ratio_prime) * sqrt(pos[0] * pos[1])) {
-                best_pos = std::make_pair(cur, pos[cur]);
-                ratio_o = ratio_prime;
-                rho = sum / sqrt(pos[0] * pos[1]);
-                rho_c = 2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]);
-            }
-        } else {
-            if (sum / sqrt(pos[0] * pos[1]) > rho) {
-                rho = sum / sqrt(pos[0] * pos[1]);
-                best_pos = std::make_pair(cur, pos[cur]);
-            }
-            if (2 * sqrt(ratio * ratio_prime) * sum > rho_c * (ratio + ratio_prime) * sqrt(pos[0] * pos[1])) {
-                ratio_o = ratio_prime;
-                rho_c = 2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]);
-            }
+//        if (!epsilon){
+        if (2 * sqrt(ratio * ratio_prime) * sum > rho_c * (ratio + ratio_prime) * sqrt(pos[0] * pos[1])) {
+            best_pos = std::make_pair(cur, pos[cur]);
+            ratio_o = ratio_prime;
+            rho = sum / sqrt(pos[0] * pos[1]);
+            rho_c = 2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]);
         }
     }
+//        } else {
+//            if (sum / sqrt(pos[0] * pos[1]) > rho) {
+//                rho = sum / sqrt(pos[0] * pos[1]);
+//                best_pos = std::make_pair(cur, pos[cur]);
+//            }
+//            if (2 * sqrt(ratio * ratio_prime) * sum > rho_c * (ratio + ratio_prime) * sqrt(pos[0] * pos[1])) {
+//                ratio_o = ratio_prime;
+//                rho_c = 2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]);
+//            }
+//        }
+//    }
     ratio_p = ratio * ratio / ratio_o;
     if (ratio_o > ratio_p) std::swap(ratio_o, ratio_p);
     vertices[0].clear();

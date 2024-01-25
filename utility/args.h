@@ -29,7 +29,8 @@ private:
             "-lr",
             "-p",       //parallel
             "-exp",
-            "-it"       //number of iteration
+            "-it",      //number of iteration
+            "-dc"
     };
 
 public:

@@ -22,7 +22,7 @@ public:
     void directedPMApproExtraction(Graph &graph, ui edges_count, std::vector<std::vector<VertexID>> vertices);
     void directedCPExtraction(Graph &graph, LinearProgramming &lp, std::pair<ui, ui> &best_pos,
                               std::vector<std::vector<VertexID>> &vertices, std::pair<double, double> ratios,
-                              double &ratio_o, double &ratio_p, double &rho, double &rho_c, double epsilon = 0);
+                              double &ratio_o, double &ratio_p, double &rho, double &rho_c);
     void directedVWApproExtraction(Graph &graph, LinearProgramming &lp,
                                    std::vector<std::vector<VertexID>> &vertices, std::pair<double, double> ratios,
                                    double &rho, double &vw_rho);

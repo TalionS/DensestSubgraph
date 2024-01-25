@@ -46,8 +46,7 @@ void Reduction::coreDecomposition(const Graph &graph) {
 }
 
 void Reduction::xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double, double> ratios, double &l, double &r,
-                                bool &is_init,
-                                bool is_dc, bool is_divide_by_number) {
+                                bool &is_init, bool is_dc, bool is_divide_by_number, bool is_exact) {
     if (!is_init) {
         is_init = true;
         xycore.xyCoreInitialization(graph);
@@ -78,7 +77,7 @@ void Reduction::xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double,
         y = std::max(static_cast<int>(ceil(ratio_left_sqrt * l / 2)), 1);
     }
 
-    xycore.generateXYCore(graph, x_y_core, x, y, false);
+    xycore.generateXYCore(graph, x_y_core, x, y, is_exact);
 }
 
 void Reduction::stableSetReduction(Graph &graph, LinearProgramming &lp,
