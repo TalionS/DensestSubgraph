@@ -113,6 +113,10 @@ bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double>
         while (!dc_ratio_set_.empty() || !is_pushed) {
             if (!is_pushed) {
                 is_pushed = true;
+                if (!ratio_o) {
+                    ratio_o = (ratio.first + ratio.second) / 2;
+                    ratio_p = ratio_o;
+                }
                 if (ratio.second > ratio_o && ratio_o > ratio.first) {
                     dc_ratio_set_.push(ratio_o);
                     dc_ratio_set_.push(ratio.first);

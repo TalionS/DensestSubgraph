@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 //    graph.loadGraphFromFile("../data/xycores.txt");
 //    graph.loadGraphFromFile("../data/MI.txt");
 //    density 7.606087, S/T 13/12
-    graph.loadGraphFromFile("../data/AM.txt");
+    graph.loadGraphFromFile("../data/AD1.txt");
 //    density 31.681085, S/T 453/195
 //    WCore wcore;
 //    wcore.wCoreDecomposition(graph);
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
         bool flag = true;
         bool is_init_lp = false;
         double l, r, alpha;
-        alpha = 0;
+        alpha = 1;
         l = alpha * graph.subgraph_density;
 //        l = 0;
         r = graph.subgraph_density_upper_bound;
@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
         bool is_core = false;
         std::pair<ui, ui> best_pos(0, 0);
         double rho, rho_c;
-        Graph x_y_core = Graph(true, graph.getVerticesCount());
+//        Graph x_y_core = Graph(true, graph.getVerticesCount());
         bool stable_set_reduction = false;
 //        Graph x_y_core = graph;
         //内层循环
@@ -102,26 +102,26 @@ int main(int argc, char **argv) {
 //        ratio.first = (double) 453 / 195;
 //        ratio.second = (double) 453 / 195;
         while(flag) {
-//            Graph x_y_core = Graph(true, graph.getVerticesCount());
-            if (!is_core) {
+            Graph x_y_core = Graph(true, graph.getVerticesCount());
+//            if (!is_core) {
                 red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc, false, false);
-                is_core = true;
-            }
+//                is_core = true;
+//            }
 //            is_core = true;
-            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
+//            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
 //            T += 100;
-            T <<= 1;
+//            T <<= 1;
 //            printf("%d\n", T);
 //            alloc.directedCPAllocation(graph, lp, T, is_init_lp, ratio, true);
 //            ext.directedVWApproExtraction(graph, lp, vertices, ratio, rho, rho_c);
 //            flag = ver.directedVWApproVerification(graph, lp, vertices, rho, rho_c, 0);
 
 
-            alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio, false, false);
-            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
-            flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
-                                              ratio_p, stable_set_reduction,
-                                              edges, 0);
+//            alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio, false, false);
+//            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
+//            flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
+//                                              ratio_p, stable_set_reduction,
+//                                              edges, 0);
 
 //            alloc.directedPMApproAllocation(graph, ratio, 1, edges_count, vertices, degrees, is_init_lp);
 //            ext.directedPMApproExtraction(graph, edges_count, vertices);
@@ -134,9 +134,9 @@ int main(int argc, char **argv) {
 //            flag = ver.directedFixedKSApproVerification(graph, cur, edges_count, vertices);
 //            flag = ver.directedBSApproVerification(graph, edges_count, vertices);
 
-//            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);
-//            ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
-//            flag = ver.flowExactVerification(graph, l, r);
+            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);
+            ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
+            flag = ver.flowExactVerification(graph, l, r);
 //            WCore w_core;
 //            red.wCoreReduction(graph, w_core);
 //            w_core.getMaxCNPair(graph, max_core_num);

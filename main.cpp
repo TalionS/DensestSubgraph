@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
                         ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
 
                     if (ver_type == "flow-exact")
-                        flag = ver.flowExactVerification(graph, l, r);
+                        flag = ver.flowExactVerification(graph, l, r, <#initializer#>, 0, <#initializer#>);
                 }
                 printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density, graph.vertices[0].size(), graph.vertices[1].size());
             }
