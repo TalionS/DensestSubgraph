@@ -38,6 +38,8 @@ bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double>
         if (is_core_dc || is_lp_dc) {
             ratio.first = 1.0 / vertices_count;
             ratio.second = vertices_count;
+            ratio.first = std::max(ratio.first, (density / 2 / max_degree[0]) * (density / 2 / max_degree[0]));
+            ratio.second = std::min(ratio.second, (2 * max_degree[1] / density) * (2 * max_degree[1] / density));
             return true;
         }
     }
@@ -70,20 +72,6 @@ bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double>
                 double b = mid;
                 if (s_size && t_size)
                     b = (double) s_size / t_size;
-//                else
-//                    continue;
-//                double c = mid * mid / b;
-//                if (b > c)
-//                    std::swap(b, c);
-//                if (ratio.first < b && b < ratio.second){
-//                    dc_ratio_set_.push(ratio.first);
-//                    dc_ratio_set_.push(b);
-//                }
-//                if(ratio.second > c && c > ratio.first){
-//                    dc_ratio_set_.push(ratio.second);
-//                    dc_ratio_set_.push(c);
-//                }
-//                printf("%d, %d\n", s_size, t_size);
                 double c = sqrt(b) / sqrt(mid) + sqrt(mid) / sqrt(b);
                 if (b > mid) {
                     double mid_cover = (-2 * mid + mid * c * c - mid * sqrt(pow(c, 4) - 4 * c * c)) / 2;
@@ -110,17 +98,6 @@ bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double>
                         dc_ratio_set_.push(ratio.first);
                     }
                 }
-//                printf("(%f, %f, %f, %f)", ratio.first, b, c, ratio.second);
-//                if (ratio.first <= b){
-//                    dc_ratio_set_.push(b);
-//                    dc_ratio_set_.push(ratio.first);
-//                }
-//                if (ratio.second >= c){
-//                    dc_ratio_set_.push(c);
-//                    dc_ratio_set_.push(ratio.second);
-//                }
-//                dc_ratio_set_.push(b);
-//                dc_ratio_set_.push(c);
             }
             if (dc_ratio_set_.empty())
                 continue;
@@ -128,6 +105,8 @@ bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double>
             dc_ratio_set_.pop();
             ratio.second = dc_ratio_set_.top();
             dc_ratio_set_.pop();
+            ratio.first = std::max(ratio.first, (density / 2 / max_degree[0]) * (density / 2 / max_degree[0]));
+            ratio.second = std::min(ratio.second, (2 * max_degree[1] / density) * (2 * max_degree[1] / density));
             if (ratio.first + 1.0 / vertices_count > ratio.second)
                 continue;
             return true;
@@ -157,8 +136,6 @@ bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double>
             ratio.second = std::min(ratio.second, (2 * max_degree[1] / density) * (2 * max_degree[1] / density));
             if (ratio.first + 1.0 / vertices_count > ratio.second)
                 continue;
-//            c_l = max(c_l, (density / 2 / max_deg[0]) * (density / 2 / max_deg[0]));
-//            c_r = min(c_r, (2 * max_deg[1] / density) * (2 * max_deg[1] / density));
             return true;
         }
     }

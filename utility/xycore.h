@@ -19,7 +19,7 @@ public:
 public:
     XYCore();
     void xyCoreInitialization(const Graph &graph);
-    void generateXYCore(const Graph &graph, Graph &x_y_core, ui x, ui y);
+    void generateXYCore(const Graph &graph, Graph &x_y_core, ui x, ui y, bool is_exact = true);
     ui getDelta(const Graph &graph);
     ui skyline_core_num(Graph &graph, ui cur, ui x, ui y, bool reduced = false);
 private:

@@ -29,6 +29,7 @@ public:
     ui nodes_count_;
     ui edges_count_;
     ui type_;
+    ui sort_type;
 public:
     std::vector<double> *r;
     std::vector<Alpha> alpha;
@@ -37,14 +38,15 @@ public:
 
 public:
     ~LinearProgramming();
-    explicit LinearProgramming(bool is_directed, ui type = 0, ui vertices_count = 0, ui edge_count = 0);
+    explicit LinearProgramming(bool is_directed, ui type = 0, ui vertices_count = 0, ui edge_count = 0, ui sort = 0);
 
-    void Iterate(double learning_rate, double ratio = 0);
+    void Iterate(double learning_rate, double ratio = 0, bool is_synchronous = false);
 
     void FistaIterate(double learning_rate, double t, double ratio = 0);
 
     void Init(Graph &graph, double ratio = 0);
 
+    void sort(Graph &graph);
 };
 
 #endif //DENSESTSUBGRAPH_FLOWNETWORK_H

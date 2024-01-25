@@ -52,6 +52,7 @@ public:
     std::vector<VertexID> &getNeighbors(VertexID i) const;
     std::vector<VertexID> &getOutNeighbors(VertexID i) const;
     std::vector<VertexID> &getInNeighbors(VertexID i) const;
+    std::vector<std::vector<std::vector<VertexID>>> getAdjList();
     std::vector<ui> &getDegrees() const;
     std::vector<ui> &getInDegrees() const;
     std::vector<ui> &getOutDegrees() const;

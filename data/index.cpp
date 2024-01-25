@@ -6,8 +6,8 @@
 #include <limits.h> // 用于 PATH_MAX
 
 int main() {
-    std::ifstream input_file("data/1111.txt");
-    std::ofstream output_file("data/MR.txt");
+    std::ifstream input_file("./data/out.amazon0601");
+    std::ofstream output_file("./data/AM.txt");
 
     char currentPath[PATH_MAX];
     if (getcwd(currentPath, sizeof(currentPath)) != NULL) {
@@ -29,6 +29,7 @@ int main() {
     }
 
     std::string line;
+    std::getline(input_file, line);
     while (std::getline(input_file, line)) {
         std::vector<int> numbers;
         std::istringstream iss(line);

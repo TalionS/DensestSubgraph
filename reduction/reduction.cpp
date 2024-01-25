@@ -2,7 +2,6 @@
 // Created by yy on 11/23/23.
 //
 #include "reduction.h"
-#include "wcore.h"
 
 void Reduction::coreDecomposition(const Graph &graph) {
     ui vertices_count = graph.getVerticesCount();
@@ -47,7 +46,8 @@ void Reduction::coreDecomposition(const Graph &graph) {
 }
 
 void Reduction::xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double, double> ratios, double &l, double &r,
-                                bool &is_init, bool is_dc) {
+                                bool &is_init,
+                                bool is_dc, bool is_divide_by_number) {
     if (!is_init) {
         is_init = true;
         xycore.xyCoreInitialization(graph);
@@ -59,21 +59,26 @@ void Reduction::xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double,
         y = std::max(static_cast<int>(ceil(ratio_sqrt * l / 2)), 1);
     } else {
         double ratio;
-        if (ratios.first < 1 && ratios.second > 1) {
-            ratio = 1;
-        } else if (ratios.second <= 1) {
+        if (is_divide_by_number){
+            if (ratios.first < 1 && ratios.second > 1) {
+                ratio = 1;
+            } else if (ratios.second <= 1) {
+                ratio = (ratios.first + ratios.second) / 2;
+            } else if (ratios.first >= 1) {
+                ratio = 2 / (1 / ratios.first + 1 / ratios.second);
+            }
+        } else
             ratio = (ratios.first + ratios.second) / 2;
-        } else if (ratios.first >= 1) {
-            ratio = 2 / (1 / ratios.first + 1 / ratios.second);
-        }
 //        ratios.first = std::max(ratios.first, ratio / 2);
-        double ratio_right_sqrt = sqrt(std::max(ratios.first, ratio / 2));
-        double ratio_left_sqrt = sqrt(std::min(ratios.second, ratio * 2));
+        double ratio_right_sqrt = sqrt(std::min(ratios.second, ratio * 2));
+        double ratio_left_sqrt = sqrt(std::max(ratios.first, ratio / 2));
+//        double ratio_right_sqrt = sqrt(ratios.second);
+//        double ratio_left_sqrt = sqrt(ratios.first);
         x = std::max(static_cast<int>(ceil(l / 2 / ratio_right_sqrt)), 1);
         y = std::max(static_cast<int>(ceil(ratio_left_sqrt * l / 2)), 1);
     }
 
-    xycore.generateXYCore(graph, x_y_core, x, y);
+    xycore.generateXYCore(graph, x_y_core, x, y, false);
 }
 
 void Reduction::stableSetReduction(Graph &graph, LinearProgramming &lp,
@@ -99,6 +104,8 @@ void Reduction::stableSetReduction(Graph &graph, LinearProgramming &lp,
         std::swap(lp.alpha[i], lp.alpha[j]);
     }
     lp.edges_count_ = edges.size();
+    lp.alpha.resize(lp.edges_count_);
+    lp.sort(stable_subgraph);
 //    for (ui i = 0; i < lp.edges_count_; i++) {
 //        if (!lp.alpha[i].is_selected)
 //            continue;
@@ -110,7 +117,7 @@ void Reduction::stableSetReduction(Graph &graph, LinearProgramming &lp,
 }
 
 void Reduction::wCoreReduction(Graph &graph, WCore &w_core) {
-    w_core.wCoreDecomposition(graph);
+    w_core.generateMaxWCore(graph);
 }
 
 void Reduction::kCoreReduction(Graph &graph, double &l, double &r) {

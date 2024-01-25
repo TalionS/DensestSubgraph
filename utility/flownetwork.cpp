@@ -9,9 +9,9 @@
 
 FlowEdge::FlowEdge(VertexID from, VertexID to, double capacity, double flow, VertexID index) : from(from), to(to), index(index), capacity(capacity), flow(flow) {};
 
-FlowNetwork::FlowNetwork() : nodes_count_(0){
-
-}
+//FlowNetwork::FlowNetwork() : nodes_count_(0){
+//
+//}
 
 FlowNetwork::FlowNetwork(ui vertices_count) : nodes_count_(vertices_count){
     adj_.clear();

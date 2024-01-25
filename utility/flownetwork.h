@@ -36,9 +36,9 @@ public:
 
 
 public:
-    FlowNetwork();
+//    FlowNetwork();
 
-    FlowNetwork(ui vertices_count);
+    FlowNetwork(ui vertices_count = 0);
 
     void addEdge(VertexID from, VertexID to, double capacity);
 

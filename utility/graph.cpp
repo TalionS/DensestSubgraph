@@ -217,6 +217,13 @@ std::vector<VertexID> &Graph::getInNeighbors(VertexID i) const {
     return adj_[1][i];
 }
 
+std::vector<std::vector<std::vector<VertexID>>> Graph::getAdjList(){
+    std::vector<std::vector<std::vector<VertexID>>> adj(2);
+    adj[0] = adj_[0];
+    adj[1] = adj_[1];
+    return adj;
+}
+
 std::vector<ui> &Graph::getDegrees() const {
     if (is_directed_) {
         printf("getDegrees() is only for undirected graphs.");

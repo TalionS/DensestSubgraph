@@ -9,31 +9,66 @@ Allocation::flowExactAllocation(Graph &graph, FlowNetwork &flow, std::pair<doubl
                                 bool is_dc) {
     ui n = graph.getVerticesCount();
     ui m = graph.getEdgesCount();
-    auto in_degrees = graph.getInDegrees();
-    auto out_degrees = graph.getOutDegrees();
+    std::vector<ui> degrees[2];
+    degrees[1] = graph.getInDegrees();
+    degrees[0] = graph.getOutDegrees();
     double ratio_sqrt;
-    if (is_dc)
+    if (is_dc) {
+//        double ratios;
+//        if (ratio.first < 1 && ratio.second > 1) {
+//            ratios = 1;
+//        } else if (ratio.second <= 1) {
+//            ratios = (ratio.first + ratio.second) / 2;
+//        } else if (ratio.first >= 1) {
+//            ratios = 2 / (1 / ratio.first + 1 / ratio.second);
+//        }
+//        ratio_sqrt = sqrt(ratios);
         ratio_sqrt = sqrt((ratio.first + ratio.second) / 2);
+    }
     else
         ratio_sqrt = sqrt(ratio.first / ratio.second);
     double mid = (l + r) / 2;
-
     flow = FlowNetwork(2 * n + 2);
     VertexID s = 0, t = 2 * n + 1;
     for (int i = 1; i <= n; i++) {
-        if (out_degrees[i - 1] > 0) {
+        if (degrees[0][i - 1] > 0) {
             flow.addEdge(s, i, m);
             flow.addEdge(i, t, m + mid / ratio_sqrt);
         }
-        if (in_degrees[i - 1] > 0) {
+        if (degrees[1][i - 1] > 0) {
             flow.addEdge(s, i + n, m);
-            flow.addEdge(i + n, t, m + ratio_sqrt * mid - 2 * in_degrees[i - 1]);
+            flow.addEdge(i + n, t, m + ratio_sqrt * mid - 2 * degrees[1][i - 1]);
         }
         for (auto &v: graph.getOutNeighbors(i - 1)) {
             flow.addEdge(v + 1 + n, i, 2);
         }
     }
     flow.getMaxFlow(s, t);
+//    std::vector<ui> map[2];
+//    ui tmp = 1;
+//    for (ui i = 0; i < 2; i++){
+//        map[i].resize(n);
+//        for (VertexID u = 0; u < n; u++){
+//            if (degrees[i][u])
+//                map[i][u] = tmp++;
+//        }
+//    }
+//    VertexID s = 0, t = tmp;
+//    flow = FlowNetwork(t + 1);
+//    for (int i = 0; i < n; i++) {
+//        if (degrees[0][i] > 0) {
+//            flow.addEdge(s, map[0][i], m);
+//            flow.addEdge(map[0][i], t, m + mid / ratio_sqrt);
+//        }
+//        if (degrees[1][i] > 0) {
+//            flow.addEdge(s, map[1][i], m);
+//            flow.addEdge(map[1][i], t, m + ratio_sqrt * mid - 2 * degrees[1][i]);
+//        }
+//        for (auto &v: graph.getOutNeighbors(i)) {
+//            flow.addEdge(map[1][v], map[0][i], 2);
+//        }
+//    }
+//    flow.getMaxFlow(s, t);
 }
 
 void Allocation::directedBSApproAllocation(Graph &graph, std::pair<double, double> ratio, std::vector<Heap> &heap,
@@ -385,16 +420,18 @@ Allocation::directedPMApproAllocation(Graph &graph, std::pair<double, double> ra
 }
 
 void Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init,
-                                      std::pair<double, double> ratios, bool is_vw_appro) {
+                                      std::pair<double, double> ratios,
+                                      bool is_vw_appro, bool is_synchronous) {
     double ratio;
     if (!is_vw_appro) {
-        if (ratios.first < 1 && ratios.second > 1) {
-            ratio = 1;
-        } else if (ratios.second <= 1) {
-            ratio = (ratios.first + ratios.second) / 2;
-        } else if (ratios.first >= 1) {
-            ratio = 2 / (1 / ratios.first + 1 / ratios.second);
-        }
+//        if (ratios.first < 1 && ratios.second > 1) {
+//            ratio = 1;
+//        } else if (ratios.second <= 1) {
+//            ratio = (ratios.first + ratios.second) / 2;
+//        } else if (ratios.first >= 1) {
+//            ratio = 2 / (1 / ratios.first + 1 / ratios.second);
+//        }
+        ratio = (ratios.first + ratios.second) / 2;
     } else {
         ratio = ratios.first / ratios.second;
     }
@@ -405,9 +442,8 @@ void Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T,
     double learning_rate;
 //    for (ui t = T - 100; t < T; t++){
     for (ui t = T >> 1; t < T; t++) {
-//        learning_rate = 2.0 / (t + 2);
-//        lp.Iterate(learning_rate, ratio);
-        lp.FistaIterate(1.0 / 786 / 2, t + 1, ratio);
+        learning_rate = 2.0 / (t + 2);
+        lp.Iterate(learning_rate, ratio, is_synchronous);
     }
 }
 

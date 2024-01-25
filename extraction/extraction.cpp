@@ -5,13 +5,41 @@
 #include "extraction.h"
 #include "wcore.h"
 
-void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, ui &s_size, ui &t_size) {
+void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, double &ratio_o, double &ratio_p) {
     std::vector<VertexID> tmp_S;
     ui n = graph.getVerticesCount();
-    VertexID s = 0, t = 2 * n + 1;
     std::vector<std::vector<VertexID>> vertices(2);
     double mid = (l + r) / 2.0;
-
+//    std::vector<ui> degrees[2];
+//    degrees[1] = graph.getInDegrees();
+//    degrees[0] = graph.getOutDegrees();
+//    std::vector<ui> map(1, 0);
+//    std::vector<ui> cnt(2, 0);
+//    ui tmp = 1;
+//    for (ui i = 0; i < 2; i++){
+//        for (VertexID u = 0; u < n; u++){
+//            if (degrees[i][u]) {
+//                map.push_back(u);
+//                tmp++;
+//            }
+//        }
+//        cnt[i] = tmp;
+//    }
+//    VertexID s = 0, t = tmp;
+//    flow.getMinCut(s, t, tmp_S);
+//    ui edge_num = 0;
+//    for (auto &v: tmp_S) {
+//        if (v == 0) continue;
+//        if (v < cnt[0]) {
+//            vertices[0].push_back(map[v]);
+//            for (auto &edge: flow.adj_[v]) {
+//                if (edge.to >= cnt[0] && edge.to < cnt[1] && flow.dist_[edge.to] >= tmp + 1) {
+//                    edge_num++;
+//                }
+//            }
+//        } else vertices[1].push_back(map[v]);
+//    }
+    ui s = 0, t = 2 * n + 1;
     flow.getMinCut(s, t, tmp_S);
     ui edge_num = 0;
     for (auto &v: tmp_S) {
@@ -19,7 +47,7 @@ void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l,
         if (v <= n) {
             vertices[0].push_back(v - 1);
             for (auto &edge: flow.adj_[v]) {
-                if (edge.to > n && edge.to <= 2 * n && flow.dist_[edge.to] >= n) {
+                if (edge.to > n && edge.to <= 2 * n && flow.dist_[edge.to] > t) {
                     edge_num++;
                 }
             }
@@ -28,8 +56,8 @@ void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l,
 
     if (!vertices[0].empty() && !vertices[1].empty()) {
         l = mid;
-        s_size = vertices[0].size();
-        t_size = vertices[1].size();
+        ratio_o = vertices[0].size() / vertices[1].size();
+        ratio_p = ratio;
         if (graph.subgraph_density < edge_num / sqrt(vertices[0].size() * vertices[1].size())) {
             graph.subgraph_density = edge_num / sqrt(vertices[0].size() * vertices[1].size());
             graph.vertices[0] = vertices[0];
@@ -62,18 +90,21 @@ void Extraction::directedPMApproExtraction(Graph &graph, ui edges_count, std::ve
 
 void Extraction::directedCPExtraction(Graph &graph, LinearProgramming &lp, std::pair<ui, ui> &best_pos,
                                       std::vector<std::vector<VertexID>> &vertices, std::pair<double, double> ratios,
-                                      double &ratio_o, double &ratio_p, double &rho, double &rho_c) {
+                                      double &ratio_o, double &ratio_p, double &rho, double &rho_c, double epsilon) {
+    if (!graph.getEdgesCount())
+        return;
     rho = 0;
     rho_c = 0;
     best_pos = std::make_pair(0, 0);
     double ratio;
-    if (ratios.first < 1 && ratios.second > 1) {
-        ratio = 1;
-    } else if (ratios.second <= 1) {
-        ratio = (ratios.first + ratios.second) / 2;
-    } else if (ratios.first >= 1) {
-        ratio = 2 / (1 / ratios.first + 1 / ratios.second);
-    }
+//    if (ratios.first < 1 && ratios.second > 1) {
+//        ratio = 1;
+//    } else if (ratios.second <= 1) {
+//        ratio = (ratios.first + ratios.second) / 2;
+//    } else if (ratios.first >= 1) {
+//        ratio = 2 / (1 / ratios.first + 1 / ratios.second);
+//    }
+    ratio = (ratios.first + ratios.second) / 2;
     ratio_o = 0;
     ratio_p = 0;
 //    double ratio = ratios.first / ratios.second;
@@ -101,6 +132,7 @@ void Extraction::directedCPExtraction(Graph &graph, LinearProgramming &lp, std::
     double sum = 0;
     std::vector<ui> pos(2, 0);
     best_pos.first = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
+//    bool flag = false;
     std::vector<std::vector<bool>> is_selected(2);
     for (ui i = 0; i < 2; i++)
         is_selected[i].resize(n, false);
@@ -122,11 +154,22 @@ void Extraction::directedCPExtraction(Graph &graph, LinearProgramming &lp, std::
         pos[cur]++;
         if (pos[0] == 0 || pos[1] == 0) continue;
         double ratio_prime = (double) pos[0] / pos[1];
-        if (2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]) > rho_c){
-            best_pos = std::make_pair(cur, pos[cur]);
-            ratio_o = ratio_prime;
-            rho = sum / sqrt(pos[0] * pos[1]);
-            rho_c = 2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]);
+        if (!epsilon){
+            if (2 * sqrt(ratio * ratio_prime) * sum > rho_c * (ratio + ratio_prime) * sqrt(pos[0] * pos[1])) {
+                best_pos = std::make_pair(cur, pos[cur]);
+                ratio_o = ratio_prime;
+                rho = sum / sqrt(pos[0] * pos[1]);
+                rho_c = 2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]);
+            }
+        } else {
+            if (sum / sqrt(pos[0] * pos[1]) > rho) {
+                rho = sum / sqrt(pos[0] * pos[1]);
+                best_pos = std::make_pair(cur, pos[cur]);
+            }
+            if (2 * sqrt(ratio * ratio_prime) * sum > rho_c * (ratio + ratio_prime) * sqrt(pos[0] * pos[1])) {
+                ratio_o = ratio_prime;
+                rho_c = 2 * sqrt(ratio * ratio_prime) / (ratio + ratio_prime) * sum / sqrt(pos[0] * pos[1]);
+            }
         }
     }
     ratio_p = ratio * ratio / ratio_o;

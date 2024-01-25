@@ -57,13 +57,14 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
                                      double rho_c, double &ratio_o, double &ratio_p, bool &stable_set_reduction,
                                      std::vector<std::pair<VertexID, VertexID>> &edges, double epsilon) {
     double ratio;
-    if (ratios.first < 1 && ratios.second > 1) {
-        ratio = 1;
-    } else if (ratios.second <= 1) {
-        ratio = (ratios.first + ratios.second) / 2;
-    } else if (ratios.first >= 1) {
-        ratio = 2 / (1 / ratios.first + 1 / ratios.second);
-    }
+//    if (ratios.first < 1 && ratios.second > 1) {
+//        ratio = 1;
+//    } else if (ratios.second <= 1) {
+//        ratio = (ratios.first + ratios.second) / 2;
+//    } else if (ratios.first >= 1) {
+//        ratio = 2 / (1 / ratios.first + 1 / ratios.second);
+//    }
+    ratio = (ratios.first + ratios.second) / 2;
 //    double ratio = ratios.first / ratios.second;
     stable_set_reduction = false;
     std::vector<std::vector<std::pair<double, VertexID>>> tmp_r(2);
@@ -73,6 +74,11 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
     ui n = subgraph.getVerticesCount();
     ui m = subgraph.getEdgesCount();
     edges.clear();
+    if (!m) {
+        ratio_o = (ratios.first + ratios.second) / 2;
+        ratio_p = ratio_o;
+        return false;
+    }
 
     for (VertexID u = 0; u < n; u++) {
         if (out_degrees[u]) {
@@ -90,19 +96,28 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
         sort(tmp_r[i].begin(), tmp_r[i].end());
 
     ui cur = tmp_r[0][0] > tmp_r[1][0] ? 1 : 0;
+    bool flag;
     if (-tmp_r[cur][0].first < graph.subgraph_density * sqrt(1 + epsilon)) {
         double t = -tmp_r[cur][0].first / graph.subgraph_density / sqrt(1 + epsilon);
         ratio_o = (2 * ratio - ratio * t * t - 2 * sqrt(ratio * ratio - ratio * ratio * t * t)) / (t * t);
         ratio_p = ratio * ratio / ratio_o;
         if (ratio_o > ratio_p)
             std::swap(ratio_o, ratio_p);
-        return false;
+        flag = false;
     }
-    bool flag;
     if (epsilon) {
-        flag = -tmp_r[cur][0].first / rho_c > sqrt(1 + epsilon);
-        ratio_o = std::min(ratio_o, ratio / (1 + epsilon));
-        ratio_p = std::max(ratio_p, ratio * (1 + epsilon));
+//        flag = -tmp_r[cur][0].first / rho_c > sqrt(1 + epsilon);
+//        flag = -tmp_r[cur][0].first > sqrt(1 + epsilon) * rho_c;
+//        ratio_o = std::min(ratio_o, ratio / (1 + epsilon));
+//        ratio_p = std::max(ratio_p, ratio * (1 + epsilon));
+        if (-tmp_r[cur][0].first / rho_c <= sqrt(1 + epsilon)) {
+            flag = false;
+            ratio_o = std::min(ratio_o, ratio / (1 + epsilon));
+            ratio_p = std::max(ratio_p, ratio * (1 + epsilon));
+        } else if (-tmp_r[cur][0].first / rho_c <= 1 + epsilon && ratio_o < ratio / (1 + epsilon) && ratio_p > ratio * (1 + epsilon)) {
+            flag = false;
+        } else
+            flag = true;
     } else {
         std::vector<std::vector<bool>> selected(2);
         for (ui i = 0; i < 2; i++) {
@@ -125,12 +140,12 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
                 lp.alpha[i].weight_second = 0;
                 in_degrees[lp.alpha[i].id_second]--;
             } else if (selected[0][lp.alpha[i].id_first] && selected[1][lp.alpha[i].id_second]) {
-                edges.emplace_back(std::make_pair(lp.alpha[i].id_first, lp.alpha[i].id_second));
+                edges.emplace_back(lp.alpha[i].id_first, lp.alpha[i].id_second);
             }
         }
         std::vector<ui> pos(2, 0);
         double min_r = -tmp_r[cur][0].first;
-        printf("(%f, %f)\n", min_r, rho_c);
+//        printf("(%f, %f)\n", min_r, rho_c);
         while (cur != best_pos.first || pos[cur] != best_pos.second) {
             if (pos[1] == cnt[1] || (pos[0] != cnt[0] && tmp_r[0][pos[0]] < tmp_r[1][pos[1]])) {
                 cur = 0;
@@ -179,7 +194,7 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
             flow.addEdge(map[1][edge.second], map[0][edge.first], 2.0);
         }
         auto max_flow = flow.getMaxFlow(s, t);
-        flag = std::abs(max_flow - edges.size()) > 1e-6;
+        flag = std::abs(max_flow - edges.size()) > 1e-3;
         if (edges.size() < m) {
             stable_set_reduction = true;
 //            Graph stable_subgraph = Graph(true, n);
