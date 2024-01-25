@@ -106,16 +106,16 @@ int main(int argc, char **argv) {
 //        ratio.first = (double) 453 / 195;
 //        ratio.second = (double) 453 / 195;
         while(flag) {
-//            Graph x_y_core = Graph(true, graph.getVerticesCount());
-            if (!is_core) {
+            Graph x_y_core = Graph(true, graph.getVerticesCount());
+//            if (!is_core) {
             red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc, false);
-                is_core = true;
-            }
+//                is_core = true;
+//            }
 //            is_core = true;
-            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
+//            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
 //            T += 100;
-            T <<= 1;
-            printf("%d\n", T);
+//            T <<= 1;
+//            printf("%d\n", T);
 //            alloc.directedCPAllocation(graph, lp, T, is_init_lp, ratio, true);
 //            ext.directedVWApproExtraction(graph, lp, vertices, ratio, rho, rho_c);
 //            flag = ver.directedVWApproVerification(graph, lp, vertices, rho, rho_c, 0);

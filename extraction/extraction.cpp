@@ -5,7 +5,9 @@
 #include "extraction.h"
 #include "wcore.h"
 
-void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, double &ratio_o, double &ratio_p) {
+void
+Extraction::flowExactExtraction(Graph &graph, std::pair<double, double> ratio, FlowNetwork &flow, double &l, double &r,
+                                double &ratio_o, double &ratio_p) {
     std::vector<VertexID> tmp_S;
     ui n = graph.getVerticesCount();
     std::vector<std::vector<VertexID>> vertices(2);
@@ -56,8 +58,9 @@ void Extraction::flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l,
 
     if (!vertices[0].empty() && !vertices[1].empty()) {
         l = mid;
-        ratio_o = vertices[0].size() / vertices[1].size();
-        ratio_p = ratio;
+        double c = (ratio.first + ratio.second) / 2;
+        ratio_o = (double) vertices[0].size() / vertices[1].size();
+        ratio_p = c * c / ratio_o;
         if (graph.subgraph_density < edge_num / sqrt(vertices[0].size() * vertices[1].size())) {
             graph.subgraph_density = edge_num / sqrt(vertices[0].size() * vertices[1].size());
             graph.vertices[0] = vertices[0];

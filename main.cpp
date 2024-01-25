@@ -13,16 +13,19 @@
 #include "args.h"
 #include "ratioselection.h"
 #include "app.h"
+#include <ctime>
 
 int main(int argc, char **argv) {
     Args args = Args();
     args.argsParse(argc, argv);
-    bool is_directed =  args.getOption("-t") == "d";
+    bool is_directed = args.getOption("-t") == "d";
     bool is_exact = args.getOption("-a") == "e";
     bool is_vw = args.getOption("-vw") == "t";
     bool is_parallel = args.getOption("-p") == "t";
+    bool is_exp = args.getOption("-exp") == "t";
     double epsilon = std::stod(args.getOption("-eps"));
     double learning_rate = std::stod(args.getOption("-lr"));
+    ui iter_num = std::stoi(args.getOption("-it"));
     std::string red_type = args.getOption("-red");
     std::string alloc_type = args.getOption("-alloc");
     std::string ext_type = args.getOption("-ext");
@@ -32,19 +35,19 @@ int main(int argc, char **argv) {
     //todo
     Graph graph = Graph(args.getOption("-t") != "u");
     graph.loadGraphFromFile(args.getOption("-path"));
+    clock_t begin = clock();
     Reduction rec;
     Allocation alloc;
     Extraction ext;
     Verification ver;
     if (!is_exact) {
         //todo
-    }
-    else {
+    } else {
 //        Reduction rec;
 //        Allocation alloc;
 //        Extraction ext;
 //        Verification ver;
-        if(!is_directed){
+        if (!is_directed) {
             double l, r;
             ui T = 1;
             FlowNetwork flow;
@@ -56,34 +59,33 @@ int main(int argc, char **argv) {
             r = graph.subgraph_density_upper_bound;
             auto vertices = new std::vector<VertexID>[1];
             bool flag = true;
-            while(flag){
+            while (flag) {
                 T <<= 1;
-                if(red_type == "flow-exact"){
+                if (red_type == "flow-exact") {
                     //todo
                 }
-                if(red_type == "core-exact")
+                if (red_type == "core-exact")
                     rec.kCoreReduction(graph, l, r);
-                if(red_type == "lp-exact"){
+                if (red_type == "lp-exact") {
                     //todo
                 }
-                if(alloc_type == "core-app")
+                if (alloc_type == "core-app")
                     alloc.UndirectedCoreAppAllocation(graph, ca);
-                if(alloc_type == "flow-exact")
+                if (alloc_type == "flow-exact")
                     alloc.UndirectedflowExactAllocation(graph, flow, l, r);
-                if(alloc_type == "lp-exact")
+                if (alloc_type == "lp-exact")
                     alloc.UndirectedlpAllocation(graph, lp, T);
-                if(ext_type == "flow-exact")
+                if (ext_type == "flow-exact")
                     ext.UndirectedflowExactExtraction(graph, flow, l, r, vertices);
-                if(ext_type == "lp-exact")
+                if (ext_type == "lp-exact")
                     ext.UndirectedlpExactExtraction(graph, lp, vertices);
-                if(ver_type == "flow-exact")
+                if (ver_type == "flow-exact")
                     flag = ver.UndirectedflowExactVerification(graph, l, r);
-                if(ver_type == "lp-exact")
+                if (ver_type == "lp-exact")
                     flag = ver.UndirectedlpVerification(graph, lp, flow, vertices);
             }
             //todo
-        }
-        else{
+        } else {
             //The generation of Ratio set needs to be refined.
             //How to combine divide-and-conquer strategy with our current framework
             //needs to be considered.
@@ -125,5 +127,7 @@ int main(int argc, char **argv) {
 //                }
         }
     }
-        return 0;
+    clock_t end = clock();
+    printf("time: %f", (double) (end - begin) / CLOCKS_PER_SEC);
+    return 0;
 };

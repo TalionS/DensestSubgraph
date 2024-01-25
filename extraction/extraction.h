@@ -16,7 +16,8 @@
 
 class Extraction{
 public:
-    void flowExactExtraction(Graph &graph, FlowNetwork &flow, double &l, double &r, double &ratio_o, double &ratio_p);
+    void flowExactExtraction(Graph &graph, std::pair<double, double> ratio, FlowNetwork &flow, double &l, double &r,
+                             double &ratio_o, double &ratio_p);
     void directedBSApproExtraction(Graph &graph, std::vector<std::vector<bool>> is_peeled, std::vector<std::vector<VertexID>> &vertices);
     void directedPMApproExtraction(Graph &graph, ui edges_count, std::vector<std::vector<VertexID>> vertices);
     void directedCPExtraction(Graph &graph, LinearProgramming &lp, std::pair<ui, ui> &best_pos,

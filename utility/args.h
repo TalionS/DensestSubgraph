@@ -27,7 +27,9 @@ private:
             "-s",       //update strategy
             "-vw",
             "-lr",
-            "-p"        //parallel
+            "-p",       //parallel
+            "-exp",
+            "-it"       //number of iteration
     };
 
 public:
