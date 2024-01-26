@@ -104,7 +104,7 @@ void Reduction::stableSetReduction(Graph &graph, LinearProgramming &lp,
     }
     lp.edges_count_ = edges.size();
     lp.alpha.resize(lp.edges_count_);
-    lp.sort(stable_subgraph);
+//    lp.sort(stable_subgraph);
 //    for (ui i = 0; i < lp.edges_count_; i++) {
 //        if (!lp.alpha[i].is_selected)
 //            continue;

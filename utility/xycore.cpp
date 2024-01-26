@@ -45,8 +45,9 @@ void XYCore::xyCoreInitialization(const Graph &graph) {
     }
 }
 
-void XYCore::generateXYCore(const Graph &graph, Graph &x_y_core, ui x, ui y, bool is_exact) {
+void XYCore::generateXYCore(const Graph &graph, Graph &subgraph, ui x, ui y, bool is_exact) {
     auto n = graph.getVerticesCount();
+    Graph x_y_core(true, graph.getVerticesCount());
     if (is_exact) {
         std::vector<std::vector<VertexID>> vert_copy(2);
         std::vector<std::vector<ui>> bin_copy(2);
@@ -117,6 +118,7 @@ void XYCore::generateXYCore(const Graph &graph, Graph &x_y_core, ui x, ui y, boo
             }
         }
     }
+    subgraph = x_y_core;
 //    sort( vertices[1].begin(), vertices[1].end() );
 //    vertices[1].erase( unique( vertices[1].begin(), vertices[1].end() ), vertices[1].end() );
 //    delete[] degrees_;

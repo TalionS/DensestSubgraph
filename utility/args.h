@@ -24,7 +24,7 @@ private:
             "-ext",     //type of extraction
             "-ver",     //type of verification
             "-o",       //update order
-            "-s",       //update strategy
+            "-seq",     //update strategy
             "-vw",
             "-lr",
             "-p",       //parallel

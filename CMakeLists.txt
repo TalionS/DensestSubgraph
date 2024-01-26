@@ -17,8 +17,8 @@ include_directories(
 add_executable(DensestSubgraph main.cpp)
 target_link_libraries(DensestSubgraph utility reduction allocation extraction verification)
 
-#verificationadd_executable(debug test.cpp)
-#target_link_libraries(debug utility reduction allocation extraction verification)
+add_executable(debug test.cpp)
+target_link_libraries(debug utility reduction allocation extraction verification)
 
 add_subdirectory(utility)
 add_subdirectory(reduction)

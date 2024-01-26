@@ -33,6 +33,7 @@ void LinearProgramming::Init(Graph &graph, double ratio) {
     ui m = graph.getEdgesCount();
     nodes_count_ = n;
     edges_count_ = m;
+    cur_iter_num = 0;
 
     if (is_directed_) {
         ui cnt = 0;
@@ -87,6 +88,7 @@ void LinearProgramming::Init(Graph &graph, double ratio) {
 }
 
 void LinearProgramming::Iterate(double learning_rate, double ratio, bool is_synchronous) {
+    cur_iter_num++;
     if (is_directed_) {
         if (is_synchronous) {
             for (ui i = 0; i < nodes_count_; i++) {

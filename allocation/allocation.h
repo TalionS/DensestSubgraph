@@ -40,8 +40,9 @@ public:
                                    std::vector<std::vector<VertexID>> &vertices, std::vector<std::vector<ui>> &degrees,
                                    bool &is_init);
     void
-    directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios,
-                         bool is_vw_appro = false, bool is_synchronous = false);
+    directedCPAllocation(Graph &graph, LinearProgramming &lp, ui &iter_num, bool &is_init,
+                         std::pair<double, double> ratios,
+                         bool is_synchronous = false, bool is_exp = true);
 //    void directedVWApproAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init, std::pair<double, double> ratios)
     void UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r);
     void UndirectedlpAllocation(Graph &graph, LinearProgramming &lp, ui T);

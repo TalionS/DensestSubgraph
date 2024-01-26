@@ -345,8 +345,7 @@ void Allocation::directedFixedKSApproAllocation(Graph &graph, std::pair<double, 
     std::vector<ui> required(2);
     required[0] = (ui) ratio.first;
     required[1] = (ui) ratio.second;
-    if (required[0] == 36 && required[1] == 1)
-        printf(" ");
+
     while (required[cur] < cnt[cur]) {
 //        printf("vertex: %d, degrees: %d\n", heap[cur].top().second, heap[cur].top().first);
 //        heap[cur].pop();
@@ -419,32 +418,26 @@ Allocation::directedPMApproAllocation(Graph &graph, std::pair<double, double> ra
     edges_count -= edges_peeled_count;
 }
 
-void Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui T, bool &is_init,
-                                      std::pair<double, double> ratios,
-                                      bool is_vw_appro, bool is_synchronous) {
+void
+Allocation::directedCPAllocation(Graph &graph, LinearProgramming &lp, ui &iter_num, bool &is_init,
+                                 std::pair<double, double> ratios,
+                                 bool is_synchronous, bool is_exp) {
     double ratio;
-    if (!is_vw_appro) {
-//        if (ratios.first < 1 && ratios.second > 1) {
-//            ratio = 1;
-//        } else if (ratios.second <= 1) {
-//            ratio = (ratios.first + ratios.second) / 2;
-//        } else if (ratios.first >= 1) {
-//            ratio = 2 / (1 / ratios.first + 1 / ratios.second);
-//        }
-        ratio = (ratios.first + ratios.second) / 2;
-    } else {
-        ratio = ratios.first / ratios.second;
-    }
+    ratio = (ratios.first + ratios.second) / 2;
     if (!is_init) {
         lp.Init(graph, ratio);
         is_init = true;
     }
     double learning_rate;
 //    for (ui t = T - 100; t < T; t++){
-    for (ui t = T >> 1; t < T; t++) {
+    ui cur_iter_num = lp.cur_iter_num;
+    if (is_exp)
+        iter_num = cur_iter_num? cur_iter_num: 1;
+    for (ui t = cur_iter_num; t < cur_iter_num + iter_num; t++) {
         learning_rate = 2.0 / (t + 2);
         lp.Iterate(learning_rate, ratio, is_synchronous);
     }
+//    printf("%d\n", lp.cur_iter_num);
 }
 
 void Allocation::UndirectedflowExactAllocation(Graph &graph, FlowNetwork &flow, double l, double r) {

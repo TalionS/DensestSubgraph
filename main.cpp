@@ -24,27 +24,87 @@ int main(int argc, char **argv) {
     bool is_parallel = args.getOption("-p") == "t";
     bool is_exp = args.getOption("-exp") == "t";
     bool is_dc = args.getOption("-dc") == "t";
+    bool is_seq = args.getOption("-seq") == "t";
+
     double epsilon = std::stod(args.getOption("-eps"));
     double learning_rate = std::stod(args.getOption("-lr"));
+
+    ui order_type = std::stoi(args.getOption("-o"));
     ui iter_num = std::stoi(args.getOption("-it"));
     std::string red_type = args.getOption("-red");
     std::string alloc_type = args.getOption("-alloc");
     std::string ext_type = args.getOption("-ext");
     std::string ver_type = args.getOption("-ver");
-    std::string order_type = args.getOption("-o");
-    std::string update_type = args.getOption("-s");
     //todo
     Graph graph = Graph(is_directed);
     graph.loadGraphFromFile(args.getOption("-path"));
     clock_t begin = clock();
-    Reduction rec;
+    Reduction red;
     Allocation alloc;
     Extraction ext;
     Verification ver;
     if (!is_exact) {
-        //todo
+        if (!is_directed) {
+            //todo
+        } else {
+            std::pair<double, double> ratio;
+            double ratio_o, ratio_p;
+            RatioSelection ratio_selection(graph);
+            bool is_init_ratio = false;
+            ui ratio_count = 0;
+            while (ratio_selection.ratioSelection(graph.getVerticesCount(),
+                                                  ratio,
+                                                  is_init_ratio,
+                                                  is_vw,
+                                                  is_dc,
+                                                  ratio_o,
+                                                  ratio_p,
+                                                  graph.subgraph_density,
+                                                  epsilon)) {
+
+                bool flag = true;
+                bool is_init_red = false;
+                bool is_init_lp = false;
+                bool is_reduced = false;
+                bool is_stable_set = false;
+                double rho, rho_c;
+                double l = learning_rate * graph.subgraph_density;
+                double r = graph.subgraph_density_upper_bound;
+                FlowNetwork flow;
+                LinearProgramming lp(is_directed, 0, 0, 0, order_type);
+                std::vector<std::pair<VertexID, VertexID>> edges;
+                std::vector<std::vector<VertexID>> vertices(2);
+                std::pair<ui, ui> best_pos(0, 0);
+                Graph subgraph(is_directed, graph.getVerticesCount());
+
+                while (flag) {
+                    if (!is_reduced || alloc_type != "CP") {
+                        is_reduced = true;
+                        if (red_type == "exact-xy-core") {
+                            red.xyCoreReduction(graph, subgraph, ratio, l, r, is_init_red,
+                                                is_dc, false, true);
+                        } else if (red_type == "appro-xy-core") {
+                            red.xyCoreReduction(graph, subgraph, ratio, l, r, is_init_red,
+                                                is_dc, false, false);
+                        }
+                    }
+                    if (alloc_type == "CP")
+                        alloc.directedCPAllocation(subgraph, lp, iter_num, is_init_lp, ratio, !is_seq, is_exp);
+
+                    if (ext_type == "CP")
+                        ext.directedCPExtraction(subgraph, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
+
+                    if (ver_type == "CP")
+                        flag = ver.directedCPVerification(graph, subgraph, lp, best_pos, vertices, ratio, rho, rho_c,
+                                                          ratio_o, ratio_p, is_stable_set, edges, epsilon);
+                }
+                printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density,
+                       graph.vertices[0].size(), graph.vertices[1].size());
+            }
+
+        }
     } else {
-//        Reduction rec;
+//        Reduction red;
 //        Allocation alloc;
 //        Extraction ext;
 //        Verification ver;
@@ -66,7 +126,7 @@ int main(int argc, char **argv) {
                     //todo
                 }
                 if (red_type == "core-exact")
-                    rec.kCoreReduction(graph, l, r);
+                    red.kCoreReduction(graph, l, r);
                 if (red_type == "lp-exact") {
                     //todo
                 }
@@ -103,35 +163,54 @@ int main(int argc, char **argv) {
                                                   ratio_o,
                                                   ratio_p,
                                                   graph.subgraph_density,
-                                                  epsilon)) {
+                                                  0)) {
 
                 bool flag = true;
                 bool is_init_red = false;
-                double l, r;
+                bool is_init_lp = false;
+                bool is_reduced = false;
+                bool is_stable_set = false;
+                double rho, rho_c;
+                double l = learning_rate * graph.subgraph_density;
+                double r = graph.subgraph_density_upper_bound;
                 FlowNetwork flow;
-                l = learning_rate * graph.subgraph_density;
-                r = graph.subgraph_density_upper_bound;
-                auto vertices = new std::vector<VertexID>[2];
+                LinearProgramming lp(is_directed, 0, 0, 0, order_type);
+                std::vector<std::pair<VertexID, VertexID>> edges;
+                std::vector<std::vector<VertexID>> vertices(2);
+                std::pair<ui, ui> best_pos(0, 0);
+                Graph subgraph(is_directed, graph.getVerticesCount());
+
                 while (flag) {
-                    Graph x_y_core(is_directed, graph.getVerticesCount());
-                    if (red_type == "exact-xy-core") {
-                        rec.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red,
-                                            is_dc, false, true);
-                    } else if (red_type == "appro-xy-core") {
-                        rec.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red,
-                                            is_dc, false, false);
+                    if (!is_reduced || alloc_type != "CP") {
+                        is_reduced = true;
+                        if (red_type == "exact-xy-core") {
+                            red.xyCoreReduction(graph, subgraph, ratio, l, r, is_init_red,
+                                                is_dc, false, true);
+                        } else if (red_type == "appro-xy-core") {
+                            red.xyCoreReduction(graph, subgraph, ratio, l, r, is_init_red,
+                                                is_dc, false, false);
+                        }
                     }
-
+                    if (alloc_type == "CP")
+                        red.stableSetReduction(subgraph, lp, edges, is_stable_set);
+                    if (alloc_type == "CP")
+                        alloc.directedCPAllocation(subgraph, lp, iter_num, is_init_lp, ratio, !is_seq, is_exp);
                     if (alloc_type == "flow-exact")
-                        alloc.flowExactAllocation(graph, flow, ratio, l, r, is_dc);
+                        alloc.flowExactAllocation(subgraph, flow, ratio, l, r, is_dc);
 
+                    if (ext_type == "CP")
+                        ext.directedCPExtraction(subgraph, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
                     if (ext_type == "flow-exact")
                         ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
 
+                    if (ver_type == "CP")
+                        flag = ver.directedCPVerification(graph, subgraph, lp, best_pos, vertices, ratio, rho, rho_c,
+                                                          ratio_o, ratio_p, is_stable_set, edges, 0);
                     if (ver_type == "flow-exact")
-                        flag = ver.flowExactVerification(graph, l, r, <#initializer#>, 0, <#initializer#>);
+                        flag = ver.flowExactVerification(graph, l, r);
                 }
-                printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density, graph.vertices[0].size(), graph.vertices[1].size());
+                printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density,
+                       graph.vertices[0].size(), graph.vertices[1].size());
             }
         }
     }

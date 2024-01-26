@@ -15,7 +15,7 @@ Args::Args() {
     args_["-ext"];
     args_["-ver"];
     args_["-o"];
-    args_["-s"];
+    args_["-seq"] = "f";
     args_["-vw"] = "f";
     args_["-lr"] = "0";
     args_["-p"] = "f";

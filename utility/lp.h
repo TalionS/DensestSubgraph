@@ -17,7 +17,6 @@ struct Alpha{
     ui id_second;
     double weight_first;
     double weight_second;
-    bool is_selected = true;
 };
 
 class LinearProgramming{
@@ -30,6 +29,7 @@ public:
     ui edges_count_;
     ui type_;
     ui sort_type;
+    ui cur_iter_num;
 public:
     std::vector<double> *r;
     std::vector<Alpha> alpha;
