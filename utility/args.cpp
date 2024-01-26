@@ -14,7 +14,7 @@ Args::Args() {
     args_["-alloc"];
     args_["-ext"];
     args_["-ver"];
-    args_["-o"];
+    args_["-o"] = "0";
     args_["-seq"] = "f";
     args_["-vw"] = "f";
     args_["-lr"] = "0";
