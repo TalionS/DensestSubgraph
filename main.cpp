@@ -188,6 +188,8 @@ int main(int argc, char **argv) {
                         } else if (red_type == "appro-xy-core") {
                             red.xyCoreReduction(graph, subgraph, ratio, l, r, is_init_red,
                                                 is_dc, false, false);
+                        } else {
+                            subgraph = graph;
                         }
                     }
                     if (alloc_type == "CP")
@@ -210,7 +212,7 @@ int main(int argc, char **argv) {
                         flag = ver.flowExactVerification(graph, l, r);
                 }
             }
-            printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density,
+            printf("ratio count: %d, density: %f, S/T: %d/%d\n", ratio_count, graph.subgraph_density,
                    graph.vertices[0].size(), graph.vertices[1].size());
         }
 
