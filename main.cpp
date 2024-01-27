@@ -25,6 +25,7 @@ int main(int argc, char **argv) {
     bool is_exp = args.getOption("-exp") == "t";
     bool is_dc = args.getOption("-dc") == "t";
     bool is_seq = args.getOption("-seq") == "t";
+    bool is_reduction_ablation = args.getOption("-ra") == "t";
 
     double epsilon = std::stod(args.getOption("-eps"));
     double learning_rate = std::stod(args.getOption("-lr"));
@@ -49,6 +50,7 @@ int main(int argc, char **argv) {
         } else {
             std::pair<double, double> ratio;
             double ratio_o, ratio_p;
+            double reduction_ratio = 0;
             RatioSelection ratio_selection(graph);
             bool is_init_ratio = false;
             ui ratio_count = 0;
@@ -86,7 +88,11 @@ int main(int argc, char **argv) {
                         } else if (red_type == "appro-xy-core") {
                             red.xyCoreReduction(graph, subgraph, ratio, l, r, is_init_red,
                                                 is_dc, false, false);
+                        } else {
+                            subgraph = graph;
                         }
+                        if (is_reduction_ablation)
+                            reduction_ratio += (double) subgraph.getEdgesCount() / graph.getEdgesCount();
                     }
                     if (alloc_type == "CP")
                         alloc.directedCPAllocation(subgraph, lp, iter_num, is_init_lp, ratio, !is_seq, is_exp);
@@ -101,6 +107,8 @@ int main(int argc, char **argv) {
             }
             printf("ratio count: %d, density: %f, S/T: %d/%d\n", ratio_count, graph.subgraph_density,
                    graph.vertices[0].size(), graph.vertices[1].size());
+            if (is_reduction_ablation)
+                printf("reduction_ratio: %f\n", reduction_ratio / ratio_count * 100);
         }
     } else {
 //        Reduction red;
@@ -151,6 +159,7 @@ int main(int argc, char **argv) {
             //needs to be considered.
             std::pair<double, double> ratio;
             double ratio_o, ratio_p;
+            double reduction_ratio = 0;
             RatioSelection ratio_selection(graph);
             bool is_init_ratio = false;
             ui ratio_count = 0;
@@ -191,6 +200,8 @@ int main(int argc, char **argv) {
                         } else {
                             subgraph = graph;
                         }
+                        if (is_reduction_ablation)
+                            reduction_ratio += (double) subgraph.getEdgesCount() / graph.getEdgesCount();
                     }
                     if (alloc_type == "CP")
                         red.stableSetReduction(subgraph, lp, edges, is_stable_set);
@@ -214,6 +225,8 @@ int main(int argc, char **argv) {
             }
             printf("ratio count: %d, density: %f, S/T: %d/%d\n", ratio_count, graph.subgraph_density,
                    graph.vertices[0].size(), graph.vertices[1].size());
+            if (is_reduction_ablation)
+                printf("reduction_ratio: %f\n", reduction_ratio / ratio_count * 100);
         }
 
     }

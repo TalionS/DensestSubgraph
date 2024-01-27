@@ -22,6 +22,7 @@ Args::Args() {
     args_["-exp"] = "t";
     args_["-it"] = "100";
     args_["-dc"] = "t";
+    args_["-ra"] = "false";
 }
 
 

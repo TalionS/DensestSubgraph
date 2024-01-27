@@ -69,8 +69,6 @@ Extraction::flowExactExtraction(Graph &graph, std::pair<double, double> ratio, F
             graph.vertices[1] = vertices[1];
         }
     } else {
-        ratio_o = 0;
-        ratio_p = 0;
         r = mid;
     }
 }

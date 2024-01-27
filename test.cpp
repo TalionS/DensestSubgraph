@@ -60,6 +60,7 @@ int main(int argc, char **argv) {
     bool is_init_red = false;
     auto ratio = std::pair<double, double>(0, 0);
     double ratio_o, ratio_p;
+    double reduction_ratio = 0;
     double epsilon = 0;
     ui s_size = 0, t_size = 0;
     std::vector<std::pair<VertexID, VertexID>> edges;
@@ -80,7 +81,7 @@ int main(int argc, char **argv) {
         bool flag = true;
         bool is_init_lp = false;
         double l, r, alpha;
-        alpha = 1;
+        alpha = 0;
         l = alpha * graph.subgraph_density;
 //        l = 0;
         r = graph.subgraph_density_upper_bound;
@@ -106,12 +107,12 @@ int main(int argc, char **argv) {
 //        ratio.second = (double) 453 / 195;
         while(flag) {
 //            Graph x_y_core = Graph(true, graph.getVerticesCount());
-            if (!is_core) {
-                red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc, false, true);
-                is_core = true;
-            }
+//            if (!is_core) {
+                red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc, false, false);
+//                is_core = true;
+//            }
 //            is_core = true;
-            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
+//            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
 //            T += 100;
 //            T <<= 1;
 //            printf("%d\n", T);
@@ -120,11 +121,11 @@ int main(int argc, char **argv) {
 //            flag = ver.directedVWApproVerification(graph, lp, vertices, rho, rho_c, 0);
 
 
-            alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio, true, is_exp);
-            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
-            flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
-                                              ratio_p, stable_set_reduction,
-                                              edges, epsilon);
+//            alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio, true, is_exp);
+//            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
+//            flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
+//                                              ratio_p, stable_set_reduction,
+//                                              edges, epsilon);
 
 //            alloc.directedPMApproAllocation(graph, ratio, 1, edges_count, vertices, degrees, is_init_lp);
 //            ext.directedPMApproExtraction(graph, edges_count, vertices);
@@ -137,9 +138,9 @@ int main(int argc, char **argv) {
 //            flag = ver.directedFixedKSApproVerification(graph, cur, edges_count, vertices);
 //            flag = ver.directedBSApproVerification(graph, edges_count, vertices);
 
-//            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);
-//            ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
-//            flag = ver.flowExactVerification(graph, l, r);
+            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);
+            ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
+            flag = ver.flowExactVerification(graph, l, r);
 //            WCore w_core;
 //            red.wCoreReduction(graph, w_core);
 //            w_core.getMaxCNPair(graph, max_core_num);

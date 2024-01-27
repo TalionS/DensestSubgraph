@@ -125,6 +125,8 @@ bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double>
                     dc_ratio_set_.push(ratio_p);
                     dc_ratio_set_.push(ratio.second);
                 }
+                ratio_o = 0;
+                ratio_p = 0;
             }
             if (dc_ratio_set_.empty())
                 continue;

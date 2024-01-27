@@ -30,7 +30,8 @@ private:
             "-p",       //parallel
             "-exp",
             "-it",      //number of iteration
-            "-dc"
+            "-dc",
+            "-ra"       //reduction ablation
     };
 
 public:
