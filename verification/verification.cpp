@@ -125,22 +125,26 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
             for (auto u: vertices[i])
                 selected[i][u] = true;
         }
+        std::vector<double> r[2];
+        r[0] = lp.r[0];
+        r[1] = lp.r[1];
+        std::vector<Alpha> alpha = lp.alpha;
         for (ui i = 0; i < lp.edges_count_; i++) {
 //            if (!lp.alpha[i].is_selected)
 //                continue;
-            if (selected[0][lp.alpha[i].id_first] && !selected[1][lp.alpha[i].id_second]) {
-                lp.r[0][lp.alpha[i].id_first] -= 2.0 * sqrt(ratio) * lp.alpha[i].weight_first;
-                lp.r[1][lp.alpha[i].id_second] += 2.0 / sqrt(ratio) * lp.alpha[i].weight_first;
-                lp.alpha[i].weight_first = 0;
-                lp.alpha[i].weight_second = 1;
-            } else if (!selected[0][lp.alpha[i].id_first] && selected[1][lp.alpha[i].id_second]) {
-                lp.r[0][lp.alpha[i].id_first] += 2.0 * sqrt(ratio) * lp.alpha[i].weight_second;
-                lp.r[1][lp.alpha[i].id_second] -= 2.0 / sqrt(ratio) * lp.alpha[i].weight_second;
-                lp.alpha[i].weight_first = 1;
-                lp.alpha[i].weight_second = 0;
-                in_degrees[lp.alpha[i].id_second]--;
-            } else if (selected[0][lp.alpha[i].id_first] && selected[1][lp.alpha[i].id_second]) {
-                edges.emplace_back(lp.alpha[i].id_first, lp.alpha[i].id_second);
+            if (selected[0][alpha[i].id_first] && !selected[1][alpha[i].id_second]) {
+                r[0][alpha[i].id_first] -= 2.0 * sqrt(ratio) * alpha[i].weight_first;
+                r[1][alpha[i].id_second] += 2.0 / sqrt(ratio) * alpha[i].weight_first;
+                alpha[i].weight_first = 0;
+                alpha[i].weight_second = 1;
+            } else if (!selected[0][alpha[i].id_first] && selected[1][alpha[i].id_second]) {
+                r[0][alpha[i].id_first] += 2.0 * sqrt(ratio) * alpha[i].weight_second;
+                r[1][alpha[i].id_second] -= 2.0 / sqrt(ratio) * alpha[i].weight_second;
+                alpha[i].weight_first = 1;
+                alpha[i].weight_second = 0;
+                in_degrees[alpha[i].id_second]--;
+            } else if (selected[0][alpha[i].id_first] && selected[1][alpha[i].id_second]) {
+                edges.emplace_back(alpha[i].id_first, alpha[i].id_second);
             }
         }
         std::vector<ui> pos(2, 0);
@@ -153,7 +157,7 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
                 cur = 1;
             }
 //        min_r = std::max(min_r, tmp_r[cur][pos_[cur]].first);
-            min_r = std::min(min_r, lp.r[cur][tmp_r[cur][pos[cur]].second]);
+            min_r = std::min(min_r, r[cur][tmp_r[cur][pos[cur]].second]);
             pos[cur]++;
         }
         while (pos[0] < cnt[0] && pos[1] < cnt[1]) {
@@ -163,7 +167,7 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
                 cur = 1;
             }
 //        if (min_r > tmp_r[cur][pos_[cur]].first)
-            if (min_r < lp.r[cur][tmp_r[cur][pos[cur]].second])
+            if (min_r < r[cur][tmp_r[cur][pos[cur]].second])
                 return true;
             pos[cur]++;
         }
@@ -197,17 +201,9 @@ Verification::directedCPVerification(Graph &graph, Graph &subgraph, LinearProgra
         flag = std::abs(max_flow - edges.size()) > 1e-3;
         if (edges.size() < m) {
             stable_set_reduction = true;
-//            Graph stable_subgraph = Graph(true, n);
-//            for (auto &edge: edges)
-//                stable_subgraph.addDirectedEdge(edge.first, edge.second);
-//            for (ui i = 0; i < lp.edges_count_; i++) {
-//                if (!lp.alpha[i].is_selected)
-//                    continue;
-//                if (!selected[0][lp.alpha[i].id_first] || !selected[1][lp.alpha[i].id_second]) {
-//                    lp.alpha[i].is_selected = false;
-//                }
-//            }
-//            subgraph = stable_subgraph;
+            lp.r[0] = r[0];
+            lp.r[1] = r[1];
+            lp.alpha = alpha;
         }
     }
     if (rho > graph.subgraph_density) {

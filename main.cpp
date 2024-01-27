@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
                                                   ratio_p,
                                                   graph.subgraph_density,
                                                   epsilon)) {
-
+                ratio_count++;
                 bool flag = true;
                 bool is_init_red = false;
                 bool is_init_lp = false;
@@ -98,10 +98,9 @@ int main(int argc, char **argv) {
                         flag = ver.directedCPVerification(graph, subgraph, lp, best_pos, vertices, ratio, rho, rho_c,
                                                           ratio_o, ratio_p, is_stable_set, edges, epsilon);
                 }
-                printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density,
-                       graph.vertices[0].size(), graph.vertices[1].size());
             }
-
+            printf("ratio count: %d, density: %f, S/T: %d/%d\n", ratio_count, graph.subgraph_density,
+                   graph.vertices[0].size(), graph.vertices[1].size());
         }
     } else {
 //        Reduction red;
@@ -164,7 +163,7 @@ int main(int argc, char **argv) {
                                                   ratio_p,
                                                   graph.subgraph_density,
                                                   0)) {
-
+                ratio_count++;
                 bool flag = true;
                 bool is_init_red = false;
                 bool is_init_lp = false;
@@ -193,6 +192,7 @@ int main(int argc, char **argv) {
                     }
                     if (alloc_type == "CP")
                         red.stableSetReduction(subgraph, lp, edges, is_stable_set);
+
                     if (alloc_type == "CP")
                         alloc.directedCPAllocation(subgraph, lp, iter_num, is_init_lp, ratio, !is_seq, is_exp);
                     if (alloc_type == "flow-exact")
@@ -209,10 +209,11 @@ int main(int argc, char **argv) {
                     if (ver_type == "flow-exact")
                         flag = ver.flowExactVerification(graph, l, r);
                 }
-                printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density,
-                       graph.vertices[0].size(), graph.vertices[1].size());
             }
+            printf("ratio count: %d, density: %f, S/T: %d/%d\n", ++ratio_count, graph.subgraph_density,
+                   graph.vertices[0].size(), graph.vertices[1].size());
         }
+
     }
     clock_t end = clock();
     printf("time: %f", (double) (end - begin) / CLOCKS_PER_SEC);
