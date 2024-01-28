@@ -69,10 +69,10 @@ void Reduction::xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double,
         } else
             ratio = (ratios.first + ratios.second) / 2;
 //        ratios.first = std::max(ratios.first, ratio / 2);
-        double ratio_right_sqrt = sqrt(std::min(ratios.second, ratio * 2));
-        double ratio_left_sqrt = sqrt(std::max(ratios.first, ratio / 2));
-//        double ratio_right_sqrt = sqrt(ratios.second);
-//        double ratio_left_sqrt = sqrt(ratios.first);
+//        double ratio_right_sqrt = sqrt(std::min(ratios.second, ratio * 2));
+//        double ratio_left_sqrt = sqrt(std::max(ratios.first, ratio / 2));
+        double ratio_right_sqrt = sqrt(ratios.second);
+        double ratio_left_sqrt = sqrt(ratios.first);
         x = std::max(static_cast<int>(ceil(l / 2 / ratio_right_sqrt)), 1);
         y = std::max(static_cast<int>(ceil(ratio_left_sqrt * l / 2)), 1);
     }

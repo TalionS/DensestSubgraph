@@ -22,7 +22,7 @@ void RatioSelection::ratioSetInitialization(ui vertices_count, bool is_vw, bool 
 }
 
 bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double> &ratio, bool &is_init, bool is_vw,
-                                    bool is_dc, double ratio_o, double ratio_p, double density, double epsilon) {
+                                    bool is_dc, double &ratio_o, double &ratio_p, double density, double epsilon) {
     if (!is_init) {
         is_init = true;
         ratioSetInitialization(vertices_count, false, is_dc);
@@ -113,7 +113,7 @@ bool RatioSelection::ratioSelection(ui vertices_count, std::pair<double, double>
         while (!dc_ratio_set_.empty() || !is_pushed) {
             if (!is_pushed) {
                 is_pushed = true;
-                if (!ratio_o) {
+                if (ratio_o == 0) {
                     ratio_o = (ratio.first + ratio.second) / 2;
                     ratio_p = ratio_o;
                 }

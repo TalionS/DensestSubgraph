@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 //    graph.loadGraphFromFile("../data/xycores.txt");
 //    graph.loadGraphFromFile("../data/MI.txt");
 //    density 7.606087, S/T 13/12
-    graph.loadGraphFromFile("../data/AD1.txt");
+    graph.loadGraphFromFile("../data/OF.txt");
     clock_t begin = clock();
 
 //    density 31.681085, S/T 453/195
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
     bool is_init_ratio = false;
     bool is_init_red = false;
     auto ratio = std::pair<double, double>(0, 0);
-    double ratio_o, ratio_p;
+    double ratio_o = 0, ratio_p = 0;
     double reduction_ratio = 0;
     double epsilon = 0;
     ui s_size = 0, t_size = 0;
