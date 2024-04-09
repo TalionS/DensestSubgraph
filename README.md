@@ -39,7 +39,7 @@ Undirected:
 |Friendster (FS)|Social|124,836,180|1,806,067,135|
 
 Directed:
-| Dataset         | Category      | $|V|$   | $|E|$     |
+| Dataset         | Category      |  $\mid V \mid$   | $\mid E \mid$    |
 | --------------- | ------------- | -------: | --------: |
 |Opflights (OF)|Infrastructure|2,939|30,501|
 |Advogato (AD)|Social|6,541|51,127|
