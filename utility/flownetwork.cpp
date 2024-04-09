@@ -165,3 +165,61 @@ void FlowNetwork::getMinCut(VertexID s, VertexID t, std::vector<VertexID> &S) {
     }
 }
 
+Edge::Edge(ui from, ui to, double flow, ui rev = 0): from(from), to(to), flow(flow), rev(rev){};
+void Dinic::Init(ui n){
+    s = 0, t = n - 1;
+    e.resize(n);
+    dis.resize(n);
+    for(ui i = 0; i < n; i++) e[i].clear();
+}
+void Dinic::addEdge(ui from, ui to, double flow){
+    e[from].push_back(Edge(from, to, flow));
+    e[to].push_back(Edge(to,from,0));
+    e[from].back().rev = e[to].size() - 1;
+    e[to].back().rev = e[from].size() - 1;
+}
+bool Dinic::bfs(){
+    for(ui i = s; i <= t; i++) dis[i] = -1;
+    std::queue<ui> q;
+    q.push(s);
+    dis[s] = 0;
+    while(q.size()){
+        ui u = q.front();q.pop();
+        for(ui i = 0; i < e[u].size(); i++){
+            if(e[u][i].flow <= 0) continue;
+            ui v = e[u][i].to;
+            if(dis[v] == -1) dis[v] = dis[u] + 1, q.push(v);
+        }
+    } 
+    return dis[t] != -1;
+}
+
+double Dinic::dfs(ui u, double flow){
+    if(u == t) return flow;
+    double res = flow;
+    for(ui i = 0; i < e[u].size(); i++){
+        if(e[u][i].flow <= 0) continue;
+        ui v = e[u][i].to;
+        if(dis[v] == dis[u] + 1){
+            double k = dfs(v, std::min(flow, e[u][i].flow));
+            if(k <= 0) dis[v] = -1;
+            else{
+                flow -= k;
+                e[u][i].flow -= k;
+                e[v][e[u][i].rev].flow += k;
+            }
+            if(!flow) return res; 
+        }
+    }
+    return res - flow;
+}
+
+double Dinic::solve(double iter){
+    double h = 0;
+    double res = 0;
+    while(bfs() && h < iter){
+        h++;
+        res += dfs(0, 1e10);
+    }
+    return res;
+}

@@ -16,7 +16,8 @@ class RatioSelection{
 public:
     bool
     ratioSelection(ui vertices_count, std::pair<double, double> &ratio, bool &is_init, bool is_vw,
-                   bool is_dc, double &ratio_o, double &ratio_p, double density, double epsilon);
+                   bool is_dc, double &ratio_o, double &ratio_p, double density, double epsilon,
+                   bool is_res, ui res_width, bool is_map);
 public:
     RatioSelection(Graph &graph);
 

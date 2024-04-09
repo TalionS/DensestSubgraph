@@ -24,7 +24,10 @@ private:
     std::vector<ui> *deg_;
 
 public:
-    std::vector<ui> weight_;
+   bool is_mapped;
+   std::vector<VertexID> map;
+//    std::vector<std::vector<VertexID>> vertex_ids;
+    std::vector<double> weight_;
     std::vector<VertexID> *vertices;
     double subgraph_density_upper_bound;
     double subgraph_density_lower_bound;
@@ -36,10 +39,16 @@ public:
     ~Graph();
 
 public:
-    void loadGraphFromFile(const std::string &dir);
+    void init();
+    void loadGraphFromFile(const std::string &dir, bool is_sample = false, double sample_rate = 1);
+    void createVertexWeightedGraph(Graph &vw_graph, double ratio);
+    void removeMultiEdges(Graph &graph);
+    void coreOrder(Graph &graph);
+    std::vector<ui> CoreOrder(Graph &graph);
+    void coreReduce(Graph &graph, ui k = 0, bool weighted = false);
     void addDirectedEdge(VertexID begin, VertexID end);
     void addUndirectedEdge(VertexID begin, VertexID end);
-
+    void sample(double p);
 //    void deleteEdge(VertexID begin, VertexID end);
 //    void addVertex(VertexID vertex_id);
 //    void deleteVertex(VertexID vertex_id);
@@ -47,7 +56,8 @@ public:
 public:
     ui getEdgesCount() const;
     ui getVerticesCount() const;
-    ui getMaxdeg();
+    double getMaxdeg();
+    void setVerticesCount(ui vertices_count);
     std::vector<VertexID>* getVertices();
     std::vector<VertexID> &getNeighbors(VertexID i) const;
     std::vector<VertexID> &getOutNeighbors(VertexID i) const;

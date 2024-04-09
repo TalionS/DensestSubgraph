@@ -12,14 +12,18 @@
 
 class XYCore{
 public:
+    std::vector<ui> max_degrees;
     std::vector<std::vector<VertexID>> vert;
     std::vector<std::vector<ui>> bin;
     std::vector<std::vector<ui>> pos;
     std::vector<std::vector<ui>> degrees;
+    std::vector<std::vector<std::vector<VertexID>>> adj;
 public:
     XYCore();
-    void xyCoreInitialization(const Graph &graph);
-    void generateXYCore(const Graph &graph, Graph &subgraph, ui x, ui y, bool is_exact = true);
+    XYCore& operator=(const XYCore& other);
+    void xyCoreInitialization(Graph& graph, bool sort = false);
+    void generateXYCore(const Graph &graph, Graph &subgraph, ui x, ui y, bool is_exact, bool is_map, bool is_copy);
+
     ui getDelta(const Graph &graph);
     ui skyline_core_num(Graph &graph, ui cur, ui x, ui y, bool reduced = false);
 private:

@@ -31,9 +31,10 @@ public:
     ui sort_type;
     ui cur_iter_num;
 public:
-    std::vector<double> *r;
+    std::vector<std::vector<double>> r;
     std::vector<Alpha> alpha;
     std::vector<Alpha> beta;
+    std::vector<double> weight;
 
 
 public:
@@ -42,7 +43,9 @@ public:
 
     void Iterate(double learning_rate, double ratio = 0, bool is_synchronous = false);
 
-    void FistaIterate(double learning_rate, double t, double ratio = 0);
+    void FistaIterate(double learning_rate, double t, double ratio = 0, bool is_synchronous = false);
+
+    void MWUIterate(ui t, bool is_synchronous = false);
 
     void Init(Graph &graph, double ratio = 0);
 

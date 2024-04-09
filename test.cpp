@@ -23,12 +23,14 @@ int main(int argc, char **argv) {
 //    Args args;
 //    args.argsParse(argc, argv);
 //    std::cout << args.getOption("-a") << std::endl;
+    bool is_vw = false;
     Graph graph(true);
 //    graph.loadGraphFromFile("../data/counter_example_for_ksapp.txt");
 //    graph.loadGraphFromFile("../data/xycores.txt");
 //    graph.loadGraphFromFile("../data/MI.txt");
 //    density 7.606087, S/T 13/12
-    graph.loadGraphFromFile("../data/OF.txt");
+    graph.loadGraphFromFile("/mnt/data/yingli/DSD_Dataset/directed/MO.txt");
+    graph.removeMultiEdges(graph);
     clock_t begin = clock();
 
 //    density 31.681085, S/T 453/195
@@ -69,30 +71,34 @@ int main(int argc, char **argv) {
     while(ratioSelect.ratioSelection(
             graph.getVerticesCount(),
             ratio,
-            is_init_ratio, false,
+            is_init_ratio, is_vw,
             true,
             ratio_o,
             ratio_p,
             graph.subgraph_density,
-            epsilon))
+            epsilon, false, 2, false))
     {
         s_size = 0;
         t_size = 0;
+//        Graph vw_graph(false);
+//        graph.createVertexWeightedGraph(vw_graph, ratio.first / ratio.second);
         bool flag = true;
         bool is_init_lp = false;
         double l, r, alpha;
-        alpha = 0;
+        alpha = 1;
         l = alpha * graph.subgraph_density;
 //        l = 0;
         r = graph.subgraph_density_upper_bound;
-        LinearProgramming lp = LinearProgramming(true, 0, 0, 0, 0);
-        ui T = 100;
+//        LinearProgramming lp = LinearProgramming(true, 0, 0, 0, 0);
+        LinearProgramming lp(true, 0, 0, 0, 0);
+        ui T = 1;
+//        lp.Init(graph, ratio);
         bool is_exp = true;
 //        ui T = 0;
         bool is_core = false;
         std::pair<ui, ui> best_pos(0, 0);
         double rho, rho_c;
-        Graph x_y_core = Graph(true, graph.getVerticesCount());
+        Graph x_y_core = Graph(true, 0);
         bool stable_set_reduction = false;
 //        Graph x_y_core = graph;
         //内层循环
@@ -102,17 +108,26 @@ int main(int argc, char **argv) {
         std::vector<std::vector<Heap::handle_type>> handles;
         std::vector<std::vector<bool>> is_peeled;
         std::vector<ui> vertices_count;
+        auto verticess = new std::vector<VertexID>[1];
         ui cur = 0;
-//        ratio.first = (double) 453 / 195;
-//        ratio.second = (double) 453 / 195;
+        ratio.first = (double) 155 / 149;
+        ratio.second = (double) 155 / 149;
         while(flag) {
+//            alloc.UndirectedlpAllocation(vw_graph, lp, T);
+//            ext.UndirectedlpExactExtraction(vw_graph, lp, verticess);
+//            flag = ver.UndirectedLpAppVerification(vw_graph, lp, verticess, epsilon);
+//            T <<= 1;
 //            Graph x_y_core = Graph(true, graph.getVerticesCount());
-//            if (!is_core) {
-                red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc, false, false);
-//                is_core = true;
-//            }
+            if (!is_core) {
+                red.xyCoreReduction(graph, x_y_core, ratio, l, r, is_init_red, is_dc, false, false, true, false, 2,
+                                    false);
+//                lp.Init(x_y_core);
+//                x_y_core = graph;
+                is_core = true;
+            }
+//            x_y_core = graph;
 //            is_core = true;
-//            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction);
+            red.stableSetReduction(x_y_core, lp, edges, stable_set_reduction, true);
 //            T += 100;
 //            T <<= 1;
 //            printf("%d\n", T);
@@ -121,31 +136,32 @@ int main(int argc, char **argv) {
 //            flag = ver.directedVWApproVerification(graph, lp, vertices, rho, rho_c, 0);
 
 
-//            alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio, true, is_exp);
-//            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c);
-//            flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
-//                                              ratio_p, stable_set_reduction,
-//                                              edges, epsilon);
+            alloc.directedCPAllocation(x_y_core, lp, T, is_init_lp, ratio, true, is_exp, false);
+            ext.directedCPExtraction(x_y_core, lp, best_pos, vertices, ratio, ratio_o, ratio_p, rho, rho_c, false);
+            flag = ver.directedCPVerification(graph, x_y_core, lp, best_pos, vertices, ratio, rho, rho_c, ratio_o,
+                                              ratio_p, stable_set_reduction,
+                                              edges, epsilon, false, false);
 
 //            alloc.directedPMApproAllocation(graph, ratio, 1, edges_count, vertices, degrees, is_init_lp);
 //            ext.directedPMApproExtraction(graph, edges_count, vertices);
 //            flag = ver.directedPMApproVerification(vertices);
 
 //            alloc.directedFixedKSApproAllocation(graph, ratio, cur, heap, handles, is_peeled, edges_count);
-//            alloc.directedBSApproAllocation(graph, ratio, heap, handles, is_peeled, edges_count, vertices_count, is_init_lp);
+//            alloc.directedBSApproAllocation(graph, ratio, heap, handles, is_peeled, edges_count, is_init_lp);
 //            alloc.directedKSApproAllocation(graph, heap, handles, is_peeled, edges_count, is_init_lp);
 //            ext.directedBSApproExtraction(graph, is_peeled, vertices);
 //            flag = ver.directedFixedKSApproVerification(graph, cur, edges_count, vertices);
 //            flag = ver.directedBSApproVerification(graph, edges_count, vertices);
 
-            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);
-            ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
-            flag = ver.flowExactVerification(graph, l, r);
+//            alloc.flowExactAllocation(x_y_core, flow, ratio, l, r, is_dc);
+//            ext.flowExactExtraction(graph, ratio, flow, l, r, ratio_o, ratio_p);
+//            flag = ver.flowExactVerification(graph, l, r);
 //            WCore w_core;
 //            red.wCoreReduction(graph, w_core);
 //            w_core.getMaxCNPair(graph, max_core_num);
 //            ext
         }
+//        ext.directedVWApproExtraction(graph, vw_graph, vertices, verticess, ratio_o, ratio_p);
         printf("ratio_count %d, ratio (%f, %f), density %f, S/T %d/%d\n", ++ratio_count, ratio.first, ratio.second, graph.subgraph_density, graph.vertices[0].size(), graph.vertices[1].size());
 //        printf("ratio_count %d, sqrt_ratio %.4f, density %f, S/T %d/%d\n", ++ratio_count, sqrt(ratio.first / ratio.second), graph.subgraph_density, graph.vertices[0].size(), graph.vertices[1].size());
     }

@@ -23,10 +23,13 @@
 class Reduction {
 public:
     void xyCoreReduction(Graph &graph, Graph &x_y_core, std::pair<double, double> ratios, double &l, double &r,
-                         bool &is_init, bool is_dc, bool is_divide_by_number = false, bool is_exact = false);
+                         bool &is_init, bool is_dc, bool is_divide_by_number, bool is_exact, bool is_map,
+                         bool is_res, ui res_width, bool is_copy);
     void kCoreReduction(Graph &graph, double &l, double &r);
-    void stableSetReduction(Graph &graph, LinearProgramming &lp, std::vector<std::pair<VertexID, VertexID>> edges, bool stable_set_reduction);
-    void wCoreReduction(Graph &graph, WCore &w_core);
+    void stableSetReduction(Graph &graph, LinearProgramming &lp, std::vector<std::pair<VertexID, VertexID>> &edges, bool stable_set_reduction, bool is_map = false);
+    void wCoreReduction(Graph &graph, Graph &subgraph, WCore &w_core);
+    void UndirectedkCoreReduction(Graph &graph, LinearProgramming &lp, bool weighted = false);
+    void UndirectedStableReduction(Graph &graph, LinearProgramming &lp);
 
 public:
     std::vector<ui> core;

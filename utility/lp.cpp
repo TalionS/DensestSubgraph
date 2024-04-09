@@ -6,15 +6,16 @@ LinearProgramming::LinearProgramming(bool is_directed, ui type, ui n, ui m, ui s
         nodes_count_(n),
         edges_count_(m),
         type_(type),
-        sort_type(sort) {
+        sort_type(sort),
+        cur_iter_num(0){
     if (is_directed_) {
-        r = new std::vector<double>[2];
+        r.resize(2);
         alpha.resize(static_cast<unsigned long>(m)), 0;
         for (int i = 0; i < 2; i++) {
             r[i].resize(static_cast<unsigned long>(n), 0);
         }
     } else {
-        r = new std::vector<double>[1];
+        r.resize(1);
         r[0].resize(static_cast<unsigned long>(n));
         alpha.resize(static_cast<unsigned long>(m));
 
@@ -25,7 +26,7 @@ LinearProgramming::LinearProgramming(bool is_directed, ui type, ui n, ui m, ui s
 }
 
 LinearProgramming::~LinearProgramming() {
-    delete[] r;
+
 }
 
 void LinearProgramming::Init(Graph &graph, double ratio) {
@@ -34,7 +35,7 @@ void LinearProgramming::Init(Graph &graph, double ratio) {
     nodes_count_ = n;
     edges_count_ = m;
     cur_iter_num = 0;
-
+    weight = graph.weight_;
     if (is_directed_) {
         ui cnt = 0;
         for (ui i = 0; i < 2; i++)
@@ -55,11 +56,9 @@ void LinearProgramming::Init(Graph &graph, double ratio) {
         }
         sort(graph);
     } else {
-        std::cout << "haha" << std::endl;
         ui cnt = 0;
         r[0].resize(n);
         alpha.resize(m);
-        std::cout << "haha" << std::endl;
         for (ui u = 0; u < n; u++) {
             r[0][u] = 0;
             for (auto &v: graph.getNeighbors(u)) {
@@ -71,13 +70,11 @@ void LinearProgramming::Init(Graph &graph, double ratio) {
                 cnt++;
             }
         }
-        std::cout << "haha" << std::endl;
         for (ui u = 0; u < m; u++) {
-            r[0][alpha[u].id_first] += alpha[u].weight_first;
+            r[0][alpha[u].id_first] += alpha[u].weight_first / weight[alpha[u].id_first];
 
-            r[0][alpha[u].id_second] += alpha[u].weight_second;
+            r[0][alpha[u].id_second] += alpha[u].weight_second / weight[alpha[u].id_second];
         }
-        std::cout << "haha" << std::endl;
         if (type_ == 1) {
             beta.resize(m);
             for (ui i = 0; i < m; i++) {
@@ -138,69 +135,149 @@ void LinearProgramming::Iterate(double learning_rate, double ratio, bool is_sync
     } else {
         std::vector<Alpha> alpha_hat;
         alpha_hat.resize(edges_count_);
-        for (ui i = 0; i < nodes_count_; i++) {
-            r[0][i] = (1 - learning_rate) * r[0][i];
+        if(is_synchronous){
+            for (ui i = 0; i < nodes_count_; i++) r[0][i] *= (1 - learning_rate);
+            for (ui i = 0; i < edges_count_; i++) {
+                alpha[i].weight_first *= (1 - learning_rate);
+                alpha[i].weight_second *= (1 - learning_rate);
+                if (r[0][alpha[i].id_first] < r[0][alpha[i].id_second])
+                    alpha[i].weight_first += learning_rate, r[0][alpha[i].id_first] += learning_rate / weight[alpha[i].id_first];
+                else
+                    alpha[i].weight_second += learning_rate, r[0][alpha[i].id_second] += learning_rate / weight[alpha[i].id_second];
+            }
         }
-//
+        else{
+            for (ui i = 0; i < edges_count_; i++) {
+                if (r[0][alpha[i].id_first] < r[0][alpha[i].id_second])
+                    alpha_hat[i].weight_first = 1, alpha_hat[i].weight_second = 0;
+                else
+                    alpha_hat[i].weight_second = 1, alpha_hat[i].weight_first = 0;
+            }
+            for (ui i = 0; i < edges_count_; i++) {
+
+                alpha[i].weight_first = (1 - learning_rate) * alpha[i].weight_first
+                                        + learning_rate * alpha_hat[i].weight_first;
+                alpha[i].weight_second = (1 - learning_rate) * alpha[i].weight_second
+                                        + learning_rate * alpha_hat[i].weight_second;
+            }
+            for (ui i = 0; i < nodes_count_; i++) {
+                r[0][i] = 0;
+            }
+            for (ui i = 0; i < edges_count_; i++) {
+                r[0][alpha[i].id_first] += alpha[i].weight_first / weight[alpha[i].id_first];
+                r[0][alpha[i].id_second] += alpha[i].weight_second / weight[alpha[i].id_second];
+            }
+        }
+        
+    }
+}
+
+void LinearProgramming::FistaIterate(double learning_rate, double t, double ratio, bool is_synchronous) {
+    if (is_directed_) {
+        //todo
+    } else {
+        if(is_synchronous){
+            std::vector<Alpha> alpha_new;
+            alpha_new.resize(edges_count_);
+            for (ui i = 0; i < edges_count_; i++) {
+                beta[i].weight_first = beta[i].weight_first - 2 * learning_rate * r[0][beta[i].id_first];
+                beta[i].weight_second = beta[i].weight_second - 2 * learning_rate * r[0][beta[i].id_second];
+                if (abs(beta[i].weight_first - beta[i].weight_second) < 1) {
+                    beta[i].weight_first = (beta[i].weight_first - beta[i].weight_second + 1) / 2;
+                    beta[i].weight_second = 1 - beta[i].weight_first;
+                } else if (beta[i].weight_first - beta[i].weight_second > 0) {
+                    beta[i].weight_first = 1;
+                    beta[i].weight_second = 0;
+                } else {
+                    beta[i].weight_first = 0;
+                    beta[i].weight_second = 1;
+                }
+                r[0][beta[i].id_first] -= alpha[i].weight_first / weight[beta[i].id_first];
+                r[0][beta[i].id_second] -= alpha[i].weight_second / weight[beta[i].id_second];
+                r[0][beta[i].id_first] += beta[i].weight_first / weight[beta[i].id_first];
+                r[0][beta[i].id_second] += beta[i].weight_second / weight[beta[i].id_second];
+                alpha_new[i] = beta[i];
+                beta[i].weight_first =
+                        alpha_new[i].weight_first + (alpha_new[i].weight_first - alpha[i].weight_first) * (t - 1) / (t + 2);
+                beta[i].weight_second = alpha_new[i].weight_second +
+                                        (alpha_new[i].weight_second - alpha[i].weight_second) * (t - 1) / (t + 2);
+            }  
+            alpha = alpha_new;
+        }
+        else{
+            std::vector<Alpha> alpha_new;
+            for (ui i = 0; i < edges_count_; i++) {
+                beta[i].weight_first = beta[i].weight_first - 2 * learning_rate * r[0][beta[i].id_first];
+                beta[i].weight_second = beta[i].weight_second - 2 * learning_rate * r[0][beta[i].id_second];
+                if (abs(beta[i].weight_first - beta[i].weight_second) < 1) {
+                    beta[i].weight_first = (beta[i].weight_first - beta[i].weight_second + 1) / 2;
+                    beta[i].weight_second = 1 - beta[i].weight_first;
+                } else if (beta[i].weight_first - beta[i].weight_second > 0) {
+                    beta[i].weight_first = 1;
+                    beta[i].weight_second = 0;
+                } else {
+                    beta[i].weight_first = 0;
+                    beta[i].weight_second = 1;
+                }
+            }
+            alpha_new = beta;
+            for (ui i = 0; i < edges_count_; i++) {
+                beta[i].weight_first =
+                        alpha_new[i].weight_first + (alpha_new[i].weight_first - alpha[i].weight_first) * (t - 1) / (t + 2);
+                beta[i].weight_second = alpha_new[i].weight_second +
+                                        (alpha_new[i].weight_second - alpha[i].weight_second) * (t - 1) / (t + 2);
+            }
+            alpha = alpha_new;
+            for (ui i = 0; i < nodes_count_; i++) {
+                r[0][i] = 0;
+            }
+            for (ui i = 0; i < edges_count_; i++) {
+                r[0][alpha[i].id_first] += alpha[i].weight_first / weight[alpha[i].id_first];
+                r[0][alpha[i].id_second] += alpha[i].weight_second / weight[alpha[i].id_second];
+            }
+        }
+    }
+}
+
+void LinearProgramming::MWUIterate(ui t, bool is_synchronous){
+    double learning_rate = 1.0 / (t + 1);
+    if(is_synchronous){
+        for (ui i = 0; i < nodes_count_; i++) r[0][i] *= (1 - learning_rate);
+        for (ui i = 0; i < edges_count_; i++) {
+            alpha[i].weight_first *= (1 - learning_rate);
+            alpha[i].weight_second *= (1 - learning_rate);
+            if (r[0][alpha[i].id_first] < r[0][alpha[i].id_second])
+                alpha[i].weight_first += learning_rate, r[0][alpha[i].id_first] += learning_rate / weight[alpha[i].id_first];
+            else
+                alpha[i].weight_second += learning_rate, r[0][alpha[i].id_second] += learning_rate / weight[alpha[i].id_second];
+        }
+    }
+    else{
+        std::vector<Alpha> alpha_hat;
+        alpha_hat.resize(edges_count_);
         for (ui i = 0; i < edges_count_; i++) {
             if (r[0][alpha[i].id_first] < r[0][alpha[i].id_second])
-                alpha_hat[i].weight_first = 1;
+                alpha_hat[i].weight_first = 1, alpha_hat[i].weight_second = 0;
             else
-                alpha_hat[i].weight_second = 1;
+                alpha_hat[i].weight_second = 1, alpha_hat[i].weight_first = 0;
         }
         for (ui i = 0; i < edges_count_; i++) {
 
             alpha[i].weight_first = (1 - learning_rate) * alpha[i].weight_first
                                     + learning_rate * alpha_hat[i].weight_first;
             alpha[i].weight_second = (1 - learning_rate) * alpha[i].weight_second
-                                     + learning_rate * alpha_hat[i].weight_second;
+                                        + learning_rate * alpha_hat[i].weight_second;
         }
         for (ui i = 0; i < nodes_count_; i++) {
             r[0][i] = 0;
         }
         for (ui i = 0; i < edges_count_; i++) {
-            r[0][alpha[i].id_first] += alpha[i].weight_first;
-            r[0][alpha[i].id_second] += alpha[i].weight_second;
+            r[0][alpha[i].id_first] += alpha[i].weight_first / weight[alpha[i].id_first];
+            r[0][alpha[i].id_second] += alpha[i].weight_second / weight[alpha[i].id_second];
         }
     }
 }
 
-void LinearProgramming::FistaIterate(double learning_rate, double t, double ratio) {
-    if (is_directed_) {
-        //todo
-    } else {
-        std::vector<Alpha> alpha_new;
-        for (ui i = 0; i < edges_count_; i++) {
-            beta[i].weight_first = beta[i].weight_first - 2 * learning_rate * r[0][beta[i].id_first];
-            beta[i].weight_second = beta[i].weight_second - 2 * learning_rate * r[0][beta[i].id_second];
-            if (abs(beta[i].weight_first - beta[i].weight_second) < 1) {
-                beta[i].weight_first = (beta[i].weight_first - beta[i].weight_second + 1) / 2;
-                beta[i].weight_second = 1 - beta[i].weight_first;
-            } else if (beta[i].weight_first - beta[i].weight_second > 0) {
-                beta[i].weight_first = 1;
-                beta[i].weight_second = 0;
-            } else {
-                beta[i].weight_first = 0;
-                beta[i].weight_second = 1;
-            }
-        }
-        alpha_new = beta;
-        for (ui i = 0; i < edges_count_; i++) {
-            beta[i].weight_first =
-                    alpha_new[i].weight_first + (alpha_new[i].weight_first - alpha[i].weight_first) * (t - 1) / (t + 2);
-            beta[i].weight_second = alpha_new[i].weight_second +
-                                    (alpha_new[i].weight_second - alpha[i].weight_second) * (t - 1) / (t + 2);
-        }
-        alpha = alpha_new;
-        for (ui i = 0; i < nodes_count_; i++) {
-            r[0][i] = 0;
-        }
-        for (ui i = 0; i < edges_count_; i++) {
-            r[0][alpha[i].id_first] += alpha[i].weight_first;
-            r[0][alpha[i].id_second] += alpha[i].weight_second;
-        }
-    }
-}
 
 void LinearProgramming::sort(Graph &graph) {
     if (is_directed_) {

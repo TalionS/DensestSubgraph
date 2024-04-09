@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <iostream>
 #include <algorithm>
 
 class Args {
@@ -26,12 +27,23 @@ private:
             "-o",       //update order
             "-seq",     //update strategy
             "-vw",
-            "-lr",
+            "-gamma",
             "-p",       //parallel
             "-exp",
             "-it",      //number of iteration
             "-dc",
-            "-ra"       //reduction ablation
+            "-ra",      //reduction ablation
+            "-stable",  //stable set
+            "-map",
+            "-res",     //restrict the range of ratios
+            "-width",
+            "-multi",
+            "-estable",
+            "-stats",
+            "-printc",
+            "-sample",
+            "-rate",
+            "-coredebug"
     };
 
 public:

@@ -8,4 +8,15 @@ test.cpp
 **/Makefile
 **/cmake_install.cmake
 **/CMakeFiles/
-
+*.py
+*.so
+/build
+/.vscode
+/.cmake
+/mem
+/Testing
+/CMakeCache.txt
+/debug
+/DensestSubgraph.cbp
+/ds.txt
+/test.txt

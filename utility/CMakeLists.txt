@@ -12,6 +12,11 @@ add_library(utility SHARED
         lp.cpp
         wcore.cpp
         app.cpp
+        heap.cpp
 )
 
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(utility PUBLIC OpenMP::OpenMP_CXX)
+endif()
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

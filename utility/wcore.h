@@ -19,7 +19,7 @@ public:
     std::vector<VertexID> vertices[2];
     std::vector<ui> degrees[2];
 public:
-    void generateMaxWCore(Graph &graph);
+    void generateMaxWCore(Graph &graph, Graph &subgraph);
     void wCoreDecomposition(Graph &graph);
     void getMaxCNPair(Graph &graph, std::pair<ui, ui> &max_core_num_pair);
 };
