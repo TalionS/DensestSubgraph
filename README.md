@@ -29,7 +29,7 @@ We use twelve real datasets from different domains including 6 undirected graphs
 
 Undirected:
 
-| Dataset         | Category      | $|V|$   | $|E|$     |
+| Dataset         | Category      | $\mid V \mid$   | $\mid E \mid$     |
 | --------------- | ------------- | -------: | --------: |
 | Econ-beacxc (EB) | Economic      | 507     | 42,176    |
 | DBLP (DP)       | Collaboration | 317,080 | 1,049,866 |
