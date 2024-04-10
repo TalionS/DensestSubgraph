@@ -97,7 +97,8 @@ There are a lot of options for you to conduct a thorough evalution among differe
 |-path|---|path to the dataset|
 |-t|`u`, `d`|`u`: undirected, `d`: directed|
 |-a|`e`, `a`|`e`: exact, `a`: approximation|
-|-eps|$\epsilon>=0$|error threshold for $1+\epsilon$ approximation algorithms|
+
+[//]: # (|-eps|$\epsilon>=0$|error threshold for $1+\epsilon$ approximation algorithms|)
 
 [//]: # (|-red|refer to B1|method of *graph reduction*|)
 
