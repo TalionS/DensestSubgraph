@@ -22,228 +22,229 @@ The codes of our in-depth study are implemented and tested under the following d
 
 - Hardware : Intel(R) Xeon(R) Gold 6338 CPU @ 2.00GHz and 512GB of memory.
 - Operation System : Ubuntu 20.04.5 LTS (GNU/Linux 5.15.0-101-generic x86_64)
+## Datasets
 
-[//]: # (## Datasets)
 
-[//]: # ()
-[//]: # (We use twelve real datasets from different domains including 6 undirected graphs and 6 directed graphs, which are available on the Stanford Network Analysis Platform, Laboratory of Web Algorithmics, Network Repository, and Konect.)
+We use twelve real datasets from different domains including 6 undirected graphs and 6 directed graphs, which are available on the Stanford Network Analysis Platform, Laboratory of Web Algorithmics, Network Repository, and Konect.
 
-[//]: # ()
-[//]: # (Undirected:)
 
-[//]: # ()
-[//]: # (| Dataset         | Category      | $\mid V \mid$   | $\mid E \mid$     |)
+Undirected:
 
-[//]: # (| --------------- | ------------- | -------: | --------: |)
 
-[//]: # (| Econ-beacxc &#40;EB&#41; | Economic      | 507     | 42,176    |)
+| Dataset         | Category      | $\mid V \mid$   | $\mid E \mid$     |
 
-[//]: # (| DBLP &#40;DP&#41;       | Collaboration | 317,080 | 1,049,866 |)
+| --------------- | ------------- | -------: | --------: |
 
-[//]: # (| Youtube &#40;YT&#41;    | Multimedia | 3,223,589 | 9,375,374 |)
+| Econ-beacxc (EB) | Economic      | 507     | 42,176    |
 
-[//]: # (|LiveJournal &#40;LJ&#41;|Social|4,036,538|34,681,189|)
+| DBLP (DP)       | Collaboration | 317,080 | 1,049,866 |
 
-[//]: # (|WebBase &#40;WB&#41;|Web|118,142,155|881,868,060|)
+| Youtube (YT)    | Multimedia | 3,223,589 | 9,375,374 |
 
-[//]: # (|Friendster &#40;FS&#41;|Social|124,836,180|1,806,067,135|)
+|LiveJournal (LJ)|Social|4,036,538|34,681,189|
 
-[//]: # ()
-[//]: # (Directed:)
+|WebBase (WB)|Web|118,142,155|881,868,060|
 
-[//]: # (| Dataset         | Category      |  $\mid V \mid$   | $\mid E \mid$    |)
+|Friendster (FS)|Social|124,836,180|1,806,067,135|
 
-[//]: # (| --------------- | ------------- | -------: | --------: |)
 
-[//]: # (|Opflights &#40;OF&#41;|Infrastructure|2,939|30,501|)
+Directed:
 
-[//]: # (|Advogato &#40;AD&#41;|Social|6,541|51,127|)
+| Dataset         | Category      |  $\mid V \mid$   | $\mid E \mid$    |
 
-[//]: # (|Amazon &#40;AM&#41;|E-commerce|403,394|3,387,388|)
+| --------------- | ------------- | -------: | --------: |
 
-[//]: # (|Bidu-zhishi &#40;BA&#41;|Hyperlink|2,141,300|17,794,839|)
+|Opflights (OF)|Infrastructure|2,939|30,501|
 
-[//]: # (|Wiki-en &#40;WE&#41;|Hyperlink|13,593,032|437,217,424|)
+|Advogato (AD)|Social|6,541|51,127|
 
-[//]: # (|SK-2005 &#40;SK&#41;|Web|50,636,154|1,949,412,601|)
+|Amazon (AM)|E-commerce|403,394|3,387,388|
 
-[//]: # ()
-[//]: # ()
-[//]: # (## How to Run the Codes)
+|Bidu-zhishi (BA)|Hyperlink|2,141,300|17,794,839|
 
-[//]: # ()
-[//]: # (### A. Code Compilation)
+|Wiki-en (WE)|Hyperlink|13,593,032|437,217,424|
 
-[//]: # ()
-[//]: # (After cloning the codes from GitHub, use the following command to compile the codes in the repository :)
+|SK-2005 (SK)|Web|50,636,154|1,949,412,601|
 
-[//]: # ()
-[//]: # (```sh)
 
-[//]: # (cmake CMakeLists.txt)
 
-[//]: # (make ./DensestSubgraph)
+## How to Run the Codes
 
-[//]: # (```)
 
-[//]: # ()
-[//]: # (### B. Command Line Parameters)
+### A. Code Compilation
 
-[//]: # (A general command of our program is like:)
 
-[//]: # (```sh)
+After cloning the codes from GitHub, use the following command to compile the codes in the repository :
 
-[//]: # (./DensestSubgraph [-option1 value1] [-option2 value2] ...)
 
-[//]: # (```)
+```sh
 
-[//]: # (For example, you could run `core-exact` on DP in the following command:)
+cmake CMakeLists.txt
 
-[//]: # (```sh)
+make ./DensestSubgraph
 
-[//]: # (./DensestSubgraph -path ./data/DP.txt -t u -a e -red core-exact -alloc flow-exact -ext flow-exact -ver flow-exact)
+```
 
-[//]: # (```)
 
-[//]: # (There are a lot of options for you to conduct a thorough evalution among different algorithms:)
+### B. Command Line Parameters
 
-[//]: # (|Parameters|Value|Description|)
+A general command of our program is like:
 
-[//]: # (|:---------------|:------------------|:------------|)
+```sh
 
-[//]: # (|-path|---|path to the dataset|)
+./DensestSubgraph [-option1 value1] [-option2 value2] ...
 
-[//]: # (|-t|`u`, `d`|`u`: undirected, `d`: directed|)
+```
 
-[//]: # (|-a|`e`, `a`|`e`: exact, `a`: approximation|)
+For example, you could run `core-exact` on DP in the following command:
 
-[//]: # (|-eps|$\epsilon>=0$|error threshold for $1+\epsilon$ approximation algorithms|)
+```sh
 
-[//]: # (|-red|refer to B1|method of *graph reduction*|)
+./DensestSubgraph -path ./data/DP.txt -t u -a e -red core-exact -alloc flow-exact -ext flow-exact -ver flow-exact
 
-[//]: # (|-alloc|refer to B2|method of `VWU`|)
+```
 
-[//]: # (|-ext|refer to B3|method of *candidate subgraph extraction*|)
+There are a lot of options for you to conduct a thorough evalution among different algorithms:
 
-[//]: # (|-ver|refer to B4|method of *candidate subgraph verification*|)
+|Parameters|Value|Description|
 
-[//]: # (|-seq|`t`, `f`|`t`: sequential update strategy, `f`:  simultaneous update strategy|)
+|:---------------|:------------------|:------------|
 
-[//]: # (|-vw|`t`, `f`|`t`: transform DDS problem into vertex-weighted UDS problem, `f`: do not transform|)
+|-path|---|path to the dataset|
 
-[//]: # (|-gamma|$0\le \gamma \le 1$|a parameter that controls the lower bound of binary search|)
+|-t|`u`, `d`|`u`: undirected, `d`: directed|
 
-[//]: # (|-exp|`t`, `f`|`t`: iteration number grows exponentially, `f`: iteration number is fixed|)
+|-a|`e`, `a`|`e`: exact, `a`: approximation|
 
-[//]: # (|-it|integer, $it \ge 1$|fixed iteration number|)
+|-eps|$\epsilon>=0$|error threshold for $1+\epsilon$ approximation algorithms|
 
-[//]: # (|-dc|`t`, `f`|`t`: apply divide-and-conquer strategy, `f`: do not apply|)
+|-red|refer to B1|method of *graph reduction*|
 
-[//]: # (|-ra|`t`, `f`|ablation study on *graph reduction*, `t`: print reduction ratio, `f`: do not print|)
+|-alloc|refer to B2|method of `VWU`|
 
-[//]: # (|-res|`t`, `f`|`t`: restrict $xy-core$ in a tight interval, `f`: do not restrict|)
+|-ext|refer to B3|method of *candidate subgraph extraction*|
 
-[//]: # (|-width|$width\ge 1$|a parameter that controls the tightness of interval|)
+|-ver|refer to B4|method of *candidate subgraph verification*|
 
-[//]: # (|-multi|`t`, `f`|`t`: apply multi-round reduction, `f`: apply single-round reduction|)
+|-seq|`t`, `f`|`t`: sequential update strategy, `f`:  simultaneous update strategy|
 
-[//]: # ()
-[//]: # (#### B1. Methods of *Graph Reduction*)
+|-vw|`t`, `f`|`t`: transform DDS problem into vertex-weighted UDS problem, `f`: do not transform|
 
-[//]: # (|Value|Description|)
+|-gamma|$0\le \gamma \le 1$|a parameter that controls the lower bound of binary search|
 
-[//]: # (|--------|--------|)
+|-exp|`t`, `f`|`t`: iteration number grows exponentially, `f`: iteration number is fixed|
 
-[//]: # (|`k-core`|derive a $k-core$, support UDS algorithms|)
+|-it|integer, $it \ge 1$|fixed iteration number|
 
-[//]: # (|`stable`|derive a stable set|)
+|-dc|`t`, `f`|`t`: apply divide-and-conquer strategy, `f`: do not apply|
 
-[//]: # (|`exact-xy-core`|derive an exact $xy-core$, support DDS algorithms|)
+|-ra|`t`, `f`|ablation study on *graph reduction*, `t`: print reduction ratio, `f`: do not print|
 
-[//]: # (|`appro-xy-core`|derive an approximate $xy-core$, support DDS algorithms|)
+|-res|`t`, `f`|`t`: restrict $xy-core$ in a tight interval, `f`: do not restrict|
 
-[//]: # (|`w-core`|derive an $w^*-core$, support WCoreApp algorithm|)
+|-width|$width\ge 1$|a parameter that controls the tightness of interval|
 
-[//]: # ()
-[//]: # (#### B2. Methods of `VWU`)
+|-multi|`t`, `f`|`t`: apply multi-round reduction, `f`: apply single-round reduction|
 
-[//]: # (|Value|Description|)
 
-[//]: # (|--------|--------|)
+#### B1. Methods of *Graph Reduction*
 
-[//]: # (|`flow-exact`|the `VWU` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|)
+|Value|Description|
 
-[//]: # (|`fw`|the `VWU` method of `FWExact`, `FWApp`, `DFWExact` and `DFWApp`|)
+|--------|--------|
 
-[//]: # (|`fista`|the `VWU` method of `FISTAExact` and `FISTAApp`|)
+|`k-core`|derive a $k-core$, support UDS algorithms|
 
-[//]: # (|`mwu`|the `VWU` method of `MWUExact` and `MWUApp`|)
+|`stable`|derive a stable set|
 
-[//]: # (|`core-app`|the `VWU` method of `CoreApp`|)
+|`exact-xy-core`|derive an exact $xy-core$, support DDS algorithms|
 
-[//]: # (|`greedy`|the `VWU` method of `Greedy` and `DGreedy`|)
+|`appro-xy-core`|derive an approximate $xy-core$, support DDS algorithms|
 
-[//]: # (|`greedypp`|the `VWU` method of `Greedy++`|)
+|`w-core`|derive an $w^*-core$, support WCoreApp algorithm|
 
-[//]: # (|`flow-app`|the `VWU` method of `FlowApp`|)
 
-[//]: # (|`xy-core-appro`|the `VWU` method of `XYCoreApp`|)
+#### B2. Methods of `VWU`
 
-[//]: # (|`w-core-appro`|the `VWU` method of `WCoreApp`|)
+|Value|Description|
 
-[//]: # ()
-[//]: # (#### B3. Methods of *Candidate Subgraph Extraction* &#40;`CSE`&#41;)
+|--------|--------|
 
-[//]: # (|Value|Description|)
+|`flow-exact`|the `VWU` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|
 
-[//]: # (|--------|--------|)
+|`fw`|the `VWU` method of `FWExact`, `FWApp`, `DFWExact` and `DFWApp`|
 
-[//]: # (|`flow-exact`|the `CSE` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|)
+|`fista`|the `VWU` method of `FISTAExact` and `FISTAApp`|
 
-[//]: # (|`cp`|the `CSE` method of `FWExact`, `FWApp`,`FISTAExact` ,`FISTAApp`, `MWUExact`, `MWUApp`, `DFWExact` and `DFWApp`|)
+|`mwu`|the `VWU` method of `MWUExact` and `MWUApp`|
 
-[//]: # (|`core-app`|the `CSE` method of `XYCoreApp` and `WCoreApp`|)
+|`core-app`|the `VWU` method of `CoreApp`|
 
-[//]: # (|`greedy`|the `CSE` method of `DGreedy`|)
+|`greedy`|the `VWU` method of `Greedy` and `DGreedy`|
 
-[//]: # ()
-[//]: # (#### B4. Methods of *Candidate Subgraph Verification* &#40;`CSV`&#41;)
+|`greedypp`|the `VWU` method of `Greedy++`|
 
-[//]: # (|Value|Description|)
+|`flow-app`|the `VWU` method of `FlowApp`|
 
-[//]: # (|-------------|--------|)
+|`xy-core-appro`|the `VWU` method of `XYCoreApp`|
 
-[//]: # (|`flow-exact`|the `CSV` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|)
+|`w-core-appro`|the `VWU` method of `WCoreApp`|
 
-[//]: # (|`cp`|the `CSV` method of `FWExact`, `FWApp`,`FISTAExact` ,`FISTAApp`, `MWUExact`, `MWUApp`, `DFWExact` and `DFWApp`|)
 
-[//]: # (|`core-app`|the `CSV` method of `CoreApp`|)
+#### B3. Methods of *Candidate Subgraph Extraction* (`CSE`)
 
-[//]: # (|`flow-app`|the `CSV` method of `FlowApp`|)
+|Value|Description|
 
-[//]: # (|`greedy`|the `CSV` method of `DGreedy`|)
+|--------|--------|
 
-[//]: # ()
-[//]: # ()
-[//]: # (### C. Data Download)
+|`flow-exact`|the `CSE` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|
 
-[//]: # ()
-[//]: # (You can download the datasets from the following Google driven link:)
+|`cp`|the `CSE` method of `FWExact`, `FWApp`,`FISTAExact` ,`FISTAApp`, `MWUExact`, `MWUApp`, `DFWExact` and `DFWApp`|
 
-[//]: # ()
-[//]: # (XXXXXXXXXXXXXXXXXX)
+|`core-app`|the `CSE` method of `XYCoreApp` and `WCoreApp`|
 
-[//]: # ()
-[//]: # (### D. Experimentation)
+|`greedy`|the `CSE` method of `DGreedy`|
 
-[//]: # ()
-[//]: # (Our one-click script for reproducibility is comming soon.)
 
-[//]: # ()
+#### B4. Methods of *Candidate Subgraph Verification* (`CSV`)
+
+|Value|Description|
+
+|-------------|--------|
+
+|`flow-exact`|the `CSV` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|
+
+|`cp`|the `CSV` method of `FWExact`, `FWApp`,`FISTAExact` ,`FISTAApp`, `MWUExact`, `MWUApp`, `DFWExact` and `DFWApp`|
+
+|`core-app`|the `CSV` method of `CoreApp`|
+
+|`flow-app`|the `CSV` method of `FlowApp`|
+
+|`greedy`|the `CSV` method of `DGreedy`|
+
+
+
+### C. Data Download
+
+
+You can download the datasets from the following Google driven link:
+
+
+XXXXXXXXXXXXXXXXXX
+
+
+### D. Experimentation
+
+
+Our one-click script for reproducibility is comming soon.
+
+
 [//]: # (### E. Contact)
 
 [//]: # ()
+[//]: # ()
 [//]: # (If you have any questions about the code or find any errors, please list them in the `issue` or contact us directly by email:)
 
+[//]: # ()
 [//]: # ()
 [//]: # (`yiyang3@link.cuhk.edu.cn` , `qingshuoguo@link.cuhk.edu.cn` or `yinglizhou@link.cuhk.edu.cn`)
