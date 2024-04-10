@@ -1,10 +1,8 @@
-# Densest Subgraph Discovery: An In-depth Study
+# In-depth Analysis of Densest Subgraph Discovery in a Unified Framework
 
 This repository contains C++ codes and datasets for the paper:
 
-> Densest Subgraph Discovery: An In-depth Study
->
-> paper: XXXXXXXXXX
+> In-depth Analysis of Densest Subgraph Discovery in a Unified Framework
 
 ## Introduction
 
