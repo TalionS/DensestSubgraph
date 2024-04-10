@@ -92,17 +92,25 @@ For example, you could run `core-exact` on DP in the following command:
 
 There are a lot of options for you to conduct a thorough evalution among different algorithms:
 
-|Parameters|Value|Description|
-|:---------------|:------------------|:------------|
-|-path|---|path to the dataset|
-|-t|`u`, `d`|`u`: undirected, `d`: directed|
-|-a|`e`, `a`|`e`: exact, `a`: approximation|
+[//]: # (|Parameters|Value|Description|)
+
+[//]: # (|:---------------|:------------------|:------------|)
+
+[//]: # (|-path|---|path to the dataset|)
+
+[//]: # (|-t|`u`, `d`|`u`: undirected, `d`: directed|)
+
+[//]: # (|-a|`e`, `a`|`e`: exact, `a`: approximation|)
 
 [//]: # (|-eps|$\epsilon>=0$|error threshold for $1+\epsilon$ approximation algorithms|)
-|-red|refer to B1|method of *graph reduction*|
-|-alloc|refer to B2|method of `VWU`|
-|-ext|refer to B3|method of *candidate subgraph extraction*|
-|-ver|refer to B4|method of *candidate subgraph verification*|
+
+[//]: # (|-red|refer to B1|method of *graph reduction*|)
+
+[//]: # (|-alloc|refer to B2|method of `VWU`|)
+
+[//]: # (|-ext|refer to B3|method of *candidate subgraph extraction*|)
+
+[//]: # (|-ver|refer to B4|method of *candidate subgraph verification*|)
 
 [//]: # (|-seq|`t`, `f`|`t`: sequential update strategy, `f`:  simultaneous update strategy|)
 
@@ -124,110 +132,69 @@ There are a lot of options for you to conduct a thorough evalution among differe
 
 [//]: # (|-multi|`t`, `f`|`t`: apply multi-round reduction, `f`: apply single-round reduction|)
 
-[//]: # ()
-[//]: # ()
-[//]: # (#### B1. Methods of *Graph Reduction*)
 
-[//]: # ()
-[//]: # (|Value|Description|)
+#### B1. Methods of *Graph Reduction*
 
-[//]: # (|--------|--------|)
+|Value|Description|
+|--------|--------|
+|`k-core`|derive a $k-core$, support UDS algorithms|
+|`stable`|derive a stable set|
+|`exact-xy-core`|derive an exact $xy-core$, support DDS algorithms|
+|`appro-xy-core`|derive an approximate $xy-core$, support DDS algorithms|
+|`w-core`|derive an $w^*-core$, support WCoreApp algorithm|
 
-[//]: # (|`k-core`|derive a $k-core$, support UDS algorithms|)
 
-[//]: # (|`stable`|derive a stable set|)
+#### B2. Methods of `VWU`
 
-[//]: # (|`exact-xy-core`|derive an exact $xy-core$, support DDS algorithms|)
+|Value|Description|
+|--------|--------|
+|`flow-exact`|the `VWU` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|
+|`fw`|the `VWU` method of `FWExact`, `FWApp`, `DFWExact` and `DFWApp`|
+|`fista`|the `VWU` method of `FISTAExact` and `FISTAApp`|
+|`mwu`|the `VWU` method of `MWUExact` and `MWUApp`|
+|`core-app`|the `VWU` method of `CoreApp`|
+|`greedy`|the `VWU` method of `Greedy` and `DGreedy`|
+|`greedypp`|the `VWU` method of `Greedy++`|
+|`flow-app`|the `VWU` method of `FlowApp`|
+|`xy-core-appro`|the `VWU` method of `XYCoreApp`|
+|`w-core-appro`|the `VWU` method of `WCoreApp`|
 
-[//]: # (|`appro-xy-core`|derive an approximate $xy-core$, support DDS algorithms|)
 
-[//]: # (|`w-core`|derive an $w^*-core$, support WCoreApp algorithm|)
+#### B3. Methods of *Candidate Subgraph Extraction* (`CSE`)
 
-[//]: # ()
-[//]: # ()
-[//]: # (#### B2. Methods of `VWU`)
+|Value|Description|
+|--------|--------|
+|`flow-exact`|the `CSE` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|
+|`cp`|the `CSE` method of `FWExact`, `FWApp`,`FISTAExact` ,`FISTAApp`, `MWUExact`, `MWUApp`, `DFWExact` and `DFWApp`|
+|`core-app`|the `CSE` method of `XYCoreApp` and `WCoreApp`|
+|`greedy`|the `CSE` method of `DGreedy`|
 
-[//]: # ()
-[//]: # (|Value|Description|)
 
-[//]: # (|--------|--------|)
+#### B4. Methods of *Candidate Subgraph Verification* (`CSV`)
 
-[//]: # (|`flow-exact`|the `VWU` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|)
+|Value|Description|
+|-------------|--------|
+|`flow-exact`|the `CSV` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|
+|`cp`|the `CSV` method of `FWExact`, `FWApp`,`FISTAExact` ,`FISTAApp`, `MWUExact`, `MWUApp`, `DFWExact` and `DFWApp`|
+|`core-app`|the `CSV` method of `CoreApp`|
+|`flow-app`|the `CSV` method of `FlowApp`|
+|`greedy`|the `CSV` method of `DGreedy`|
 
-[//]: # (|`fw`|the `VWU` method of `FWExact`, `FWApp`, `DFWExact` and `DFWApp`|)
 
-[//]: # (|`fista`|the `VWU` method of `FISTAExact` and `FISTAApp`|)
 
-[//]: # (|`mwu`|the `VWU` method of `MWUExact` and `MWUApp`|)
+### C. Data Download
 
-[//]: # (|`core-app`|the `VWU` method of `CoreApp`|)
 
-[//]: # (|`greedy`|the `VWU` method of `Greedy` and `DGreedy`|)
+You can download the datasets from the following Google driven link:
 
-[//]: # (|`greedypp`|the `VWU` method of `Greedy++`|)
 
-[//]: # (|`flow-app`|the `VWU` method of `FlowApp`|)
+XXXXXXXXXXXXXXXXXX
 
-[//]: # (|`xy-core-appro`|the `VWU` method of `XYCoreApp`|)
 
-[//]: # (|`w-core-appro`|the `VWU` method of `WCoreApp`|)
+### D. Experimentation
 
-[//]: # ()
-[//]: # ()
-[//]: # (#### B3. Methods of *Candidate Subgraph Extraction* &#40;`CSE`&#41;)
 
-[//]: # ()
-[//]: # (|Value|Description|)
-
-[//]: # (|--------|--------|)
-
-[//]: # (|`flow-exact`|the `CSE` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|)
-
-[//]: # (|`cp`|the `CSE` method of `FWExact`, `FWApp`,`FISTAExact` ,`FISTAApp`, `MWUExact`, `MWUApp`, `DFWExact` and `DFWApp`|)
-
-[//]: # (|`core-app`|the `CSE` method of `XYCoreApp` and `WCoreApp`|)
-
-[//]: # (|`greedy`|the `CSE` method of `DGreedy`|)
-
-[//]: # ()
-[//]: # ()
-[//]: # (#### B4. Methods of *Candidate Subgraph Verification* &#40;`CSV`&#41;)
-
-[//]: # ()
-[//]: # (|Value|Description|)
-
-[//]: # (|-------------|--------|)
-
-[//]: # (|`flow-exact`|the `CSV` method of `FlowExact`, `CoreExact`, `DFlowExact`, `DCExact`|)
-
-[//]: # (|`cp`|the `CSV` method of `FWExact`, `FWApp`,`FISTAExact` ,`FISTAApp`, `MWUExact`, `MWUApp`, `DFWExact` and `DFWApp`|)
-
-[//]: # (|`core-app`|the `CSV` method of `CoreApp`|)
-
-[//]: # (|`flow-app`|the `CSV` method of `FlowApp`|)
-
-[//]: # (|`greedy`|the `CSV` method of `DGreedy`|)
-
-[//]: # ()
-[//]: # ()
-[//]: # ()
-[//]: # (### C. Data Download)
-
-[//]: # ()
-[//]: # ()
-[//]: # (You can download the datasets from the following Google driven link:)
-
-[//]: # ()
-[//]: # ()
-[//]: # (XXXXXXXXXXXXXXXXXX)
-
-[//]: # ()
-[//]: # ()
-[//]: # (### D. Experimentation)
-
-[//]: # ()
-[//]: # ()
-[//]: # (Our one-click script for reproducibility is comming soon.)
+Our one-click script for reproducibility is comming soon.
 
 
 [//]: # (### E. Contact)
