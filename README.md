@@ -102,18 +102,29 @@ There are a lot of options for you to conduct a thorough evalution among differe
 |-alloc|refer to B2|method of `VWU`|
 |-ext|refer to B3|method of *candidate subgraph extraction*|
 |-ver|refer to B4|method of *candidate subgraph verification*|
-|-seq|`t`, `f`|`t`: sequential update strategy, `f`:  simultaneous update strategy|
-|-vw|`t`, `f`|`t`: transform DDS problem into vertex-weighted UDS problem, `f`: do not transform|
-|-gamma|$0\le \gamma \le 1$|a parameter that controls the lower bound of binary search|
-|-exp|`t`, `f`|`t`: iteration number grows exponentially, `f`: iteration number is fixed|
-|-it|integer, $it \ge 1$|fixed iteration number|
-|-dc|`t`, `f`|`t`: apply divide-and-conquer strategy, `f`: do not apply|
-|-ra|`t`, `f`|ablation study on *graph reduction*, `t`: print reduction ratio, `f`: do not print|
-|-res|`t`, `f`|`t`: restrict $xy-core$ in a tight interval, `f`: do not restrict|
-|-width|$width\ge 1$|a parameter that controls the tightness of interval|
-|-multi|`t`, `f`|`t`: apply multi-round reduction, `f`: apply single-round reduction|
 
+[//]: # (|-seq|`t`, `f`|`t`: sequential update strategy, `f`:  simultaneous update strategy|)
 
+[//]: # (|-vw|`t`, `f`|`t`: transform DDS problem into vertex-weighted UDS problem, `f`: do not transform|)
+
+[//]: # (|-gamma|$0\le \gamma \le 1$|a parameter that controls the lower bound of binary search|)
+
+[//]: # (|-exp|`t`, `f`|`t`: iteration number grows exponentially, `f`: iteration number is fixed|)
+
+[//]: # (|-it|integer, $it \ge 1$|fixed iteration number|)
+
+[//]: # (|-dc|`t`, `f`|`t`: apply divide-and-conquer strategy, `f`: do not apply|)
+
+[//]: # (|-ra|`t`, `f`|ablation study on *graph reduction*, `t`: print reduction ratio, `f`: do not print|)
+
+[//]: # (|-res|`t`, `f`|`t`: restrict $xy-core$ in a tight interval, `f`: do not restrict|)
+
+[//]: # (|-width|$width\ge 1$|a parameter that controls the tightness of interval|)
+
+[//]: # (|-multi|`t`, `f`|`t`: apply multi-round reduction, `f`: apply single-round reduction|)
+
+[//]: # ()
+[//]: # ()
 [//]: # (#### B1. Methods of *Graph Reduction*)
 
 [//]: # ()
