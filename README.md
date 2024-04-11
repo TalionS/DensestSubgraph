@@ -29,26 +29,26 @@ We use twelve real datasets from different domains including 6 undirected graphs
 Undirected:
 
 
-| Dataset         | Category      | $\mid V \mid$   | $\mid E \mid$     | download link |
-| --------------- | ------------- | -------: | --------: | ------ |
-| Econ-beacxc (EB) | Economic      | 507     | 42,176    | [link](https://networkrepository.com/econ-beacxc.php)                                             |
-| DBLP (DP)       | Collaboration | 317,080 | 1,049,866 | [link](https://snap.stanford.edu/data/com-DBLP.html)                                             |
-| Youtube (YT)    | Multimedia | 3,223,589 | 9,375,374 | [link](https://snap.stanford.edu/data/com-Youtube.html)                                             |
-|LiveJournal (LJ)|Social|4,036,538|34,681,189| [link](https://snap.stanford.edu/data/com-LiveJournal.html)                                             |
-|WebBase (WB)|Web|118,142,155|881,868,060| [link](https://networkrepository.com/web-webbase-2001-all.php)                                             |
-|Friendster (FS)|Social|124,836,180|1,806,067,135| [link](https://snap.stanford.edu/data/com-Friendster.html)                                             |
+| Dataset         | Category      | $\mid V \mid$   | $\mid E \mid$     | Download link                                                  |
+| --------------- | ------------- | -------: | --------: |----------------------------------------------------------------|
+| Econ-beacxc (EB) | Economic      | 507     | 42,176    | [Link](https://networkrepository.com/econ-beacxc.php)          |
+| DBLP (DP)       | Collaboration | 317,080 | 1,049,866 | [Link](https://snap.stanford.edu/data/com-DBLP.html)           |
+| Youtube (YT)    | Multimedia | 3,223,589 | 9,375,374 | [Link](https://snap.stanford.edu/data/com-Youtube.html)        |
+|LiveJournal (LJ)|Social|4,036,538|34,681,189| [Link](https://snap.stanford.edu/data/com-LiveJournal.html)    |
+|WebBase (WB)|Web|118,142,155|881,868,060| [Link](https://networkrepository.com/web-webbase-2001-all.php) |
+|Friendster (FS)|Social|124,836,180|1,806,067,135| [Link](https://snap.stanford.edu/data/com-Friendster.html)     |
 
 
 Directed:
 
-| Dataset          | Category      |  $\mid V \mid$   | $\mid E \mid$    | download link                                        |
-|------------------| ------------- | -------: | --------: |------------------------------------------------------|
-| Openflights (OF) |Infrastructure|2,939|30,501| [link](http://konect.cc/networks/opsahl-openflights/)                                             |
-| Advogato (AD)    |Social|6,541|51,127| [link](http://konect.cc/networks/advogato/)                                             |
-| Amazon (AM)      |E-commerce|403,394|3,387,388| [link](http://konect.cc/networks/amazon0601/)                                             |
-| Bidu-zhishi (BA) |Hyperlink|2,141,300|17,794,839| [link](http://konect.cc/networks/zhishi-baidu-internallink/)   |
-| Wiki-en (WE)     |Hyperlink|13,593,032|437,217,424| [link](http://konect.cc/networks/wikipedia_link_en/) |
-| SK-2005 (SK)     |Web|50,636,154|1,949,412,601| [link](https://law.di.unimi.it/webdata/sk-2005/)     |
+| Dataset          | Category      |  $\mid V \mid$   | $\mid E \mid$    | Download link                                                |
+|------------------| ------------- | -------: | --------: |--------------------------------------------------------------|
+| Openflights (OF) |Infrastructure|2,939|30,501| [Link](http://konect.cc/networks/opsahl-openflights/)        |
+| Advogato (AD)    |Social|6,541|51,127| [Link](http://konect.cc/networks/advogato/)                  |
+| Amazon (AM)      |E-commerce|403,394|3,387,388| [Link](http://konect.cc/networks/amazon0601/)                |
+| Bidu-zhishi (BA) |Hyperlink|2,141,300|17,794,839| [Link](http://konect.cc/networks/zhishi-baidu-internallink/) |
+| Wiki-en (WE)     |Hyperlink|13,593,032|437,217,424| [Link](http://konect.cc/networks/wikipedia_link_en/)         |
+| SK-2005 (SK)     |Web|50,636,154|1,949,412,601| [Link](https://law.di.unimi.it/webdata/sk-2005/)             |
 
 
 
