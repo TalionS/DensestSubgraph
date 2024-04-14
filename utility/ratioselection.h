@@ -1,7 +1,3 @@
-//
-// Created by yy on 12/6/23.
-//
-
 #ifndef DENSESTSUBGRAPH_RATIOSELECTION_H
 #define DENSESTSUBGRAPH_RATIOSELECTION_H
 

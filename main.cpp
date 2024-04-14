@@ -1,6 +1,3 @@
-//
-// Created by yy on 23-11-14.
-//
 #include "graph.h"
 #include "reduction.h"
 #include "allocation.h"

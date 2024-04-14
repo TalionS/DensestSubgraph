@@ -1,7 +1,3 @@
-//
-// Created by yy on 11/19/23.
-//
-
 #ifndef DENSESTSUBGRAPH_FLOWNETWORK_H
 #define DENSESTSUBGRAPH_FLOWNETWORK_H
 

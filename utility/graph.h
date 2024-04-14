@@ -1,7 +1,3 @@
-//
-// Created by yy on 23-11-13.
-//
-
 #ifndef DENSESTSUBGRAPH_GRAPH_H
 #define DENSESTSUBGRAPH_GRAPH_H
 

@@ -1,7 +1,3 @@
-//
-// Created by yy on 12/16/23.
-//
-
 #include <vector>
 #include <algorithm>
 #include "types.h"
