@@ -65,7 +65,7 @@ After cloning the codes from GitHub, use the following command to compile the co
 
 cmake CMakeLists.txt
 
-make ./DensestSubgraph
+make
 
 ```
 
