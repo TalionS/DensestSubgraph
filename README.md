@@ -84,7 +84,7 @@ For example, you could run `core-exact` on DP in the following command:
 
 ```sh
 
-./DensestSubgraph -path ./data/DP.txt -t u -a e -red core-exact -alloc flow-exact -ext flow-exact -ver flow-exact
+./DensestSubgraph -path ./data/DP.txt -t u -a e -red k-core -alloc flow-exact -ext flow-exact -ver flow-exact
 
 ```
 
