@@ -349,6 +349,7 @@ int main(int argc, char **argv) {
                 if(ver_type == "cp" && red_type == "stable")
                     flag = ver.UndirectedlpVerification(graph, lp, flow, vertices, true);
             }
+            printf("%.10lf\n",graph.subgraph_density);
         } else {
             //The generation of Ratio set needs to be refined.
             //How to combine divide-and-conquer strategy with our current framework
