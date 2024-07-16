@@ -377,6 +377,7 @@ void Extraction::UndirectedflowExactExtraction(Graph &graph, FlowNetwork &flow, 
             }
         }
     }
+    edge_num /= 4;
     if (!vertices[0].empty()) {
         l = mid;
         if (graph.subgraph_density < edge_num / vertices[0].size()) {
