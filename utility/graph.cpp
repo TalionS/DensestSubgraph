@@ -331,7 +331,7 @@ void Graph::coreReduce(Graph &graph, ui k, bool weighted){
         for(ui i = 0; i < new_vertices_count_; i++){
             up = std::max(up, (double) deg[i]);
         }
-        copy.subgraph_density_upper_bound = std::min(graph.subgraph_density_upper_bound, up);
+        copy.subgraph_density_upper_bound = up;
         graph = copy;
     }
     else{
