@@ -356,6 +356,7 @@ void Reduction::UndirectedkCoreReduction(Graph &graph, LinearProgramming &lp, bo
             }        
         }
         Graph copy(0, new_vertices_count_);
+        copy.subgraph_density = graph.subgraph_density;
         copy.weight_.resize(new_vertices_count_);
         for(ui i = 0; i < new_vertices_count_; i++) copy.weight_[i] = 1;
         for(ui i = 0; i < vertices_count_; i++){
