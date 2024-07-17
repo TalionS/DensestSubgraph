@@ -380,7 +380,7 @@ void Extraction::UndirectedflowExactExtraction(Graph &graph, FlowNetwork &flow, 
     edge_num /= 4;
     if (!vertices[0].empty()) {
         l = mid;
-        if (graph.subgraph_density < edge_num / vertices[0].size()) {
+        if (graph.subgraph_density < 1.0 * edge_num / vertices[0].size()) {
             graph.subgraph_density = 1.0 * edge_num / vertices[0].size();
             graph.vertices[0] = vertices[0];
         }
