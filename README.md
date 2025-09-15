@@ -112,7 +112,8 @@ There are a lot of options for you to conduct a thorough evalution among differe
 |-multi| `t`, `f`         |`t`: apply multi-round reduction, `f`: apply single-round reduction|
 
 #### B0. Format of the Dataset
-The first line of this file should contain two integers $n$ (the number of vertices) and $m$ (the number of edges) separated by a space. The index of vertices should be ranged from $0$ to $n - 1$.  Each of the following $m$ lines contains one edge by two integers separated by a space. There should be no multiple edges and self-loops in this file.
+
+The Dataset should be stored in a txt file. The first line of this file should contain two integers $n$ (the number of vertices) and $m$ (the number of edges) separated by a space. The index of vertices should be ranged from $0$ to $n - 1$.  Each of the following $m$ lines contains one edge by two integers separated by a space. There should be no multiple edges and self-loops in this file.
 
 For example, here is a correct graph file with 4 vertices and 5 edges 
 
